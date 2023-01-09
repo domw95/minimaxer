@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/domw95/minimax-ts/issues"
   },
-  "homepage": "https://github.com/domw95/minimax-ts#readme"
+  "homepage": "https://github.com/domw95/minimax-ts#readme",
+  "devDependencies": {
+    "typescript": "^4.9.4"
+  }
 }
