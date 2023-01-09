@@ -1,0 +1,19 @@
+{
+  "name": "minimax-ts",
+  "version": "1.0.0",
+  "description": "Library for building game trees and running the minimax algorithm for turn-based games",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domw95/minimax-ts.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/domw95/minimax-ts/issues"
+  },
+  "homepage": "https://github.com/domw95/minimax-ts#readme"
+}
