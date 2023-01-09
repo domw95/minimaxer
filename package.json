@@ -4,7 +4,8 @@
   "description": "Library for building game trees and running the minimax algorithm for turn-based games",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,6 @@
   "homepage": "https://github.com/domw95/minimax-ts#readme",
   "devDependencies": {
     "typescript": "^4.9.4"
-  }
+  },
+  "files":["lib/**/*"]
 }
