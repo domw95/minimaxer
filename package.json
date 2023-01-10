@@ -1,18 +1,18 @@
 {
-  "name": "minimax-ts",
+  "name": "minimaxer",
   "version": "1.0.0",
   "description": "Library for building game trees and running the minimax algorithm for turn-based games",
   "keywords": [
     "minimax",
     "game"
   ],
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test specified\"",
     "build": "tsc",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json",
+    "lint": "eslint -p tsconfig.json",
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "preversion": "npm run lint",
@@ -21,22 +21,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/domw95/minimax-ts.git"
+    "url": "git+https://github.com/domw95/minimaxer.git"
   },
   "author": "domw95",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/domw95/minimax-ts/issues"
+    "url": "https://github.com/domw95/minimaxer/issues"
   },
-  "homepage": "https://github.com/domw95/minimax-ts#readme",
+  "homepage": "https://github.com/domw95/minimaxer#readme",
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.48.1",
+    "@typescript-eslint/parser": "^5.48.1",
+    "eslint": "^8.31.0",
     "prettier": "^2.8.2",
-    "tslint": "^6.1.3",
-    "tslint-config-prettier": "^1.18.0",
     "typedoc": "^0.23.24",
     "typescript": "^4.9.4"
   },
   "files": [
-    "lib/**/*"
+    "dist/**/*"
   ]
 }
