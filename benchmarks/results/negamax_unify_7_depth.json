@@ -1,0 +1,45 @@
+{
+  "name": "Negamax varieties",
+  "date": "2023-01-12T15:39:43.056Z",
+  "version": null,
+  "results": [
+    {
+      "name": "Standard settings, original",
+      "ops": 2.96,
+      "margin": 13.67,
+      "percentSlower": 0
+    },
+    {
+      "name": "Standard settings, unify",
+      "ops": 2.86,
+      "margin": 11.89,
+      "percentSlower": 3.38
+    },
+    {
+      "name": "Gen Based, unify",
+      "ops": 2.91,
+      "margin": 16.8,
+      "percentSlower": 1.69
+    },
+    {
+      "name": "Presort, unify",
+      "ops": 2.82,
+      "margin": 11.66,
+      "percentSlower": 4.73
+    },
+    {
+      "name": "Postsort, unify",
+      "ops": 2.81,
+      "margin": 13.81,
+      "percentSlower": 5.07
+    }
+  ],
+  "fastest": {
+    "name": "Standard settings, original",
+    "index": 0
+  },
+  "slowest": {
+    "name": "Postsort, unify",
+    "index": 4
+  }
+}
