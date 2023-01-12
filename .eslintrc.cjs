@@ -10,9 +10,6 @@ module.exports = {
         "plugin:@typescript-eslint/recommended-requiring-type-checking",
     ],
     "overrides": [
-        {
-            "files": ["src/**/*"],
-        }
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
