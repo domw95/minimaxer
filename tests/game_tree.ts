@@ -3,13 +3,12 @@ import * as minimax from "../dist/index.js";
 
 const game = new ttt.tictactoe();
 game.start();
-const tree = new minimax.Tree<ttt.tictactoe, number[]>(
-    game.clone(),
-    minimax.NodeAim.MAX,
-    ttt.getMovesCallback,
-    ttt.createChildCallback,
-    ttt.evaluateGamestateCallback,
-);
+
+// Create a tree with a clone of the empty game at the root
+const tree = new minimax.Tree(game.clone(), minimax.NodeAim.MAX, game.moves);
+tree.CreateChildNode = ttt.createChildCallback;
+tree.EvaluateNode = ttt.evaluateGamestateCallback;
+tree.GetMoves = ttt.getMovesCallback;
 
 test("Construct TicTacToe game tree", () => {
     tree.createFullTree();

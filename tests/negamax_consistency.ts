@@ -5,7 +5,10 @@ import * as minmax from "../dist/index.js";
 
 const depth = 8;
 
-const depthCallback = (tree: minmax.Negamax<mancala.mancala, number>, result: minmax.NegamaxResult<number>): void => {
+const depthCallback = (
+    tree: minmax.Negamax<mancala.mancala, number, unknown>,
+    result: minmax.NegamaxResult<number>,
+): void => {
     // console.log("Depth: %d, Move:%d", result.depth, result.move);
     console.log("Depth: \t", result.depth, "\t Moves", JSON.stringify(tree.getOptimalMoves()));
 };
@@ -19,15 +22,8 @@ function negamax(opts: minmax.NegamaxOpts): number[] {
     // game.playMove(2);
     // game.playMove(-1);
 
-    const tree = new minmax.Negamax(
-        game,
-        minmax.NodeAim.MAX,
-        mancala.getMovesCallback,
-        mancala.createChildCallback,
-        mancala.evaluateNodeCallback,
-        opts,
-    );
-    // tree.depthCallback = depthCallback;
+    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, opts, game.moves);
+    tree.CreateChildNode = mancala.createChildCallback;
     const result = tree.evalDeepening();
     // console.log(result);
     // console.log("Memory: ", process.memoryUsage()["heapTotal"] / 1e6, " MB");
