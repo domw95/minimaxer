@@ -1,4 +1,4 @@
-import * as minmax from "../../src/index.js";
+import * as minmax from "../../dist/index.js";
 
 export const enum CellType {
     EMPTY,
@@ -126,8 +126,8 @@ export const evaluateGamestateCallback: minmax.EvaluateGamestateFunc<tictactoe> 
             return 0;
         case CellType.CIRCLE:
             // Rank by number of moves played
-            return 1 / gamestate.played;
+            return 1;
         case CellType.CROSS:
-            return -1 / gamestate.played;
+            return -1;
     }
 };

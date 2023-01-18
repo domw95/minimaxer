@@ -1,5 +1,5 @@
 import * as ttt from "./games/tictactoe.js";
-import * as minmax from "../src/index.js";
+import * as minmax from "../dist/index.js";
 
 // Create a new game of ticatactoe and initialise
 const game = new ttt.tictactoe();
