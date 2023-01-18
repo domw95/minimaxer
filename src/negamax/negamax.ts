@@ -20,8 +20,8 @@ export class Negamax<GS, M> extends Tree<GS, M> {
     protected expireTime = 0;
     /** Flags that full depth has *not* been reached when set to false*/
     protected fullDepth = true;
-    /** Tracks starting depth of search */
-    protected startDepth = 0;
+    /** Depth of current search */
+    protected activeDepth = 0;
     /** Enables postsort of children internally */
     protected postsortEnable = false;
     /** Enables presort of children internally */
@@ -69,8 +69,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
     evalDepth(depth = this.opts.depth): NegamaxResult<M> {
         // reset stats
         this.outcomes = 0;
-        // record start depth before call
-        this.startDepth = depth;
+        this.activeDepth = depth;
         // reset fullDepth flag
         this.fullDepth = true;
         // Call negamax to depth
@@ -109,8 +108,8 @@ export class Negamax<GS, M> extends Tree<GS, M> {
         this.postsortEnable = this.opts.postsort;
 
         // Iterate through depths until timeout or full tree
-        for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
-            const result = this.evalDepth(activeDepth);
+        for (this.activeDepth = this.opts.initialDepth; ; this.activeDepth++) {
+            const result = this.evalDepth(this.activeDepth);
             if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME) {
                 return result;
             }
@@ -182,8 +181,13 @@ export class Negamax<GS, M> extends Tree<GS, M> {
 
             let value = -Infinity;
             let exit = SearchExit.FULL_DEPTH;
+            let done = false;
             // Iterate through node children
             for (const child of this.getChildren(node, depth)) {
+                // Check if pruning does not consider node
+                if (done) {
+                    child.inheritedValue = -Infinity;
+                }
                 // score is assigned directly to child, exit if timeout
                 exit = this.negamax(child, depth - 1, -colour, -beta, -alpha);
                 if (exit == SearchExit.TIME) {
@@ -196,7 +200,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
                     // check for break condition
                     alpha = Math.max(value, alpha);
                     if (alpha >= beta) {
-                        break;
+                        done = true;
                     }
                 }
             }
@@ -276,10 +280,10 @@ export class Negamax<GS, M> extends Tree<GS, M> {
         if (this.postsortEnable) {
             // sort children and pick best
             node.child = this.sortChildren(node);
-            node.inheritedValue = -node.child.inheritedValue;
         } else {
             node.child = this.bestChild(node);
-            node.inheritedValue = -node.child.inheritedValue;
         }
+
+        node.inheritedValue = -node.child.inheritedValue;
     }
 }
