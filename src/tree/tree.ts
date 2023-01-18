@@ -1,5 +1,5 @@
 import { Node, NodeAim, NodeType } from "./node.js";
-import { CreateChildNodeFunc, EvaluateGamestateFunc, GetMovesFunc } from "./interfaces.js";
+import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
 
 /**
  * Represents the reason for terminating the search
@@ -16,33 +16,42 @@ export const enum SearchExit {
 /**
  * Representation of a game tree for any turn based game with any number of players.
  */
-export class Tree<GS, M> {
+export class Tree<GS, M, D> {
     /**
      * Original root when tree was created
      */
-    root: Node<GS, M>;
+    root: Node<GS, M, D>;
     /**
      * Active root, only differs from root after traversing tree
      */
-    activeRoot: Node<GS, M>;
+    activeRoot: Node<GS, M, D>;
     /** Number of nodes in tree */
     nodeCount = 0;
     /** Number of leaf nodes in tree */
     leafCount = 0;
+
+    GetMoves: GetMovesFunc<GS, M> = () => {
+        throw Error("Get moves callback is not implemented");
+    };
+
+    CreateChildNode: CreateChildNodeFunc<GS, M, D> = () => {
+        throw Error("Create child node callback is not implemented");
+    };
+
+    EvaluateNode: EvaluateNodeFunc<GS, M, D> = () => {
+        return 0;
+    };
 
     /**
      *
      * @param gamestate The current state of game, placed at root node. Can be any type
      * @param aim The current players aim at root node
      */
-    constructor(
-        gamestate: GS,
-        aim: NodeAim,
-        public GetMovesFunc: GetMovesFunc<GS, M>,
-        public CreateChildNodeFunc: CreateChildNodeFunc<GS, M>,
-        public EvaluateGamestateFunc: EvaluateGamestateFunc<GS>,
-    ) {
+    constructor(gamestate: GS, aim: NodeAim, moves?: M[]) {
         this.root = new Node(NodeType.ROOT, gamestate);
+        if (moves !== undefined) {
+            this.root.moves = moves;
+        }
         this.root.aim = aim;
         this.activeRoot = this.root;
     }
@@ -51,7 +60,7 @@ export class Tree<GS, M> {
      * @param node Node to create children for
      * @returns true if nodes created, false if already existed
      */
-    protected createChildren(node: Node<GS, M>): boolean {
+    protected createChildren(node: Node<GS, M, D>): boolean {
         // Check if children already created for node
         if (node.children.length > 0) {
             return false;
@@ -60,14 +69,14 @@ export class Tree<GS, M> {
         let n_moves = node.moves.length;
         // Get moves for nodes if not already there
         if (n_moves == 0) {
-            node.moves = this.GetMovesFunc(node.gamestate);
+            node.moves = this.GetMoves(node.gamestate);
             n_moves = node.moves.length;
         }
 
-        node.children = new Array<Node<GS, M>>(n_moves);
+        node.children = new Array<Node<GS, M, D>>(n_moves);
         // Create all child nodes
         for (let i = 0; i < n_moves; i++) {
-            const child = this.CreateChildNodeFunc(node.gamestate, node.moves[i]);
+            const child = this.CreateChildNode(node, node.moves[i]);
             child.parent = node;
             node.children[i] = child;
             this.nodeCount++;
@@ -82,7 +91,7 @@ export class Tree<GS, M> {
      * Creates the full game tree recursively starting from given node
      * @param node Parent node
      */
-    protected createTree(node: Node<GS, M>) {
+    protected createTree(node: Node<GS, M, D>) {
         // Create child nodes
         this.createChildren(node);
         // Create grandchild for each child that isnt a LEAF node
@@ -105,7 +114,7 @@ export class Tree<GS, M> {
      * Generate all the children of node, starting from those already created
      * @param node Node to create children for
      */
-    protected *childGen(node: Node<GS, M>): Generator<Node<GS, M>> {
+    protected *childGen(node: Node<GS, M, D>): Generator<Node<GS, M, D>> {
         // Yield children already created first
         for (const child of node.children) {
             yield child;
@@ -114,7 +123,7 @@ export class Tree<GS, M> {
         const nMoves = node.moves.length;
         while (node.moveInd < nMoves) {
             const move = node.moves[node.moveInd];
-            const child = this.CreateChildNodeFunc(node.gamestate, move);
+            const child = this.CreateChildNode(node, move);
             child.parent = node;
             child.move = move;
             node.children.push(child);
@@ -129,7 +138,7 @@ export class Tree<GS, M> {
      * @param node Node to find best child of
      * @returns Best child of node
      */
-    protected bestChild(node: Node<GS, M>): Node<GS, M> {
+    protected bestChild(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.reduce((prevNode, node) => {
             if (node.inheritedValue > prevNode.inheritedValue) {
                 return node;
@@ -144,13 +153,13 @@ export class Tree<GS, M> {
      * @param node Node of children to sort
      * @returns The child with the highest value
      */
-    protected sortChildren(node: Node<GS, M>): Node<GS, M> {
+    protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.sort((a, b) => b.inheritedValue - a.inheritedValue)[0];
     }
 
     /** Generator that yields all the nodes along the optimal
      * path, starting from and including `node` */
-    protected *routeGen(node: Node<GS, M>): Generator<Node<GS, M>> {
+    protected *routeGen(node: Node<GS, M, D>): Generator<Node<GS, M, D>> {
         yield node;
         while (node.child != undefined) {
             node = node.child;
@@ -158,7 +167,7 @@ export class Tree<GS, M> {
         }
     }
     /** Generator that yields all the moves along the optimal path  */
-    protected *optimalMoveGen(node: Node<GS, M>): Generator<M> {
+    protected *optimalMoveGen(node: Node<GS, M, D>): Generator<M> {
         for (const child of this.routeGen(node)) {
             if (child.move != undefined) {
                 yield child.move;
@@ -200,10 +209,4 @@ export class Tree<GS, M> {
     //         throw Error("Failed to find branch corresponding to move");
     //     }
     // }
-
-    // Callbacks must be assigned before calling and optimisers
-    // Function to compare 2 moves
-    //     moveCompareCallback(a: any, b: any): boolean {
-    //         return a == b;
-    //     }
 }

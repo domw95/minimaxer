@@ -1,6 +1,5 @@
 import { Tree, SearchExit } from "../tree/tree.js";
 import { Node, NodeAim, NodeType } from "../tree/node.js";
-import { CreateChildNodeFunc, GetMovesFunc, EvaluateGamestateFunc } from "../tree/interfaces.js";
 import { NegamaxOpts, NegamaxResult, PruningType } from "./index.js";
 
 /**
@@ -8,7 +7,7 @@ import { NegamaxOpts, NegamaxResult, PruningType } from "./index.js";
  * Can be configured to do depth based, time based and deepening searches,
  * with or without alpha-beta pruning and other optimisations.
  */
-export class Negamax<GS, M> extends Tree<GS, M> {
+export class Negamax<GS, M, D> extends Tree<GS, M, D> {
     /** Search options.
      * @see {@link Negamax.evalDepth}
      * @see {@link Negamax.evalDeepening}
@@ -38,15 +37,8 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * @param EvaluateGamestateFunc callback to return a value for a gamestate.
      * @param opts Control the behaviour of the negamax search
      */
-    constructor(
-        gamestate: GS,
-        aim: NodeAim,
-        public GetMovesFunc: GetMovesFunc<GS, M>,
-        public CreateChildNodeFunc: CreateChildNodeFunc<GS, M>,
-        public EvaluateGamestateFunc: EvaluateGamestateFunc<GS>,
-        opts?: NegamaxOpts,
-    ) {
-        super(gamestate, aim, GetMovesFunc, CreateChildNodeFunc, EvaluateGamestateFunc);
+    constructor(gamestate: GS, aim: NodeAim, opts?: NegamaxOpts) {
+        super(gamestate, aim);
         if (opts != undefined) {
             this.opts = opts;
         }
@@ -149,7 +141,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
 
     // Function called during time based and deepening in between successive
     // calls to further depths fo search
-    depthCallback(tree: Negamax<GS, M>, result: NegamaxResult<M>): void {
+    depthCallback(tree: Negamax<GS, M, D>, result: NegamaxResult<M>): void {
         // console.log(tree);
     }
 
@@ -169,7 +161,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * @param colour `1` for {@link NodeAim.MAX}, `-1` for {@link NodeAim.MIN}
      * @returns `false` if time expired during search, `true` if search should continue
      */
-    protected negamax(node: Node<GS, M>, depth: number, colour: number, alpha: number, beta: number): SearchExit {
+    protected negamax(node: Node<GS, M, D>, depth: number, colour: number, alpha: number, beta: number): SearchExit {
         // Check if this node should be assigned a direct value
         if (depth == 0 || node.type == NodeType.LEAF) {
             return this.assignNodeValue(node, depth, colour);
@@ -218,9 +210,9 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * @param depth
      * @param colour
      */
-    protected assignNodeValue(node: Node<GS, M>, depth: number, colour: number): SearchExit {
+    protected assignNodeValue(node: Node<GS, M, D>, depth: number, colour: number): SearchExit {
         // Get value from function. Assign to inherited as well since at depth/leaf
-        node.value = -colour * this.EvaluateGamestateFunc(node.gamestate);
+        node.value = -colour * this.EvaluateNode(node);
         node.inheritedValue = node.value;
         // Log +1 leaf or depth node
         this.outcomes++;
@@ -253,11 +245,11 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * @param node Node to return an iterable of children
      * @returns An iterable for going through children of node
      */
-    protected getChildren(node: Node<GS, M>, depth: number): Iterable<Node<GS, M>> {
+    protected getChildren(node: Node<GS, M, D>, depth: number): Iterable<Node<GS, M, D>> {
         if (this.opts.genBased) {
             // Get moves if not already on node
             if (!node.moves.length) {
-                node.moves = this.GetMovesFunc(node.gamestate);
+                node.moves = this.GetMoves(node.gamestate);
             } else if (this.presortEnable) {
                 this.sortChildren(node);
             }
@@ -276,7 +268,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * Gets the best child of `node`, assigns and sorts children if postsort is enabled
      * @param node Node to find best child of
      */
-    protected assignBestChild(node: Node<GS, M>): void {
+    protected assignBestChild(node: Node<GS, M, D>): void {
         // Find the best child
         if (this.postsortEnable) {
             // sort children and pick best
