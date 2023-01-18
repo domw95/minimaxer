@@ -38,8 +38,8 @@ export class Tree<GS, M, D> {
         throw Error("Create child node callback is not implemented");
     };
 
-    EvaluateNode: EvaluateNodeFunc<GS, M, D> = () => {
-        return 0;
+    EvaluateNode: EvaluateNodeFunc<GS, M, D> = (node: Node<GS, M, D>) => {
+        return node.value;
     };
 
     /**

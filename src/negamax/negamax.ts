@@ -37,8 +37,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param EvaluateGamestateFunc callback to return a value for a gamestate.
      * @param opts Control the behaviour of the negamax search
      */
-    constructor(gamestate: GS, aim: NodeAim, opts?: NegamaxOpts) {
-        super(gamestate, aim);
+    constructor(gamestate: GS, aim: NodeAim, opts: NegamaxOpts, moves?: M[]) {
+        super(gamestate, aim, moves);
         if (opts != undefined) {
             this.opts = opts;
         }
@@ -212,8 +212,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      */
     protected assignNodeValue(node: Node<GS, M, D>, depth: number, colour: number): SearchExit {
         // Get value from function. Assign to inherited as well since at depth/leaf
-        node.value = -colour * this.EvaluateNode(node);
-        node.inheritedValue = node.value;
+        node.inheritedValue = -colour * this.EvaluateNode(node);
         // Log +1 leaf or depth node
         this.outcomes++;
         if (!this.fullDepth || (depth == 0 && node.type != NodeType.LEAF)) {
