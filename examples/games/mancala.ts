@@ -1,4 +1,4 @@
-import * as minmax from "../../dist/index.js";
+import * as minimax from "../../dist/index.js";
 
 export class mancala {
     pits: Array<Array<number>> = [];
@@ -100,28 +100,25 @@ export class mancala {
     }
 }
 
-export const getMovesCallback: minmax.GetMovesFunc<mancala, number> = (gamestate: mancala): Array<number> => {
-    // Get moves directly from previous state
-    return gamestate.moves;
-};
-
-export const createChildCallback: minmax.CreateChildNodeFunc<mancala, number> = (
-    gamestate: mancala,
+export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, unknown> = (
+    parent: minimax.Node<mancala, number, unknown>,
     move: number,
-): minmax.Node<mancala, number> => {
+): minimax.Node<mancala, number, unknown> => {
     // First create a clone of the gamestate
-    const new_gamestate = gamestate.clone();
+    const new_gamestate = parent.gamestate.clone();
     // Apply the move
     new_gamestate.playMove(move);
     // Return a new node with correct node type
+    const score = new_gamestate.ends[0] - new_gamestate.ends[1];
     if (new_gamestate.end) {
-        return new minmax.Node(minmax.NodeType.LEAF, new_gamestate, move);
+        const node = new minimax.Node<mancala, number, unknown>(minimax.NodeType.LEAF, new_gamestate, move);
+        node.value = score;
+        node.moves = new_gamestate.moves;
+        return node;
     } else {
-        return new minmax.Node(minmax.NodeType.INNER, new_gamestate, move);
+        const node = new minimax.Node<mancala, number, unknown>(minimax.NodeType.INNER, new_gamestate, move);
+        node.value = score;
+        node.moves = new_gamestate.moves;
+        return node;
     }
-};
-
-export const evaluateNodeCallback: minmax.EvaluateGamestateFunc<mancala> = (gamestate: mancala): number => {
-    // Get winner from gamestate and return values accordingly
-    return gamestate.ends[0] - gamestate.ends[1];
 };

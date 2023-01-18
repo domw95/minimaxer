@@ -1,18 +1,15 @@
 import * as ttt from "./games/tictactoe.js";
-import * as minmax from "../dist/index.js";
+import * as minimax from "../dist/index.js";
 
 // Create a new game of ticatactoe and initialise
 const game = new ttt.tictactoe();
 game.start();
 
 // Create a tree with a clone of the empty game at the root
-const tree = new minmax.Tree(
-    game.clone(),
-    minmax.NodeAim.MAX,
-    ttt.getMovesCallback,
-    ttt.createChildCallback,
-    ttt.evaluateGamestateCallback,
-);
+const tree = new minimax.Tree(game.clone(), minimax.NodeAim.MAX, game.moves);
+tree.CreateChildNode = ttt.createChildCallback;
+tree.EvaluateNode = ttt.evaluateGamestateCallback;
+tree.GetMoves = ttt.getMovesCallback;
 
 // Time how long it takes to make a full tree
 const now = Date.now();
