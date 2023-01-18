@@ -79,7 +79,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
         return new NegamaxResult<M>(
             exit,
             this.activeRoot.child?.move as M,
-            -this.activeRoot.aim * this.activeRoot.value,
+            -this.activeRoot.aim * this.activeRoot.inheritedValue,
             depth,
             this.outcomes,
             this.nodeCount,
@@ -192,7 +192,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
                 // If pruning, check for break
                 if (this.opts.pruning == PruningType.ALPHA_BETA) {
                     // get best value
-                    value = Math.max(value, child.value);
+                    value = Math.max(value, child.inheritedValue);
                     // check for break condition
                     alpha = Math.max(value, alpha);
                     if (alpha >= beta) {
@@ -214,7 +214,10 @@ export class Negamax<GS, M> extends Tree<GS, M> {
      * @param colour
      */
     protected assignNodeValue(node: Node<GS, M>, depth: number, colour: number): SearchExit {
+        // Get value from function. Assign to inherited as well since at depth/leaf
         node.value = -colour * this.EvaluateGamestateFunc(node.gamestate);
+        node.inheritedValue = node.value;
+        // Log +1 leaf or depth node
         this.outcomes++;
         if (!this.fullDepth || (depth == 0 && node.type != NodeType.LEAF)) {
             this.fullDepth = false;
@@ -273,10 +276,10 @@ export class Negamax<GS, M> extends Tree<GS, M> {
         if (this.postsortEnable) {
             // sort children and pick best
             node.child = this.sortChildren(node);
-            node.value = -node.child.value;
+            node.inheritedValue = -node.child.inheritedValue;
         } else {
             node.child = this.bestChild(node);
-            node.value = -node.child.value;
+            node.inheritedValue = -node.child.inheritedValue;
         }
     }
 }

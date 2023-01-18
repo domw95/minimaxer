@@ -41,8 +41,10 @@ export class Node<GS, M> {
     children: Node<GS, M>[] = [];
     /** Index of next move to be branched */
     moveInd = 0;
-    /** Value used for selection by parent of this node */
+    /** Value of the gamestate at this node */
     value = 0;
+    /** Value used for selection by parent of this node */
+    inheritedValue = 0;
     /** Scores used for multiplayer minimax */
     scores: number[] = [];
     /** Reference to all the possible moves from this node */

@@ -131,7 +131,7 @@ export class Tree<GS, M> {
      */
     protected bestChild(node: Node<GS, M>): Node<GS, M> {
         return node.children.reduce((prevNode, node) => {
-            if (node.value > prevNode.value) {
+            if (node.inheritedValue > prevNode.inheritedValue) {
                 return node;
             } else {
                 return prevNode;
@@ -145,7 +145,7 @@ export class Tree<GS, M> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M>): Node<GS, M> {
-        return node.children.sort((a, b) => b.value - a.value)[0];
+        return node.children.sort((a, b) => b.inheritedValue - a.inheritedValue)[0];
     }
 
     /** Generator that yields all the nodes along the optimal
