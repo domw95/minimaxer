@@ -187,6 +187,7 @@ export class Negamax<GS, M> extends Tree<GS, M> {
                 // Check if pruning does not consider node
                 if (done) {
                     child.inheritedValue = -Infinity;
+                    continue;
                 }
                 // score is assigned directly to child, exit if timeout
                 exit = this.negamax(child, depth - 1, -colour, -beta, -alpha);
