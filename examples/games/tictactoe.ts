@@ -1,4 +1,4 @@
-import * as minmax from "../../dist/index.js";
+import * as minmax from "../../src/index.js";
 
 export const enum CellType {
     EMPTY,
