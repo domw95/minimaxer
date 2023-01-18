@@ -12,7 +12,7 @@
     "scripts": {
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "build": "tsc",
-        "buildExamples": "rm -rf examples/*js && npx tsc -p examples/",
+        "buildExamples": "npm run build && rm -rf examples/*js && npx tsc -p examples/",
         "buildBenchmarks": "rm -rf benchmarks/*js && npx tsc -p benchmarks/",
         "docs": "typedoc",
         "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
