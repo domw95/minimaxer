@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import { add, complete, configure, cycle, save, suite } from "benny";
-import { Node, NodeAim, NodeType } from "../dist/tree/node.js";
-import { GetMovesFunc, CreateChildNodeFunc, EvaluateNodeFunc } from "../dist/index.js";
+import { add, complete, cycle, save, suite } from "benny";
+import { Node, NodeType } from "../dist/tree/node.js";
+import { GetMovesFunc, CreateChildNodeFunc } from "../dist/index.js";
 
 const number_of_moves = 1e2;
 
-const getMovesCallback: GetMovesFunc<number, number> = (gamestate: number) => {
+const getMovesCallback: GetMovesFunc<number, number> = () => {
     return Array(number_of_moves).fill(-1);
 };
 
@@ -21,10 +21,6 @@ const createChildCallback: CreateChildNodeFunc<number, number, unknown> = (
     } else {
         return new Node(NodeType.INNER, gamestate);
     }
-};
-
-const evaluateGamestateCallback: EvaluateNodeFunc<number, number, unknown> = (node): number => {
-    return node.gamestate;
 };
 
 function createChildrenFor(node: Node<number, number, unknown>): boolean {

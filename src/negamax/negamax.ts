@@ -140,8 +140,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
 
     // Function called during time based and deepening in between successive
     // calls to further depths fo search
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     depthCallback(tree: Negamax<GS, M, D>, result: NegamaxResult<M>): void {
-        // console.log(tree);
+        //
     }
 
     /**

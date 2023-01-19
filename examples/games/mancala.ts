@@ -8,10 +8,14 @@ export class mancala {
     end = false;
     enableDoubleMove = false;
 
-    constructor() {}
+    constructor() {
+        // nothing here
+    }
 
     start() {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.pits.push(Array(6).fill(4));
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.pits.push(Array(6).fill(4));
         this.ends = [0, 0];
         this.generateMoves();
