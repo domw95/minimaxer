@@ -7,9 +7,9 @@
     },
     "include": [
         // whatever paths you intend to lint
-        "src/**/*",
-        "tests/**/*",
-        // "examples/**/*",
-        "benchmarks/**/*"
+        "src",
+        "tests",
+        "examples",
+        "benchmarks"
     ]
 }

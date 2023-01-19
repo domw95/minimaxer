@@ -1,5 +1,5 @@
 /dist
 /docs
-/examples
-/*.js
-/*.cjs
+**.js
+**.cjs
+**.d.ts
