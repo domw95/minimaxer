@@ -157,7 +157,19 @@ export class Tree<GS, M, D> {
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.sort((a, b) => {
             if (b.inheritedDepth == a.inheritedDepth) {
-                return b.inheritedValue - a.inheritedValue;
+                if (this.opts.pruneByPathLength) {
+                    if (b.inheritedValue == a.inheritedValue) {
+                        if (b.inheritedValue >= 0) {
+                            return a.pathLength - b.pathLength;
+                        } else {
+                            return b.pathLength - a.pathLength;
+                        }
+                    } else {
+                        return b.inheritedValue - a.inheritedValue;
+                    }
+                } else {
+                    return b.inheritedValue - a.inheritedValue;
+                }
             } else if (b.inheritedDepth > a.inheritedDepth) {
                 return 1;
             } else {

@@ -14,7 +14,7 @@ function negamax(opts: minmax.NegamaxOpts): number[] {
     // game.playMove(2);
     // game.playMove(-1);
 
-    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, opts, game.moves);
+    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = mancala.createChildCallback;
     tree.evalDeepening();
     // console.log(result);
