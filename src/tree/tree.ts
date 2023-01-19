@@ -134,7 +134,7 @@ export class Tree<GS, M, D> {
     }
 
     /**
-     * Finds the child with maximum value in children
+     * Finds the child with maximum inherited value in children
      * @param node Node to find best child of
      * @returns Best child of node
      */
@@ -149,7 +149,7 @@ export class Tree<GS, M, D> {
     }
 
     /**
-     * Sorts the child nodes of given node according to value, descending.
+     * Sorts the child nodes of given node according to inherited value, descending.
      * @param node Node of children to sort
      * @returns The child with the highest value
      */
@@ -175,38 +175,10 @@ export class Tree<GS, M, D> {
         }
     }
 
+    /**
+     * @returns A list of moves from the active root {@link Node} that represent the optimal sequence through the game.
+     */
     getOptimalMoves(): M[] {
         return [...this.optimalMoveGen(this.activeRoot)];
     }
-
-    /**
-     * Move the {@link tree.Tree.activeRoot} of the {@link tree.Tree} from the current to one of its children. Effectively 'playing' a move.
-     * @param move Move used to move from current node to next
-     */
-    // traverse(move: unknown) {
-    //     // check if branches/children have been added to active root
-    //     if (this.activeRoot.branches.length == 0) {
-    //         this.createChildren(this.activeRoot);
-    //     }
-    //     // look in branches for matching move
-    //     let activeBranch;
-    //     for (const branch of this.activeRoot.branches) {
-    //         if (this.moveCompareCallback(branch.move, move)) {
-    //             activeBranch = branch;
-    //             break;
-    //         }
-    //     }
-    //     if (activeBranch != undefined) {
-    //         // remove all other branches and children from current root
-    //         this.activeRoot.branches = [activeBranch];
-    //         if (activeBranch.child == undefined) {
-    //             throw Error("Branch Child Undefined");
-    //         }
-    //         this.activeRoot.children = [activeBranch.child];
-    //         // set a new active root
-    //         this.activeRoot = activeBranch.child;
-    //     } else {
-    //         throw Error("Failed to find branch corresponding to move");
-    //     }
-    // }
 }
