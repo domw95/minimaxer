@@ -38,9 +38,9 @@ test("Alphabeta pruning", () => {
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
 
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evalTime();
-    const elapsed = (Date.now() - now) / 1000;
+    // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
     expect(result.pathLength).toBe(5);

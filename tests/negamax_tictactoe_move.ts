@@ -13,9 +13,9 @@ test("Standard negamax evaluation", () => {
     tree.GetMoves = ttt.getMovesCallback;
 
     tree.opts.timeout = 5000;
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evalTime();
-    const elapsed = (Date.now() - now) / 1000;
+    // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
     expect(result.outcomes).toBe(255168);
@@ -32,9 +32,9 @@ test("Alphabeta pruning", () => {
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
 
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evalTime();
-    const elapsed = (Date.now() - now) / 1000;
+    // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
 });
@@ -51,11 +51,11 @@ test("Alphabeta pruning, genbased and presort", () => {
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
 
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evalTime();
-    const elapsed = (Date.now() - now) / 1000;
-    console.log(result);
-    console.log("Took ", elapsed, " Seconds");
+    // const elapsed = (Date.now() - now) / 1000;
+    // console.log(result);
+    // console.log("Took ", elapsed, " Seconds");
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
 });
