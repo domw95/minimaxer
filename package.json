@@ -1,6 +1,6 @@
 {
     "name": "minimaxer",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "description": "Library for building game trees and running the minimax algorithm for turn-based games",
     "keywords": [
         "minimax",
@@ -18,8 +18,8 @@
         "format": "prettier --write \"src/**/*.ts\"",
         "lint": "eslint .",
         "prepare": "npm run build",
-        "prepublishOnly": "npx git-branch-is master && npm run lint && npm test",
-        "preversion": "npm run lint",
+        "prepublishOnly": "npx git-branch-is -r release* && npm run lint && npm test",
+        "preversion": "npx git-branch-is -r release* && npm run lint",
         "postversion": "git push && git push --tags"
     },
     "repository": {
