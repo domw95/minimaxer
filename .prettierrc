@@ -3,5 +3,13 @@
     "trailingComma": "all",
     "semi": true,
     "tabWidth": 4,
-    "useTabs": false
+    "useTabs": false,
+    "overrides": [
+        {
+            "files": ["**/*.yml", "**/*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
 }
