@@ -9,14 +9,13 @@ game.generateMoves();
 // Test full tree search for a few algorithms
 
 test("Standard negamax evaluation", () => {
-    const tree = new minimax.Negamax<ttt.tictactoe, number[]>(
-        game.clone(),
-        minimax.NodeAim.MAX,
-        ttt.getMovesCallback,
-        ttt.createChildCallback,
-        ttt.evaluateGamestateCallback,
-    );
+    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, new minimax.NegamaxOpts(), game.moves);
+    tree.CreateChildNode = ttt.createChildCallback;
+    tree.EvaluateNode = ttt.evaluateGamestateCallback;
+    tree.GetMoves = ttt.getMovesCallback;
+
     tree.opts.timeout = 5000;
+
     const now = Date.now();
     const result = tree.evalTime();
     const elapsed = (Date.now() - now) / 1000;
@@ -26,15 +25,15 @@ test("Standard negamax evaluation", () => {
 });
 
 test("Alphabeta pruning", () => {
-    const tree = new minimax.Negamax<ttt.tictactoe, number[]>(
-        game.clone(),
-        minimax.NodeAim.MAX,
-        ttt.getMovesCallback,
-        ttt.createChildCallback,
-        ttt.evaluateGamestateCallback,
-    );
-    tree.opts.timeout = 5000;
-    tree.opts.pruning = minimax.PruningType.ALPHA_BETA;
+    const opts = new minimax.NegamaxOpts();
+    opts.timeout = 5000;
+    opts.pruning = minimax.PruningType.ALPHA_BETA;
+
+    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, opts, game.moves);
+    tree.CreateChildNode = ttt.createChildCallback;
+    tree.EvaluateNode = ttt.evaluateGamestateCallback;
+    tree.GetMoves = ttt.getMovesCallback;
+
     const now = Date.now();
     const result = tree.evalTime();
     const elapsed = (Date.now() - now) / 1000;
@@ -44,17 +43,17 @@ test("Alphabeta pruning", () => {
 });
 
 test("Alphabeta pruning, genbased and presort", () => {
-    const tree = new minimax.Negamax<ttt.tictactoe, number[]>(
-        game.clone(),
-        minimax.NodeAim.MAX,
-        ttt.getMovesCallback,
-        ttt.createChildCallback,
-        ttt.evaluateGamestateCallback,
-    );
-    tree.opts.timeout = 5000;
-    tree.opts.pruning = minimax.PruningType.ALPHA_BETA;
-    tree.opts.genBased = true;
-    tree.opts.presort = true;
+    const opts = new minimax.NegamaxOpts();
+    opts.timeout = 5000;
+    opts.pruning = minimax.PruningType.ALPHA_BETA;
+    opts.genBased = true;
+    opts.presort = true;
+
+    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, opts, game.moves);
+    tree.CreateChildNode = ttt.createChildCallback;
+    tree.EvaluateNode = ttt.evaluateGamestateCallback;
+    tree.GetMoves = ttt.getMovesCallback;
+
     const now = Date.now();
     const result = tree.evalTime();
     const elapsed = (Date.now() - now) / 1000;
