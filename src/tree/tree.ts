@@ -17,6 +17,8 @@ export class Tree<GS, M, D> {
     nodeCount = 0;
     /** Number of leaf nodes in tree */
     leafCount = 0;
+    /** Depth of current search */
+    protected activeDepth = 0;
 
     GetMoves: GetMovesFunc<GS, M> = () => {
         throw Error("Get moves callback is not implemented");
@@ -127,9 +129,9 @@ export class Tree<GS, M, D> {
      * @returns Best child of node
      */
     protected bestChild(node: Node<GS, M, D>): Node<GS, M, D> {
-        return node.children.reduce((prevNode, node) => {
-            if (node.inheritedValue > prevNode.inheritedValue) {
-                return node;
+        return node.children.reduce((prevNode, curNode) => {
+            if (curNode.inheritedDepth == this.activeDepth && curNode.inheritedValue > prevNode.inheritedValue) {
+                return curNode;
             } else {
                 return prevNode;
             }
@@ -142,7 +144,15 @@ export class Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        return node.children.sort((a, b) => b.inheritedValue - a.inheritedValue)[0];
+        return node.children.sort((a, b) => {
+            if (b.inheritedDepth == a.inheritedDepth) {
+                return b.inheritedValue - a.inheritedValue;
+            } else if (b.inheritedDepth > a.inheritedDepth) {
+                return 1;
+            } else {
+                return 0;
+            }
+        })[0];
     }
 
     /** Generator that yields all the nodes along the optimal

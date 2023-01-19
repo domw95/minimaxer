@@ -44,6 +44,11 @@ export class Node<GS, M, D> {
     value = 0;
     /** Value used for selection by parent of this node */
     inheritedValue = 0;
+    /**
+     * Search depth when inherited value was assigned
+     * Use to remove false selections when a-b pruning
+     */
+    inheritedDepth = 0;
     /** Scores used for multiplayer minimax */
     scores: number[] = [];
 
