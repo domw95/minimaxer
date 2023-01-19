@@ -64,7 +64,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         // reset fullDepth flag
         this.fullDepth = true;
         // Call negamax to depth
-        const exit = this.negamax(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity);
+        const exit = this.negamax(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity, Infinity, Infinity);
         // return result
         return new NegamaxResult<M>(
             exit,
@@ -73,6 +73,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             depth,
             this.outcomes,
             this.nodeCount,
+            this.activeRoot.pathLength,
         );
     }
 
@@ -159,40 +160,98 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param node Node to evaluate or search children
      * @param depth Depth to search from this node
      * @param colour `1` for {@link NodeAim.MAX}, `-1` for {@link NodeAim.MIN}
+     * @param alpha minimum guarenteed score
+     * @param beta maximum guarenteed score from minimising player above
      * @returns `false` if time expired during search, `true` if search should continue
      */
-    protected negamax(node: Node<GS, M, D>, depth: number, colour: number, alpha: number, beta: number): SearchExit {
+    protected negamax(
+        node: Node<GS, M, D>,
+        depth: number,
+        colour: number,
+        alpha: number,
+        alpha_path: number,
+        beta: number,
+        beta_path: number,
+    ): SearchExit {
         // Check if this node should be assigned a direct value
-        if (depth == 0 || node.type == NodeType.LEAF) {
-            return this.assignNodeValue(node, depth, colour);
+        if (node.type == NodeType.LEAF) {
+            return this.assignNodeValue(node, depth, colour, true);
+        } else if (depth == 0) {
+            return this.assignNodeValue(node, depth, colour, false);
         } else {
             // Check expiry
             if (this.checkExpiry()) {
                 return SearchExit.TIME;
             }
 
-            let value = -Infinity;
             let exit = SearchExit.FULL_DEPTH;
-            // Iterate through node children
-            for (const child of this.getChildren(node, depth)) {
-                // score is assigned directly to child, exit if timeout
-                exit = this.negamax(child, depth - 1, -colour, -beta, -alpha);
-                if (exit == SearchExit.TIME) {
-                    return SearchExit.TIME;
-                }
-                // If pruning, check for break
-                if (this.opts.pruning == PruningType.ALPHA_BETA) {
-                    // get best value
-                    value = Math.max(value, child.inheritedValue);
-                    // check for break condition
-                    alpha = Math.max(value, alpha);
-                    if (alpha >= beta) {
-                        break;
+            let value = -Infinity;
+            let bestChild: Node<GS, M, D> | undefined;
+
+            switch (this.opts.pruning) {
+                case PruningType.NONE:
+                    // Iterate through node children
+                    for (const child of this.getChildren(node, depth)) {
+                        // score is assigned directly to child, exit if timeout
+                        exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
+                        if (exit == SearchExit.TIME) {
+                            return SearchExit.TIME;
+                        }
                     }
-                }
+                    break;
+
+                case PruningType.ALPHA_BETA:
+                    // Iterate through node children
+                    for (const child of this.getChildren(node, depth)) {
+                        // score is assigned directly to child, exit if timeout
+                        exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
+                        if (exit == SearchExit.TIME) {
+                            return SearchExit.TIME;
+                        }
+                        // get best value with pathlength
+                        if (child.inheritedValue > value) {
+                            value = child.inheritedValue;
+                            alpha_path = child.pathLength;
+                            bestChild = child;
+                            //  Update alpha
+                            alpha = Math.max(value, alpha);
+                        } else if (child.inheritedValue == value) {
+                            // Check if winning
+                            if (value > 0) {
+                                // Get the shortest path
+                                if (child.pathLength < alpha_path) {
+                                    alpha_path = child.pathLength;
+                                    bestChild = child;
+                                }
+                            } else {
+                                // get the longest path as negative evaluation
+                                if (child.pathLength > alpha_path) {
+                                    alpha_path = child.pathLength;
+                                    bestChild = child;
+                                }
+                            }
+                        } else {
+                            continue;
+                        }
+                        // If alpha is greater than beta, this node will never be reached
+                        if (alpha > beta) {
+                            break;
+                        } else if (alpha == beta) {
+                            // Need to check path length
+                            // If alpha is positive, minimiser wont select if path is short
+                            if (alpha >= 0 && alpha_path <= beta_path) {
+                                break;
+                                // If alpha is negative, minimiser goes for quick win
+                            } else if (alpha < 0 && alpha_path >= beta_path) {
+                                break;
+                            }
+                        }
+                    }
+                    break;
             }
+
             // Assign the best child (and postsort if enabled)
-            this.assignBestChild(node);
+            this.assignBestChild(node, bestChild);
             return exit;
         }
     }
@@ -203,18 +262,27 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param node
      * @param depth
      * @param colour
+     * @param leaf  `true` if node is a leaf
      */
-    protected assignNodeValue(node: Node<GS, M, D>, depth: number, colour: number): SearchExit {
+    protected assignNodeValue(node: Node<GS, M, D>, depth: number, colour: number, leaf: boolean): SearchExit {
         // Get value from function. Assign to inherited as well since at depth/leaf
         node.inheritedValue = -colour * this.EvaluateNode(node);
         node.inheritedDepth = this.activeDepth;
         // Log +1 leaf or depth node
         this.outcomes++;
-        if (!this.fullDepth || (depth == 0 && node.type != NodeType.LEAF)) {
+        // Check if leaf node
+        if (leaf) {
+            node.pathLength = 0;
+            if (this.fullDepth) {
+                return SearchExit.FULL_DEPTH;
+            } else {
+                return SearchExit.DEPTH;
+            }
+        } else {
+            node.pathLength = 1;
             this.fullDepth = false;
             return SearchExit.DEPTH;
         }
-        return SearchExit.FULL_DEPTH;
     }
 
     /**
@@ -262,15 +330,18 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * Gets the best child of `node`, assigns and sorts children if postsort is enabled
      * @param node Node to find best child of
      */
-    protected assignBestChild(node: Node<GS, M, D>): void {
+    protected assignBestChild(node: Node<GS, M, D>, bestChild?: Node<GS, M, D>): void {
         // Find the best child
         if (this.postsortEnable) {
             // sort children and pick best
             node.child = this.sortChildren(node);
+        } else if (bestChild !== undefined) {
+            node.child = bestChild;
         } else {
             node.child = this.bestChild(node);
         }
         node.inheritedValue = -node.child.inheritedValue;
         node.inheritedDepth = this.activeDepth;
+        node.pathLength = node.child.pathLength + 1;
     }
 }

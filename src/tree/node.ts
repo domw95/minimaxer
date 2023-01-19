@@ -49,6 +49,8 @@ export class Node<GS, M, D> {
      * Use to remove false selections when a-b pruning
      */
     inheritedDepth = 0;
+    /** Minimum number of moves required until a leaf node is reached. */
+    pathLength = 1;
     /** Scores used for multiplayer minimax */
     scores: number[] = [];
 

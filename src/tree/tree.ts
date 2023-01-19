@@ -130,11 +130,18 @@ export class Tree<GS, M, D> {
      */
     protected bestChild(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.reduce((prevNode, curNode) => {
-            if (curNode.inheritedDepth == this.activeDepth && curNode.inheritedValue > prevNode.inheritedValue) {
-                return curNode;
-            } else {
-                return prevNode;
+            if (curNode.inheritedDepth == this.activeDepth) {
+                if (curNode.inheritedValue > prevNode.inheritedValue) {
+                    return curNode;
+                } else if (curNode.inheritedValue == prevNode.inheritedValue) {
+                    if (curNode.pathLength < prevNode.pathLength && curNode.inheritedValue > 0) {
+                        return curNode;
+                    } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
+                        return curNode;
+                    }
+                }
             }
+            return prevNode;
         });
     }
 

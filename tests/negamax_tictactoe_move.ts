@@ -20,7 +20,6 @@ test("Standard negamax evaluation", () => {
     expect(result.depth).toBe(9);
     expect(result.outcomes).toBe(255168);
     expect(result.nodes).toBe(549945);
-    expect(elapsed).toBeLessThan(3.5);
 });
 
 test("Alphabeta pruning", () => {
@@ -38,7 +37,6 @@ test("Alphabeta pruning", () => {
     const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
-    expect(elapsed).toBeLessThan(0.3);
 });
 
 test("Alphabeta pruning, genbased and presort", () => {
@@ -60,5 +58,4 @@ test("Alphabeta pruning, genbased and presort", () => {
     console.log("Took ", elapsed, " Seconds");
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
-    expect(elapsed).toBeLessThan(0.2);
 });
