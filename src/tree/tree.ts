@@ -1,5 +1,6 @@
 import { Node, NodeAim, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
+import { SearchOpts } from "./search.js";
 
 /**
  * Representation of a game tree for any turn based game with any number of players.
@@ -37,7 +38,7 @@ export class Tree<GS, M, D> {
      * @param gamestate The current state of game, placed at root node. Can be any type
      * @param aim The current players aim at root node
      */
-    constructor(gamestate: GS, aim: NodeAim, moves?: M[]) {
+    constructor(gamestate: GS, aim: NodeAim, moves: M[], public opts: SearchOpts = new SearchOpts()) {
         this.root = new Node(NodeType.ROOT, gamestate);
         if (moves !== undefined) {
             this.root.moves = moves;
@@ -134,6 +135,9 @@ export class Tree<GS, M, D> {
                 if (curNode.inheritedValue > prevNode.inheritedValue) {
                     return curNode;
                 } else if (curNode.inheritedValue == prevNode.inheritedValue) {
+                    if (!this.opts.pruneByPathLength) {
+                        return prevNode;
+                    }
                     if (curNode.pathLength < prevNode.pathLength && curNode.inheritedValue > 0) {
                         return curNode;
                     } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
