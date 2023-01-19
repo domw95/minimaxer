@@ -36,8 +36,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param EvaluateGamestateFunc callback to return a value for a gamestate.
      * @param opts Control the behaviour of the negamax search
      */
-    constructor(gamestate: GS, aim: NodeAim, opts: NegamaxOpts, moves?: M[]) {
-        super(gamestate, aim, moves);
+    constructor(gamestate: GS, aim: NodeAim, moves: M[], opts: NegamaxOpts = new NegamaxOpts()) {
+        super(gamestate, aim, moves, opts);
         if (opts != undefined) {
             this.opts = opts;
         }
@@ -216,6 +216,10 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                             //  Update alpha
                             alpha = Math.max(value, alpha);
                         } else if (child.inheritedValue == value) {
+                            // Check if pathlength based pruning is enabled
+                            if (!this.opts.pruneByPathLength) {
+                                continue;
+                            }
                             // Check if winning
                             if (value > 0) {
                                 // Get the shortest path
@@ -237,6 +241,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                         if (alpha > beta) {
                             break;
                         } else if (alpha == beta) {
+                            if (!this.opts.pruneByPathLength) {
+                                break;
+                            }
                             // Need to check path length
                             // If alpha is positive, minimiser wont select if path is short
                             if (alpha >= 0 && alpha_path <= beta_path) {
