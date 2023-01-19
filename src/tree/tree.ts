@@ -2,18 +2,6 @@ import { Node, NodeAim, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
 
 /**
- * Represents the reason for terminating the search
- */
-export const enum SearchExit {
-    /** At least 1 path did not reach a leaf node */
-    DEPTH,
-    /** All paths reached leaf nodes */
-    FULL_DEPTH,
-    /** Searched concluded because of timeout */
-    TIME,
-}
-
-/**
  * Representation of a game tree for any turn based game with any number of players.
  */
 export class Tree<GS, M, D> {

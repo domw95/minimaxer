@@ -1,6 +1,7 @@
-import { Tree, SearchExit } from "../tree/tree.js";
+import { Tree } from "../tree/tree.js";
 import { Node, NodeAim, NodeType } from "../tree/node.js";
-import { NegamaxOpts, NegamaxResult, PruningType } from "./index.js";
+import { NegamaxOpts, NegamaxResult } from "./index.js";
+import { PruningType, SearchExit } from "../tree/search.js";
 
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
