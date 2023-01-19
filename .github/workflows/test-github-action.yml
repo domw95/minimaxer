@@ -10,12 +10,11 @@ jobs:
         strategy:
             matrix:
                 node-version: [15.x, 16.x]
-
         steps:
             - uses: actions/checkout@v3
             - name: Use Node.js ${{ matrix.node-version }}
-            uses: actions/setup-node@v3
-            with:
+                uses: actions/setup-node@v3
+                with:
                 node-version: ${{ matrix.node-version }}
-            - run: npm ci   # Runs the prepare script (builds)
-            - run: npm test # Runs the jest test suite
+            - run: npm ci
+            - run: npm test
