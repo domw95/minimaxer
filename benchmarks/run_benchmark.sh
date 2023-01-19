@@ -1,5 +1,5 @@
 echo "Building benchmarks"
-npm run buildBenchmarks || exit 1
+npm run build:benchmarks || exit 1
 # Set cpu for benchmark
 
 echo "Disabling turboboost | 1"
