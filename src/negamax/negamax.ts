@@ -1,7 +1,7 @@
 import { Tree } from "../tree/tree.js";
 import { Node, NodeAim, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
-import { PruningType, SearchExit } from "../tree/search.js";
+import { PruningType, SearchExit, SearchMethod } from "../tree/search.js";
 
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
@@ -57,7 +57,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param depth Overide the depth parameter set in {@link Negamax.opts}
      * @returns The result of the search
      */
-    evalDepth(depth = this.opts.depth): NegamaxResult<M> {
+    protected evalDepth(depth = this.opts.depth): NegamaxResult<M> {
         // reset stats
         this.outcomes = 0;
         this.activeDepth = depth;
@@ -78,40 +78,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
     }
 
     /**
-     * Searches the tree until a timeout occurs.
-     * Returns after timeout, or early if tree is complete.
-     * ### Relevant {@link NegamaxOpts | options}
-     * - {@link NegamaxOpts.timeout} (Overidden by *timeout* argument)
-     * - {@link NegamaxOpts.pruning}
-     * - {@link NegamaxOpts.initialDepth}
-     * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
-     * - {@link NegamaxOpts.postsort}
-     * - {@link NegamaxOpts.presort}
-     *
-     * @param timeout Override the timeout parameter set in {@link Negamax.opts}
-     * @returns The result of the search
-     */
-    evalTime(timeout = this.opts.timeout): NegamaxResult<M> {
-        // Calculate timeout and set flag
-        this.expireTime = Date.now() + timeout;
-        this.expired = false;
-        // Set pre/post sort flags
-        this.presortEnable = this.opts.presort;
-        this.postsortEnable = this.opts.postsort;
-
-        // Iterate through depths until timeout or full tree
-        for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
-            const result = this.evalDepth(activeDepth);
-            if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME) {
-                return result;
-            }
-            this.depthCallback(this, result);
-        }
-    }
-
-    /**
      * Searches the tree repeatedly, incrementing the depth each time.
-     * Returns after reaching target depth, or early if tree is complete.
+     * Returns after reaching target depth, or early if tree is complete or time exceeded.
      * ### Relevant {@link Negamax.opts | options}
      * - {@link NegamaxOpts.depth} (Overidden by *depth* argument)
      * - {@link NegamaxOpts.pruning}
@@ -123,9 +91,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param depth Overide the depth parameter set in {@link Negamax.opts}
      * @returns The result of the search
      */
-    evalDeepening(depth: number = this.opts.depth): NegamaxResult<M> {
-        // Don't use time related settings
-        this.expireTime = 0;
+    protected evalDeepening(): NegamaxResult<M> {
+        // Get maximum depth
+        const max_depth = this.opts.depth ? this.opts.depth : Infinity;
         // Set pre/post sort flags
         this.presortEnable = this.opts.presort;
         this.postsortEnable = this.opts.postsort;
@@ -133,9 +101,32 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
             const result = this.evalDepth(activeDepth);
             this.depthCallback(this, result);
-            if (result.exit == SearchExit.FULL_DEPTH || activeDepth == depth) {
+            if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME || activeDepth == max_depth) {
                 return result;
             }
+        }
+    }
+
+    evaluate(): NegamaxResult<M> {
+        switch (this.opts.method) {
+            case SearchMethod.DEPTH:
+                this.expireTime = 0;
+                return this.evalDepth();
+            case SearchMethod.DEEPENING:
+                // Don't use time related settings
+                this.expireTime = 0;
+                return this.evalDeepening();
+            case SearchMethod.TIME:
+                // Calculate timeout and set flag
+                if (this.opts.timeout > 0) {
+                    this.expireTime = Date.now() + this.opts.timeout;
+                    this.expired = false;
+                } else {
+                    this.expireTime = 0;
+                }
+                return this.evalDeepening();
+            default:
+                return this.evalDepth();
         }
     }
 

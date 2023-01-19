@@ -1,5 +1,6 @@
 import * as ttt from "../examples/games/tictactoe.js";
 import * as minimax from "../dist/index.js";
+import { SearchMethod } from "../dist/tree/search.js";
 
 const game = new ttt.tictactoe();
 game.start();
@@ -18,9 +19,10 @@ test("Standard negamax evaluation", () => {
 
     tree.opts.timeout = 5000;
     tree.opts.pruneByPathLength = true;
+    tree.opts.method = SearchMethod.TIME;
 
     const now = Date.now();
-    const result = tree.evalTime();
+    const result = tree.evaluate();
     const elapsed = (Date.now() - now) / 1000;
     console.log(result);
     expect(result.value).toBe(1);
@@ -34,6 +36,7 @@ test("Alphabeta pruning", () => {
     opts.timeout = 5000;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.pruneByPathLength = true;
+    opts.method = SearchMethod.TIME;
 
     const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = ttt.createChildCallback;
@@ -41,7 +44,7 @@ test("Alphabeta pruning", () => {
     tree.GetMoves = ttt.getMovesCallback;
 
     // const now = Date.now();
-    const result = tree.evalTime();
+    const result = tree.evaluate();
     // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
@@ -54,6 +57,7 @@ test("Alphabeta pruning, postsort", () => {
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.postsort = true;
     opts.pruneByPathLength = true;
+    opts.method = SearchMethod.TIME;
 
     const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = ttt.createChildCallback;
@@ -61,7 +65,7 @@ test("Alphabeta pruning, postsort", () => {
     tree.GetMoves = ttt.getMovesCallback;
 
     // const now = Date.now();
-    const result = tree.evalTime();
+    const result = tree.evaluate();
     // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
@@ -75,6 +79,7 @@ test("Alphabeta pruning, genbased and presort", () => {
     opts.genBased = true;
     opts.presort = true;
     opts.pruneByPathLength = true;
+    opts.method = SearchMethod.TIME;
 
     const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = ttt.createChildCallback;
@@ -82,7 +87,7 @@ test("Alphabeta pruning, genbased and presort", () => {
     tree.GetMoves = ttt.getMovesCallback;
 
     const now = Date.now();
-    const result = tree.evalTime();
+    const result = tree.evaluate();
     const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
