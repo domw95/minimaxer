@@ -14,6 +14,7 @@ done
 # Disable core 1 (hyperthreading)
 echo 0 | sudo tee /sys/devices/system/cpu/cpu1/online > /dev/null
 
+
 # Run node on cpu 0
 sudo perf stat -- taskset -c 0 node "$1"
 

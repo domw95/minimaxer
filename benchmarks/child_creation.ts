@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 import { add, complete, configure, cycle, save, suite } from "benny";
 import { Node, NodeAim, NodeType } from "../dist/tree/node.js";
-import { GetMovesFunc, CreateChildNodeFunc, EvaluateGamestateFunc } from "../dist/index.js";
+import { GetMovesFunc, CreateChildNodeFunc, EvaluateNodeFunc } from "../dist/index.js";
 
 const number_of_moves = 1e2;
 
@@ -11,11 +11,11 @@ const getMovesCallback: GetMovesFunc<number, number> = (gamestate: number) => {
     return Array(number_of_moves).fill(-1);
 };
 
-const createChildCallback: CreateChildNodeFunc<number, number> = (
-    gamestate: number,
+const createChildCallback: CreateChildNodeFunc<number, number, unknown> = (
+    parent: Node<number, number, unknown>,
     move: number,
-): Node<number, number> => {
-    gamestate += move;
+): Node<number, number, unknown> => {
+    const gamestate = parent.gamestate + move;
     if (gamestate == 0) {
         return new Node(NodeType.LEAF, gamestate);
     } else {
@@ -23,11 +23,11 @@ const createChildCallback: CreateChildNodeFunc<number, number> = (
     }
 };
 
-const evaluateGamestateCallback: EvaluateGamestateFunc<number> = (gamestate): number => {
-    return gamestate;
+const evaluateGamestateCallback: EvaluateNodeFunc<number, number, unknown> = (node): number => {
+    return node.gamestate;
 };
 
-function createChildrenFor(node: Node<number, number>): boolean {
+function createChildrenFor(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
@@ -38,14 +38,14 @@ function createChildrenFor(node: Node<number, number>): boolean {
     node.children = new Array(n_moves);
     // Create all child nodes
     for (let i = 0; i < n_moves; i++) {
-        const child = createChildCallback(node.gamestate, node.moves[i]);
+        const child = createChildCallback(node, node.moves[i]);
         child.parent = node;
         node.children[i] = child;
     }
     return true;
 }
 
-function createChildrenMap(node: Node<number, number>): boolean {
+function createChildrenMap(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
@@ -54,8 +54,8 @@ function createChildrenMap(node: Node<number, number>): boolean {
     }
 
     // Create all child nodes
-    node.children = node.moves.map<Node<number, number>>((move) => {
-        const child = createChildCallback(node.gamestate, move);
+    node.children = node.moves.map<Node<number, number, unknown>>((move) => {
+        const child = createChildCallback(node, move);
         child.parent = node;
         return child;
     });
@@ -63,7 +63,7 @@ function createChildrenMap(node: Node<number, number>): boolean {
     return true;
 }
 
-function createChildrenForEach(node: Node<number, number>): void {
+function createChildrenForEach(node: Node<number, number, unknown>): void {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
@@ -73,7 +73,7 @@ function createChildrenForEach(node: Node<number, number>): void {
 
     //
     node.moves.forEach((move) => {
-        const child = createChildCallback(node.gamestate, move);
+        const child = createChildCallback(node, move);
         child.parent = node;
         node.children.push(child);
     });
@@ -86,29 +86,29 @@ suite(
     //     createChildrenSlow(node);
     // }),
     add("Map", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenForEach(node);
     }),
     add("Map", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number> = new Node(NodeType.ROOT, 100);
+        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
         createChildrenForEach(node);
     }),
 
