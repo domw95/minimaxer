@@ -1,5 +1,6 @@
 import { Node, NodeAim, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
+import { SearchOpts } from "./search.js";
 
 /**
  * Representation of a game tree for any turn based game with any number of players.
@@ -37,7 +38,7 @@ export class Tree<GS, M, D> {
      * @param gamestate The current state of game, placed at root node. Can be any type
      * @param aim The current players aim at root node
      */
-    constructor(gamestate: GS, aim: NodeAim, moves?: M[]) {
+    constructor(gamestate: GS, aim: NodeAim, moves: M[], public opts: SearchOpts = new SearchOpts()) {
         this.root = new Node(NodeType.ROOT, gamestate);
         if (moves !== undefined) {
             this.root.moves = moves;
@@ -130,11 +131,21 @@ export class Tree<GS, M, D> {
      */
     protected bestChild(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.reduce((prevNode, curNode) => {
-            if (curNode.inheritedDepth == this.activeDepth && curNode.inheritedValue > prevNode.inheritedValue) {
-                return curNode;
-            } else {
-                return prevNode;
+            if (curNode.inheritedDepth == this.activeDepth) {
+                if (curNode.inheritedValue > prevNode.inheritedValue) {
+                    return curNode;
+                } else if (curNode.inheritedValue == prevNode.inheritedValue) {
+                    if (!this.opts.pruneByPathLength) {
+                        return prevNode;
+                    }
+                    if (curNode.pathLength < prevNode.pathLength && curNode.inheritedValue > 0) {
+                        return curNode;
+                    } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
+                        return curNode;
+                    }
+                }
             }
+            return prevNode;
         });
     }
 
@@ -146,7 +157,19 @@ export class Tree<GS, M, D> {
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
         return node.children.sort((a, b) => {
             if (b.inheritedDepth == a.inheritedDepth) {
-                return b.inheritedValue - a.inheritedValue;
+                if (this.opts.pruneByPathLength) {
+                    if (b.inheritedValue == a.inheritedValue) {
+                        if (b.inheritedValue >= 0) {
+                            return a.pathLength - b.pathLength;
+                        } else {
+                            return b.pathLength - a.pathLength;
+                        }
+                    } else {
+                        return b.inheritedValue - a.inheritedValue;
+                    }
+                } else {
+                    return b.inheritedValue - a.inheritedValue;
+                }
             } else if (b.inheritedDepth > a.inheritedDepth) {
                 return 1;
             } else {

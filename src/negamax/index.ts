@@ -12,6 +12,7 @@ export class NegamaxResult<M> {
      * @param depth Depth reached and fully searched
      * @param outcomes Number of nodes at bottom of tree (not neccessarily leaves).
      * @param nodes  Number of nodes in full tree
+     * @param pathLength Minimum number of moves until a leaf node
      */
     constructor(
         public exit: SearchExit,
@@ -20,5 +21,6 @@ export class NegamaxResult<M> {
         public depth: number,
         public outcomes: number,
         public nodes: number,
+        public pathLength: number,
     ) {}
 }

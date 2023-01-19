@@ -1,49 +1,49 @@
 {
   "name": "Negamax varieties",
-  "date": "2023-01-19T12:20:34.832Z",
+  "date": "2023-01-19T20:59:28.295Z",
   "version": null,
   "results": [
     {
       "name": "Standard settings",
-      "ops": 354,
-      "margin": 0.48,
-      "percentSlower": 94.04
+      "ops": 359,
+      "margin": 0.3,
+      "percentSlower": 94.1
     },
     {
       "name": "Gen Based",
-      "ops": 363,
-      "margin": 0.45,
-      "percentSlower": 93.89
+      "ops": 368,
+      "margin": 0.36,
+      "percentSlower": 93.95
     },
     {
       "name": "Alphabeta",
-      "ops": 1362,
-      "margin": 0.2,
-      "percentSlower": 77.07
+      "ops": 1385,
+      "margin": 0.46,
+      "percentSlower": 77.23
     },
     {
       "name": "Alphabeta presort",
-      "ops": 4272,
-      "margin": 0.17,
-      "percentSlower": 28.07
+      "ops": 4489,
+      "margin": 0.4,
+      "percentSlower": 26.2
     },
     {
       "name": "Alphabeta postsort",
-      "ops": 3721,
-      "margin": 0.28,
-      "percentSlower": 37.35
+      "ops": 3639,
+      "margin": 0.14,
+      "percentSlower": 40.18
     },
     {
       "name": "Alphabeta gen presort",
-      "ops": 5939,
-      "margin": 0.22,
+      "ops": 6083,
+      "margin": 0.17,
       "percentSlower": 0
     },
     {
       "name": "Alphabeta gen postsort",
-      "ops": 5350,
-      "margin": 0.15,
-      "percentSlower": 9.92
+      "ops": 5304,
+      "margin": 0.7,
+      "percentSlower": 12.81
     }
   ],
   "fastest": {
