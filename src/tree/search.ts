@@ -1,4 +1,18 @@
 /**
+ * Search method to use
+ */
+export const enum SearchMethod {
+    /** Go to depth specified by {@link SearchOpts.depth} */
+    DEPTH,
+    /**  */
+    FULL_DEPTH,
+    /**  */
+    DEEPENING,
+    /**  */
+    TIME,
+}
+
+/**
  * Represents the reason for terminating the search
  */
 export const enum SearchExit {
@@ -22,10 +36,12 @@ export const enum PruningType {
  * Class representing common options for searching a {@link Tree}
  */
 export class SearchOpts {
-    /** Timeout used for time based search */
-    timeout = 1000;
+    /** Timeout used for **all** searches */
+    timeout = 0;
     /** Default depth for depth and deepening searches */
-    depth = 1;
+    depth = 0;
+    /** Method used to search for best move */
+    method = SearchMethod.DEPTH;
     /** Node pruning type, default none */
     pruning: PruningType = PruningType.NONE;
     /**

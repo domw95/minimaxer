@@ -1,5 +1,6 @@
 import * as ttt from "./games/tictactoe.js";
 import * as minimax from "../dist/index.js";
+import { SearchMethod } from "../dist/tree/search.js";
 
 // Create a new game of ticatactoe and initialise
 const game = new ttt.tictactoe();
@@ -10,6 +11,8 @@ game.generateMoves();
 const opts = new minimax.NegamaxOpts();
 opts.pruning = minimax.PruningType.ALPHA_BETA;
 opts.timeout = 1000;
+opts.pruneByPathLength = true;
+opts.method = SearchMethod.TIME;
 let aim = minimax.NodeAim.MAX;
 while (!game.end) {
     // Create a tree with a clone of the empty game at the root
@@ -19,7 +22,7 @@ while (!game.end) {
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
-    const result = tree.evalTime();
+    const result = tree.evaluate();
     console.log(result);
     game.playMove(result.move);
     console.log(game.state);
