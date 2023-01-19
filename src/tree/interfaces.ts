@@ -14,13 +14,13 @@ export interface GetMovesFunc<GS, M> {
  * Function should clone gamestate, apply move
  *
  */
-export interface CreateChildNodeFunc<GS, M> {
-    (gamestate: GS, move: M): Node<GS, M>;
+export interface CreateChildNodeFunc<GS, M, D> {
+    (parent: Node<GS, M, D>, move: M): Node<GS, M, D>;
 }
 
 /**
  * Callback to evaluate the value of the gamestate attached to the node
  */
-export interface EvaluateGamestateFunc<GS> {
-    (gamestate: GS): number;
+export interface EvaluateNodeFunc<GS, M, D> {
+    (node: Node<GS, M, D>): number;
 }

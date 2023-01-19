@@ -1,4 +1,4 @@
-import * as minmax from "../../dist/index.js";
+import * as minimax from "../../dist/index.js";
 
 export const enum CellType {
     EMPTY,
@@ -95,39 +95,41 @@ export class tictactoe {
 }
 
 /** Returns a reference to the possible moves for the gamestate */
-export const getMovesCallback: minmax.GetMovesFunc<tictactoe, number[]> = (gamestate: tictactoe): Array<number[]> => {
+export const getMovesCallback: minimax.GetMovesFunc<tictactoe, number[]> = (gamestate: tictactoe): Array<number[]> => {
     return gamestate.moves;
 };
 
 /** Clones the gamestate, plays the move, creates a new tree node */
-export const createChildCallback: minmax.CreateChildNodeFunc<tictactoe, Array<number>> = (
-    gamestate: tictactoe,
-    move: Array<number>,
-): minmax.Node<tictactoe, Array<number>> => {
+export const createChildCallback: minimax.CreateChildNodeFunc<tictactoe, Array<number>, unknown> = (
+    node: minimax.Node<tictactoe, Array<number>, unknown>,
+    move: number[],
+): minimax.Node<tictactoe, Array<number>, unknown> => {
     // First create a clone of the gamestate
-    const new_gamestate = gamestate.clone();
+    const new_gamestate = node.gamestate.clone();
     // Apply the move
     new_gamestate.playMove(move);
     // Return a new node with correct node type
     // let node:Node<tictactoe, Array<number>>;
     if (new_gamestate.end) {
-        return new minmax.Node(minmax.NodeType.LEAF, new_gamestate, move);
+        return new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move);
     } else {
-        return new minmax.Node(minmax.NodeType.INNER, new_gamestate, move);
+        return new minimax.Node(minimax.NodeType.INNER, new_gamestate, move);
     }
 };
 
 /** Evaluates the gamestate, 1 for circle win, 0 for draw, -1 for crosses win */
-export const evaluateGamestateCallback: minmax.EvaluateGamestateFunc<tictactoe> = (gamestate: tictactoe): number => {
+export const evaluateGamestateCallback: minimax.EvaluateNodeFunc<tictactoe, number[], unknown> = (
+    node: minimax.Node<tictactoe, Array<number>, unknown>,
+): number => {
     // Get winner from gamestate and return values accordingly
-    const winner = gamestate.winner;
+    const winner = node.gamestate.winner;
     switch (winner) {
         case CellType.EMPTY:
             return 0;
         case CellType.CIRCLE:
             // Rank by number of moves played
-            return 1 / gamestate.played;
+            return 1;
         case CellType.CROSS:
-            return -1 / gamestate.played;
+            return -1;
     }
 };

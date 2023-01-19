@@ -31,29 +31,44 @@ export const enum NodeAim {
  * Holds the gamestate, list of moves and child nodes.
  * @typeparam GS - The object representing the state of the game
  * @typeparam M - The object representing a move in the game
+ * @typeparam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
-export class Node<GS, M> {
-    /** Defines how best child node is selected */
-    aim: NodeAim = NodeAim.NONE;
+export class Node<GS, M, D> {
     /** parent of this node, undefined if node is root */
-    parent: Node<GS, M> | undefined;
+    parent: Node<GS, M, D> | undefined;
     /** List of the child nodes that link to this node */
-    children: Node<GS, M>[] = [];
+    children: Node<GS, M, D>[] = [];
     /** Index of next move to be branched */
     moveInd = 0;
-    /** Value used for selection by parent of this node */
+    /** Value of the gamestate at this node */
     value = 0;
+    /** Value used for selection by parent of this node */
+    inheritedValue = 0;
+    /**
+     * Search depth when inherited value was assigned
+     * Use to remove false selections when a-b pruning
+     */
+    inheritedDepth = 0;
     /** Scores used for multiplayer minimax */
     scores: number[] = [];
-    /** Reference to all the possible moves from this node */
-    moves: Array<M> = [];
+
     /** Best child as selected by  {@link Node.aim}*/
-    child: Node<GS, M> | undefined;
+    child: Node<GS, M, D> | undefined;
+    /** Extra data accessible by the evaluation function */
+    data: D | undefined;
 
     /**
      * @param type Defines location within tree. See {@link NodeType}
      * @param gamestate Gamestate used to create the node. Should be a clone of that used in the game.
      * @param move Move used to reach this node. Undefined if node is root.
+     * @param aim Defines how best child node is selected
+     * @param moves Reference to all the possible moves from this node
      */
-    constructor(public type: NodeType, public gamestate: GS, public move?: M) {}
+    constructor(
+        public type: NodeType,
+        public gamestate: GS,
+        public move?: M,
+        public aim = NodeAim.NONE,
+        public moves: Array<M> = [],
+    ) {}
 }

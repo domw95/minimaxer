@@ -1,43 +1,43 @@
 {
   "name": "Child creation",
-  "date": "2023-01-12T21:12:41.025Z",
+  "date": "2023-01-19T12:15:55.198Z",
   "version": null,
   "results": [
     {
       "name": "Map",
-      "ops": 266514,
-      "margin": 0.55,
-      "percentSlower": 4.73
+      "ops": 244073,
+      "margin": 0.49,
+      "percentSlower": 4.74
     },
     {
       "name": "For",
-      "ops": 279746,
-      "margin": 0.06,
+      "ops": 256229,
+      "margin": 0.18,
       "percentSlower": 0
     },
     {
       "name": "ForEach",
-      "ops": 252484,
+      "ops": 237732,
       "margin": 0.12,
-      "percentSlower": 9.75
+      "percentSlower": 7.22
     },
     {
       "name": "Map",
-      "ops": 267331,
-      "margin": 0.25,
-      "percentSlower": 4.44
+      "ops": 245782,
+      "margin": 0.42,
+      "percentSlower": 4.08
     },
     {
       "name": "For",
-      "ops": 277045,
-      "margin": 0.6,
-      "percentSlower": 0.97
+      "ops": 253115,
+      "margin": 0.69,
+      "percentSlower": 1.22
     },
     {
       "name": "ForEach",
-      "ops": 251763,
-      "margin": 0.18,
-      "percentSlower": 10
+      "ops": 235978,
+      "margin": 0.44,
+      "percentSlower": 7.9
     }
   ],
   "fastest": {
