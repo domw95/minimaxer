@@ -14,7 +14,7 @@ let aim = minimax.NodeAim.MAX;
 while (!game.end) {
     // Create a tree with a clone of the empty game at the root
 
-    const tree = new minimax.Negamax(game.clone(), aim, opts, game.moves);
+    const tree = new minimax.Negamax(game.clone(), aim, game.moves, opts);
 
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
