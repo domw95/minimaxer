@@ -28,7 +28,7 @@
 <ul class="tsd-hierarchy">
 <li><span class="target">NegamaxResult</span></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L7">negamax/index.ts:7</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L12">negamax/index.ts:12</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -45,6 +45,7 @@
 <a href="NegamaxResult.html#move" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>move</span></a>
 <a href="NegamaxResult.html#nodes" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>nodes</span></a>
 <a href="NegamaxResult.html#outcomes" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>outcomes</span></a>
+<a href="NegamaxResult.html#pathLength" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>path<wbr/>Length</span></a>
 <a href="NegamaxResult.html#value" class="tsd-index-link tsd-kind-property tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg><span>value</span></a>
 </div></section></div></details></section></section>
 <section class="tsd-panel-group tsd-member-group">
@@ -52,7 +53,7 @@
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_NegamaxResult">new <wbr/>Negamax<wbr/>Result<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>exit<span class="tsd-signature-symbol">: </span><a href="../enums/SearchExit.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SearchExit</a>, move<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, depth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outcomes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, nodes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="NegamaxResult.html" class="tsd-signature-type" data-tsd-kind="Class">NegamaxResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_NegamaxResult" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_NegamaxResult">new <wbr/>Negamax<wbr/>Result<span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">(</span>exit<span class="tsd-signature-symbol">: </span><a href="../enums/SearchExit.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SearchExit</a>, move<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span>, value<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, depth<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, outcomes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, nodes<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, pathLength<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="NegamaxResult.html" class="tsd-signature-type" data-tsd-kind="Class">NegamaxResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span><span class="tsd-signature-symbol">&gt;</span><a href="#constructor.new_NegamaxResult" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <section class="tsd-panel tsd-type-parameters">
 <h4>Type Parameters</h4>
@@ -85,10 +86,14 @@
 <li>
 <h5>nodes: <span class="tsd-signature-type">number</span></h5>
 <div class="tsd-comment tsd-typography"><p>Number of nodes in full tree</p>
+</div></li>
+<li>
+<h5>pathLength: <span class="tsd-signature-type">number</span></h5>
+<div class="tsd-comment tsd-typography"><p>Minimum number of moves until a leaf node</p>
 </div></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="NegamaxResult.html" class="tsd-signature-type" data-tsd-kind="Class">NegamaxResult</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L16">negamax/index.ts:16</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L22">negamax/index.ts:22</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="depth" class="tsd-anchor"></a>
@@ -97,42 +102,49 @@
 <div class="tsd-comment tsd-typography"><p>Depth reached and fully searched</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L20">negamax/index.ts:20</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L26">negamax/index.ts:26</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="exit" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>exit</span><a href="#exit" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">exit<span class="tsd-signature-symbol">:</span> <a href="../enums/SearchExit.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SearchExit</a></div>
 <div class="tsd-comment tsd-typography"><p>Reason the search has stopped and result returned.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L17">negamax/index.ts:17</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L23">negamax/index.ts:23</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="move" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>move</span><a href="#move" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">move<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type" data-tsd-kind="Type parameter">M</span></div>
 <div class="tsd-comment tsd-typography"><p>The best move from the <a href="Tree.html#activeRoot">activeRoot</a>.</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L18">negamax/index.ts:18</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L24">negamax/index.ts:24</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="nodes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>nodes</span><a href="#nodes" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">nodes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Number of nodes in full tree</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L22">negamax/index.ts:22</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L28">negamax/index.ts:28</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="outcomes" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>outcomes</span><a href="#outcomes" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">outcomes<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Number of nodes at bottom of tree (not neccessarily leaves).</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L21">negamax/index.ts:21</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L27">negamax/index.ts:27</a></li></ul></aside></section>
+<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="pathLength" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><span>path<wbr/>Length</span><a href="#pathLength" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<div class="tsd-signature">path<wbr/>Length<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+<div class="tsd-comment tsd-typography"><p>Minimum number of moves until a leaf node</p>
+</div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L29">negamax/index.ts:29</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class"><a id="value" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>value</span><a href="#value" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">value<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 <div class="tsd-comment tsd-typography"><p>Value of <a href="Tree.html#activeRoot">activeRoot</a> according to search</p>
 </div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/a19787c/src/negamax/index.ts#L19">negamax/index.ts:19</a></li></ul></aside></section></section></div>
+<li>Defined in <a href="https://github.com/domw95/minimax-ts/blob/d9b6a78/src/negamax/index.ts#L25">negamax/index.ts:25</a></li></ul></aside></section></section></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
 <details class="tsd-index-accordion"><summary class="tsd-accordion-summary">
@@ -164,6 +176,7 @@
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="NegamaxResult.html#move" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>move</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="NegamaxResult.html#nodes" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>nodes</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="NegamaxResult.html#outcomes" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>outcomes</a></li>
+<li class="tsd-kind-property tsd-parent-kind-class"><a href="NegamaxResult.html#pathLength" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>path<wbr/>Length</a></li>
 <li class="tsd-kind-property tsd-parent-kind-class"><a href="NegamaxResult.html#value" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-1024-path"></use><use href="#icon-1024-text"></use></svg>value</a></li></ul></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>

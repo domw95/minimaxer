@@ -2,6 +2,9 @@ import { SearchExit, SearchOpts } from "../tree/search.js";
 
 /** Options to configure the behaviour of the negamax search */
 export class NegamaxOpts extends SearchOpts {
+    /**
+     * Set to `true` to override other options and run optimised negamax
+     */
     optimal = false;
 }
 

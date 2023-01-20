@@ -12,7 +12,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
     /** Search options.
      * @see {@link Negamax.evalDepth}
      * @see {@link Negamax.evalDeepening}
-     * @see {@link Negamax.evalTime}*/
+     * @see {@link Negamax.evaluate}*/
     opts: NegamaxOpts = new NegamaxOpts();
     /** Tracks whether a searched has expired due to time */
     protected expired = false;
@@ -30,10 +30,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
     /**
      *
      * @param gamestate Gamestate for root node.
-     * @param aim The aim of the player in the current gamestate {@link NodeAim}.
-     * @param GetMovesFunc callback function to get moves of a gamestate.
-     * @param CreateChildNodeFunc callback to create {@link Node} from gamestate and move.
-     * @param EvaluateGamestateFunc callback to return a value for a gamestate.
+     * @param aim The aim of the player in the current gamestate {@link NodeAim}
+     * @param moves Array of moves playable from the initial gamestate
      * @param opts Control the behaviour of the negamax search
      */
     constructor(gamestate: GS, aim: NodeAim, moves: M[], opts: NegamaxOpts = new NegamaxOpts()) {
@@ -53,8 +51,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
      * - {@link NegamaxOpts.postsort}
      * - {@link NegamaxOpts.presort}
+     * - {@link NegamaxOpts.optimal}
      *
-     * @param depth Overide the depth parameter set in {@link Negamax.opts}
+     * @param depth Override the depth parameter set in {@link Negamax.opts}
      * @returns The result of the search
      */
     protected evalDepth(depth = this.opts.depth): NegamaxResult<M> {
@@ -68,9 +67,6 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         if (this.opts.optimal == false) {
             exit = this.negamax(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity, Infinity, Infinity);
         } else {
-            this.opts.genBased = true;
-            this.opts.presort = true;
-            this.opts.postsort = false;
             exit = this.negamax_optimal(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity);
         }
         // return result
@@ -89,7 +85,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * Searches the tree repeatedly, incrementing the depth each time.
      * Returns after reaching target depth, or early if tree is complete or time exceeded.
      * ### Relevant {@link Negamax.opts | options}
-     * - {@link NegamaxOpts.depth} (Overidden by *depth* argument)
+     * - {@link NegamaxOpts.depth} | Maximum depth to search for. 0 for unlimited
+     * - {@link NegamaxOpts.timeout} | Maximum time to search for. 0 for unlimited
      * - {@link NegamaxOpts.pruning}
      * - {@link NegamaxOpts.initialDepth}
      * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
@@ -114,7 +111,10 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             }
         }
     }
-
+    /**
+     * Search the tree according to the options specified by {@link Negamax.opts}
+     * @returns Result from the tree search
+     */
     evaluate(): NegamaxResult<M> {
         switch (this.opts.method) {
             case SearchMethod.DEPTH:
@@ -138,8 +138,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         }
     }
 
-    // Function called during time based and deepening in between successive
-    // calls to further depths fo search
+    /**
+     *  Called during deepening search between each depth
+     */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     depthCallback(tree: Negamax<GS, M, D>, result: NegamaxResult<M>): void {
         //
@@ -159,8 +160,10 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param node Node to evaluate or search children
      * @param depth Depth to search from this node
      * @param colour `1` for {@link NodeAim.MAX}, `-1` for {@link NodeAim.MIN}
-     * @param alpha minimum guarenteed score
-     * @param beta maximum guarenteed score from minimising player above
+     * @param alpha minimum guaranteed score
+     * @param alpha_path Best guaranteed path
+     * @param beta maximum guaranteed score from minimising player
+     * @param beta_path Best guaranteed path for minimising player
      * @returns `false` if time expired during search, `true` if search should continue
      */
     protected negamax(
@@ -351,6 +354,18 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         node.pathLength = node.child.pathLength + 1;
     }
 
+    /**
+     * Same as {@link Negamax.negamax} but optimised for best performing options.
+     *
+     * Runs when {@link NegamaxOpts.optimal} = `true`
+     *
+     * Runs as:
+     * - {@link NegamaxOpts.pruning} = {@link PruningType.ALPHA_BETA}
+     * - {@link NegamaxOpts.presort} = `true`
+     * - {@link NegamaxOpts.postsort} = `false`
+     * - {@link NegamaxOpts.genBased} = `true`
+     * - {@link NegamaxOpts.pruneByPathLength} = `false`
+     */
     protected negamax_optimal(
         node: Node<GS, M, D>,
         depth: number,
