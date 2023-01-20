@@ -60,6 +60,12 @@ suite(
         opts.genBased = true;
         negamax(opts);
     }),
+    add("Optimal", () => {
+        const opts = new minmax.NegamaxOpts();
+        opts.optimal = true;
+        // opts.pruning = minmax.PruningType.ALPHA_BETA;
+        negamax(opts);
+    }),
 
     cycle(),
     cycle(),
