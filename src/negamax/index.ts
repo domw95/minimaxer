@@ -1,7 +1,12 @@
 import { SearchExit, SearchOpts } from "../tree/search.js";
 
 /** Options to configure the behaviour of the negamax search */
-export class NegamaxOpts extends SearchOpts {}
+export class NegamaxOpts extends SearchOpts {
+    /**
+     * Set to `true` to override other options and run optimised negamax
+     */
+    optimal = false;
+}
 
 /** Object returned after searching the tree using negamax */
 export class NegamaxResult<M> {
@@ -12,6 +17,7 @@ export class NegamaxResult<M> {
      * @param depth Depth reached and fully searched
      * @param outcomes Number of nodes at bottom of tree (not neccessarily leaves).
      * @param nodes  Number of nodes in full tree
+     * @param pathLength Minimum number of moves until a leaf node
      */
     constructor(
         public exit: SearchExit,
@@ -20,5 +26,6 @@ export class NegamaxResult<M> {
         public depth: number,
         public outcomes: number,
         public nodes: number,
+        public pathLength: number,
     ) {}
 }

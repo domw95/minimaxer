@@ -10,9 +10,11 @@ function negamax(opts: minmax.NegamaxOpts): void {
     const game = new mancala.mancala();
     game.start();
 
-    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, opts, game.moves);
+    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = mancala.createChildCallback;
-    tree.evalDeepening(depth);
+    tree.opts.depth = depth;
+    tree.opts.method = minmax.SearchMethod.DEEPENING;
+    tree.evaluate();
 }
 
 suite(
@@ -56,6 +58,12 @@ suite(
         opts.pruning = minmax.PruningType.ALPHA_BETA;
         opts.postsort = true;
         opts.genBased = true;
+        negamax(opts);
+    }),
+    add("Optimal", () => {
+        const opts = new minmax.NegamaxOpts();
+        opts.optimal = true;
+        // opts.pruning = minmax.PruningType.ALPHA_BETA;
         negamax(opts);
     }),
 

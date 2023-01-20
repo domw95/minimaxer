@@ -2,6 +2,7 @@
 
 import * as mancala from "../examples/games/mancala.js";
 import * as minmax from "../dist/index.js";
+import { SearchMethod } from "../dist/tree/search.js";
 
 const depth = 8;
 
@@ -14,9 +15,9 @@ function negamax(opts: minmax.NegamaxOpts): number[] {
     // game.playMove(2);
     // game.playMove(-1);
 
-    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, opts, game.moves);
+    const tree = new minmax.Negamax(game, minmax.NodeAim.MAX, game.moves, opts);
     tree.CreateChildNode = mancala.createChildCallback;
-    tree.evalDeepening();
+    tree.evaluate();
     // console.log(result);
     // console.log("Memory: ", process.memoryUsage()["heapTotal"] / 1e6, " MB");
     return tree.getOptimalMoves();
@@ -26,6 +27,7 @@ test("Search consistency", () => {
     // Standard time search
     const opts = new minmax.NegamaxOpts();
     opts.depth = depth;
+    opts.method = SearchMethod.DEEPENING;
     console.log("Standard search");
     const moves = negamax(opts);
     console.log(moves);
@@ -38,7 +40,21 @@ test("Search consistency", () => {
     opts.presort = true;
     expect(negamax(opts)).toEqual(moves);
 
-    // Alphabeta with presort and gen
+    // Alphabeta with postsort
+    opts.presort = false;
+    opts.postsort = true;
+    expect(negamax(opts)).toEqual(moves);
+
+    // Alphabeta with postsort and gen
     opts.genBased = true;
+    expect(negamax(opts)).toEqual(moves);
+
+    // Alphabeta with postsort and gen
+    opts.presort = true;
+    opts.postsort = false;
+    expect(negamax(opts)).toEqual(moves);
+
+    // Alphabeta with postsort and gen
+    opts.pruneByPathLength = true;
     expect(negamax(opts)).toEqual(moves);
 });
