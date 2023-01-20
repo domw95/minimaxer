@@ -64,7 +64,15 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         // reset fullDepth flag
         this.fullDepth = true;
         // Call negamax to depth
-        const exit = this.negamax(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity, Infinity, Infinity);
+        let exit: SearchExit;
+        if (this.opts.optimal == false) {
+            exit = this.negamax(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity, Infinity, Infinity);
+        } else {
+            this.opts.genBased = true;
+            this.opts.presort = true;
+            this.opts.postsort = false;
+            exit = this.negamax_optimal(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity);
+        }
         // return result
         return new NegamaxResult<M>(
             exit,
@@ -341,5 +349,65 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         node.inheritedValue = -node.child.inheritedValue;
         node.inheritedDepth = this.activeDepth;
         node.pathLength = node.child.pathLength + 1;
+    }
+
+    protected negamax_optimal(
+        node: Node<GS, M, D>,
+        depth: number,
+        colour: number,
+        alpha: number,
+        beta: number,
+    ): SearchExit {
+        // Check if this node should be assigned a direct value
+        if (node.type == NodeType.LEAF) {
+            return this.assignNodeValue(node, depth, colour, true);
+        } else if (depth == 0) {
+            return this.assignNodeValue(node, depth, colour, false);
+        } else {
+            // Check expiry
+            if (this.checkExpiry()) {
+                return SearchExit.TIME;
+            }
+
+            let exit = SearchExit.FULL_DEPTH;
+            let value = -Infinity;
+
+            // Get moves if not already on node
+            if (!node.moves.length) {
+                node.moves = this.GetMoves(node.gamestate);
+            } else {
+                this.sortChildren(node);
+            }
+            const gen = this.childGen(node);
+            let bestChild: Node<GS, M, D> | undefined;
+
+            // Iterate through node children
+            for (const child of gen) {
+                // score is assigned directly to child, exit if timeout
+                exit = this.negamax_optimal(child, depth - 1, -colour, -beta, -alpha);
+                if (exit == SearchExit.TIME) {
+                    return SearchExit.TIME;
+                }
+                // get best value with pathlength
+                if (child.inheritedValue > value) {
+                    value = child.inheritedValue;
+                    bestChild = child;
+                    //  Update alpha
+                    alpha = Math.max(value, alpha);
+
+                    // If alpha is greater than beta, this node will never be reached
+                    if (alpha >= beta) {
+                        break;
+                    }
+                }
+            }
+            if (bestChild !== undefined) {
+                node.child = bestChild;
+                node.inheritedValue = -node.child.inheritedValue;
+                node.inheritedDepth = this.activeDepth;
+                node.pathLength = node.child.pathLength + 1;
+            }
+            return exit;
+        }
     }
 }

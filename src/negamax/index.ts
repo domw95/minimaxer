@@ -1,7 +1,9 @@
 import { SearchExit, SearchOpts } from "../tree/search.js";
 
 /** Options to configure the behaviour of the negamax search */
-export class NegamaxOpts extends SearchOpts {}
+export class NegamaxOpts extends SearchOpts {
+    optimal = false;
+}
 
 /** Object returned after searching the tree using negamax */
 export class NegamaxResult<M> {
