@@ -38,12 +38,8 @@ export class Tree<GS, M, D> {
      * @param gamestate The current state of game, placed at root node. Can be any type
      * @param aim The current players aim at root node
      */
-    constructor(gamestate: GS, aim: NodeAim, moves: M[], public opts: SearchOpts = new SearchOpts()) {
-        this.root = new Node(NodeType.ROOT, gamestate);
-        if (moves !== undefined) {
-            this.root.moves = moves;
-        }
-        this.root.aim = aim;
+    constructor(root: Node<GS, M, D>, public opts: SearchOpts = new SearchOpts()) {
+        this.root = root;
         this.activeRoot = this.root;
     }
     /**
