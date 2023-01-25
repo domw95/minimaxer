@@ -95,8 +95,8 @@ export class tictactoe {
 }
 
 /** Returns a reference to the possible moves for the gamestate */
-export const getMovesCallback: minimax.GetMovesFunc<tictactoe, number[]> = (gamestate: tictactoe): Array<number[]> => {
-    return gamestate.moves;
+export const getMovesCallback: minimax.GetMovesFunc<tictactoe, number[], number> = (node): Array<number[]> => {
+    return node.gamestate.moves;
 };
 
 /** Clones the gamestate, plays the move, creates a new tree node */
