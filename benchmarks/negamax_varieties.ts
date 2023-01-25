@@ -30,6 +30,16 @@ suite(
         opts.genBased = true;
         negamax(opts);
     }),
+    add("Presort", () => {
+        const opts = new minimax.NegamaxOpts();
+        opts.presort = true;
+        negamax(opts);
+    }),
+    add("Postsort", () => {
+        const opts = new minimax.NegamaxOpts();
+        opts.postsort = true;
+        negamax(opts);
+    }),
     add("Alphabeta", () => {
         const opts = new minimax.NegamaxOpts();
         opts.pruning = minimax.PruningType.ALPHA_BETA;
@@ -59,6 +69,14 @@ suite(
         opts.pruning = minimax.PruningType.ALPHA_BETA;
         opts.postsort = true;
         opts.genBased = true;
+        negamax(opts);
+    }),
+    add("Alphabeta gen presort pathlength", () => {
+        const opts = new minimax.NegamaxOpts();
+        opts.pruning = minimax.PruningType.ALPHA_BETA;
+        opts.presort = true;
+        opts.genBased = true;
+        opts.pruneByPathLength = true;
         negamax(opts);
     }),
     add("Optimal", () => {
