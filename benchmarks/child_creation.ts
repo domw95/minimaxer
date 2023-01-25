@@ -17,9 +17,9 @@ const createChildCallback: CreateChildNodeFunc<number, number, unknown> = (
 ): Node<number, number, unknown> => {
     const gamestate = parent.gamestate + move;
     if (gamestate == 0) {
-        return new Node(NodeType.LEAF, gamestate);
+        return new Node(NodeType.LEAF, gamestate, 0, 0);
     } else {
-        return new Node(NodeType.INNER, gamestate);
+        return new Node(NodeType.INNER, gamestate, 0, 0);
     }
 };
 
@@ -82,29 +82,29 @@ suite(
     //     createChildrenSlow(node);
     // }),
     add("Map", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenForEach(node);
     }),
     add("Map", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenForEach(node);
     }),
 

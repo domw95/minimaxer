@@ -100,10 +100,7 @@ export const getMovesCallback: minimax.GetMovesFunc<tictactoe, number[]> = (game
 };
 
 /** Clones the gamestate, plays the move, creates a new tree node */
-export const createChildCallback: minimax.CreateChildNodeFunc<tictactoe, Array<number>, unknown> = (
-    node: minimax.Node<tictactoe, Array<number>, unknown>,
-    move: number[],
-): minimax.Node<tictactoe, Array<number>, unknown> => {
+export const createChildCallback: minimax.CreateChildNodeFunc<tictactoe, Array<number>, number> = (node, move) => {
     // First create a clone of the gamestate
     const new_gamestate = node.gamestate.clone();
     // Apply the move
@@ -111,16 +108,14 @@ export const createChildCallback: minimax.CreateChildNodeFunc<tictactoe, Array<n
     // Return a new node with correct node type
     // let node:Node<tictactoe, Array<number>>;
     if (new_gamestate.end) {
-        return new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move);
+        return new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0);
     } else {
-        return new minimax.Node(minimax.NodeType.INNER, new_gamestate, move);
+        return new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0);
     }
 };
 
 /** Evaluates the gamestate, 1 for circle win, 0 for draw, -1 for crosses win */
-export const evaluateGamestateCallback: minimax.EvaluateNodeFunc<tictactoe, number[], unknown> = (
-    node: minimax.Node<tictactoe, Array<number>, unknown>,
-): number => {
+export const evaluateGamestateCallback: minimax.EvaluateNodeFunc<tictactoe, number[], number> = (node): number => {
     // Get winner from gamestate and return values accordingly
     const winner = node.gamestate.winner;
     switch (winner) {
