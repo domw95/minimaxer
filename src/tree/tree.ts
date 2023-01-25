@@ -1,4 +1,4 @@
-import { Node, NodeAim, NodeType } from "./node.js";
+import { Node, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
 import { SearchOpts } from "./search.js";
 
@@ -21,7 +21,7 @@ export class Tree<GS, M, D> {
     /** Depth of current search */
     protected activeDepth = 0;
 
-    GetMoves: GetMovesFunc<GS, M> = () => {
+    GetMoves: GetMovesFunc<GS, M, D> = () => {
         throw Error("Get moves callback is not implemented");
     };
 
@@ -30,7 +30,11 @@ export class Tree<GS, M, D> {
     };
 
     EvaluateNode: EvaluateNodeFunc<GS, M, D> = (node: Node<GS, M, D>) => {
-        return node.value;
+        if (!isNaN(node.value)) {
+            return node.value;
+        } else {
+            throw Error("Value has not been defined");
+        }
     };
 
     /**
@@ -38,12 +42,8 @@ export class Tree<GS, M, D> {
      * @param gamestate The current state of game, placed at root node. Can be any type
      * @param aim The current players aim at root node
      */
-    constructor(gamestate: GS, aim: NodeAim, moves: M[], public opts: SearchOpts = new SearchOpts()) {
-        this.root = new Node(NodeType.ROOT, gamestate);
-        if (moves !== undefined) {
-            this.root.moves = moves;
-        }
-        this.root.aim = aim;
+    constructor(root: Node<GS, M, D>, public opts: SearchOpts = new SearchOpts()) {
+        this.root = root;
         this.activeRoot = this.root;
     }
     /**
@@ -60,7 +60,7 @@ export class Tree<GS, M, D> {
         let n_moves = node.moves.length;
         // Get moves for nodes if not already there
         if (n_moves == 0) {
-            node.moves = this.GetMoves(node.gamestate);
+            node.moves = this.GetMoves(node);
             n_moves = node.moves.length;
         }
 
@@ -142,10 +142,15 @@ export class Tree<GS, M, D> {
                         return curNode;
                     } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
                         return curNode;
+                    } else {
+                        return prevNode;
                     }
+                } else {
+                    return prevNode;
                 }
+            } else {
+                return prevNode;
             }
-            return prevNode;
         });
     }
 
@@ -155,9 +160,12 @@ export class Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        return node.children.sort((a, b) => {
+        node.children.sort((a, b) => {
+            // Check if b and a were both updated at same depth
             if (b.inheritedDepth == a.inheritedDepth) {
+                // If option to prune for shorter wins and longer losses enabled
                 if (this.opts.pruneByPathLength) {
+                    // Only care if values are the same
                     if (b.inheritedValue == a.inheritedValue) {
                         if (b.inheritedValue >= 0) {
                             return a.pathLength - b.pathLength;
@@ -175,7 +183,8 @@ export class Tree<GS, M, D> {
             } else {
                 return 0;
             }
-        })[0];
+        });
+        return node.children[0];
     }
 
     /** Generator that yields all the nodes along the optimal
@@ -190,9 +199,7 @@ export class Tree<GS, M, D> {
     /** Generator that yields all the moves along the optimal path  */
     protected *optimalMoveGen(node: Node<GS, M, D>): Generator<M> {
         for (const child of this.routeGen(node)) {
-            if (child.move != undefined) {
-                yield child.move;
-            }
+            yield child.move;
         }
     }
 

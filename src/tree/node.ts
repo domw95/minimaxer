@@ -41,14 +41,14 @@ export class Node<GS, M, D> {
     /** Index of next move to be branched */
     moveInd = 0;
     /** Value of the gamestate at this node */
-    value = 0;
+    value = NaN;
     /** Value used for selection by parent of this node */
-    inheritedValue = 0;
+    inheritedValue = NaN;
     /**
      * Search depth when inherited value was assigned
      * Use to remove false selections when a-b pruning
      */
-    inheritedDepth = 0;
+    inheritedDepth = -1;
     /** Minimum number of moves required until a leaf node is reached. */
     pathLength = 1;
     /** Scores used for multiplayer minimax */
@@ -56,20 +56,20 @@ export class Node<GS, M, D> {
 
     /** Best child as selected by  {@link Node.aim}*/
     child: Node<GS, M, D> | undefined;
-    /** Extra data accessible by the evaluation function */
-    data: D | undefined;
 
     /**
      * @param type Defines location within tree. See {@link NodeType}
      * @param gamestate Gamestate used to create the node. Should be a clone of that used in the game.
-     * @param move Move used to reach this node. Undefined if node is root.
+     * @param move Move used to reach this node. For root node, use a `Null` version of the correct data type
+     * @param data Extra data accessible by the evaluation function. If not used, set to 0
      * @param aim Defines how best child node is selected
      * @param moves Reference to all the possible moves from this node
      */
     constructor(
         public type: NodeType,
         public gamestate: GS,
-        public move?: M,
+        public move: M,
+        public data: D,
         public aim = NodeAim.NONE,
         public moves: Array<M> = [],
     ) {}

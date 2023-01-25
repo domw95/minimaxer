@@ -1,5 +1,5 @@
 import { Tree } from "../tree/tree.js";
-import { Node, NodeAim, NodeType } from "../tree/node.js";
+import { Node, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit, SearchMethod } from "../tree/search.js";
 
@@ -34,11 +34,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param moves Array of moves playable from the initial gamestate
      * @param opts Control the behaviour of the negamax search
      */
-    constructor(gamestate: GS, aim: NodeAim, moves: M[], opts: NegamaxOpts = new NegamaxOpts()) {
-        super(gamestate, aim, moves, opts);
-        if (opts != undefined) {
-            this.opts = opts;
-        }
+    constructor(root: Node<GS, M, D>, opts: NegamaxOpts = new NegamaxOpts()) {
+        super(root, opts);
+        this.opts = opts;
     }
 
     /**
@@ -193,7 +191,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             switch (this.opts.pruning) {
                 case PruningType.NONE:
                     // Iterate through node children
-                    for (const child of this.getChildren(node, depth)) {
+                    for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
@@ -204,7 +202,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
 
                 case PruningType.ALPHA_BETA:
                     // Iterate through node children
-                    for (const child of this.getChildren(node, depth)) {
+                    for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
@@ -316,11 +314,11 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param node Node to return an iterable of children
      * @returns An iterable for going through children of node
      */
-    protected getChildren(node: Node<GS, M, D>, depth: number): Iterable<Node<GS, M, D>> {
+    protected getChildren(node: Node<GS, M, D>): Iterable<Node<GS, M, D>> {
         if (this.opts.genBased) {
             // Get moves if not already on node
             if (!node.moves.length) {
-                node.moves = this.GetMoves(node.gamestate);
+                node.moves = this.GetMoves(node);
             } else if (this.presortEnable) {
                 this.sortChildren(node);
             }
@@ -328,8 +326,11 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         } else {
             // Create children if required
             // sort enabled and children already present
-            if (!this.createChildren(node) && this.presortEnable && depth > 1) {
-                this.sortChildren(node);
+            if (!this.createChildren(node)) {
+                // Children already created, sort by inherited value
+                if (this.presortEnable) {
+                    this.sortChildren(node);
+                }
             }
             return node.children;
         }
@@ -389,7 +390,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
 
             // Get moves if not already on node
             if (!node.moves.length) {
-                node.moves = this.GetMoves(node.gamestate);
+                node.moves = this.GetMoves(node);
             } else {
                 this.sortChildren(node);
             }

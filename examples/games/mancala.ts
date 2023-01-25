@@ -85,6 +85,8 @@ export class mancala {
 
         // Check for double move
         if (this.enableDoubleMove && pit == 6) {
+            // Check that player can play more moves
+
             this.moves = [-1];
         } else {
             this.generateMoves();
@@ -100,14 +102,12 @@ export class mancala {
         clone.activePlayer = this.activePlayer;
         clone.moves = this.moves.slice(0);
         clone.end = this.end;
+        clone.enableDoubleMove = this.enableDoubleMove;
         return clone;
     }
 }
 
-export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, unknown> = (
-    parent: minimax.Node<mancala, number, unknown>,
-    move: number,
-): minimax.Node<mancala, number, unknown> => {
+export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, number> = (parent, move) => {
     // First create a clone of the gamestate
     const new_gamestate = parent.gamestate.clone();
     // Apply the move
@@ -115,12 +115,12 @@ export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, u
     // Return a new node with correct node type
     const score = new_gamestate.ends[0] - new_gamestate.ends[1];
     if (new_gamestate.end) {
-        const node = new minimax.Node<mancala, number, unknown>(minimax.NodeType.LEAF, new_gamestate, move);
+        const node = new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0);
         node.value = score;
         node.moves = new_gamestate.moves;
         return node;
     } else {
-        const node = new minimax.Node<mancala, number, unknown>(minimax.NodeType.INNER, new_gamestate, move);
+        const node = new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0);
         node.value = score;
         node.moves = new_gamestate.moves;
         return node;

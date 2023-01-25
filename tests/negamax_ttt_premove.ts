@@ -12,7 +12,8 @@ game.generateMoves();
 // Test full tree search for a few algorithms
 
 test("Standard negamax evaluation", () => {
-    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves);
+    const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
+    const tree = new minimax.Negamax(root);
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
@@ -38,7 +39,8 @@ test("Alphabeta pruning", () => {
     opts.pruneByPathLength = true;
     opts.method = SearchMethod.TIME;
 
-    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
+    const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
+    const tree = new minimax.Negamax(root, opts);
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
@@ -59,7 +61,8 @@ test("Alphabeta pruning, postsort", () => {
     opts.pruneByPathLength = true;
     opts.method = SearchMethod.TIME;
 
-    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
+    const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
+    const tree = new minimax.Negamax(root, opts);
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
@@ -81,7 +84,8 @@ test("Alphabeta pruning, genbased and presort", () => {
     opts.pruneByPathLength = true;
     opts.method = SearchMethod.TIME;
 
-    const tree = new minimax.Negamax(game.clone(), minimax.NodeAim.MAX, game.moves, opts);
+    const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
+    const tree = new minimax.Negamax(root, opts);
     tree.CreateChildNode = ttt.createChildCallback;
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;

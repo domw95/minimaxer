@@ -7,7 +7,7 @@ import { GetMovesFunc, CreateChildNodeFunc } from "../dist/index.js";
 
 const number_of_moves = 1e2;
 
-const getMovesCallback: GetMovesFunc<number, number> = () => {
+const getMovesCallback: GetMovesFunc<number, number, unknown> = () => {
     return Array(number_of_moves).fill(-1);
 };
 
@@ -17,9 +17,9 @@ const createChildCallback: CreateChildNodeFunc<number, number, unknown> = (
 ): Node<number, number, unknown> => {
     const gamestate = parent.gamestate + move;
     if (gamestate == 0) {
-        return new Node(NodeType.LEAF, gamestate);
+        return new Node(NodeType.LEAF, gamestate, 0, 0);
     } else {
-        return new Node(NodeType.INNER, gamestate);
+        return new Node(NodeType.INNER, gamestate, 0, 0);
     }
 };
 
@@ -27,7 +27,7 @@ function createChildrenFor(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 
@@ -45,7 +45,7 @@ function createChildrenMap(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 
@@ -63,7 +63,7 @@ function createChildrenForEach(node: Node<number, number, unknown>): void {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 
@@ -82,29 +82,29 @@ suite(
     //     createChildrenSlow(node);
     // }),
     add("Map", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenForEach(node);
     }),
     add("Map", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenMap(node);
     }),
 
     add("For", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenFor(node);
     }),
     add("ForEach", () => {
-        const node: Node<number, number, unknown> = new Node(NodeType.ROOT, 100);
+        const node = new Node(NodeType.ROOT, 100, 0, 0);
         createChildrenForEach(node);
     }),
 
