@@ -19,7 +19,7 @@
         "lint": "eslint .",
         "prepare": "npm run build",
         "prepublishOnly": "npx git-branch-is -r release* && npm run lint && npm test",
-        "preversion": "npx git-branch-is -r release* && npm run lint",
+        "preversion": "npx git-branch-is -r release* && npm run lint && npm run build:docs",
         "postversion": "git push && git push --tags"
     },
     "repository": {
