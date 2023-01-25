@@ -326,8 +326,11 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         } else {
             // Create children if required
             // sort enabled and children already present
-            if (!this.createChildren(node) && this.presortEnable && depth > 1) {
-                this.sortChildren(node);
+            if (!this.createChildren(node)) {
+                // Children already created, sort by inherited value
+                if (this.presortEnable) {
+                    this.sortChildren(node);
+                }
             }
             return node.children;
         }

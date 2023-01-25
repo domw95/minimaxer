@@ -85,6 +85,8 @@ export class mancala {
 
         // Check for double move
         if (this.enableDoubleMove && pit == 6) {
+            // Check that player can play more moves
+
             this.moves = [-1];
         } else {
             this.generateMoves();
@@ -100,6 +102,7 @@ export class mancala {
         clone.activePlayer = this.activePlayer;
         clone.moves = this.moves.slice(0);
         clone.end = this.end;
+        clone.enableDoubleMove = this.enableDoubleMove;
         return clone;
     }
 }

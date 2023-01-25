@@ -1,63 +1,81 @@
 {
   "name": "Negamax varieties",
-  "date": "2023-01-25T11:13:23.154Z",
+  "date": "2023-01-25T17:33:55.345Z",
   "version": null,
   "results": [
     {
       "name": "Standard settings",
-      "ops": 223,
-      "margin": 4.09,
-      "percentSlower": 93.92
+      "ops": 349,
+      "margin": 0.44,
+      "percentSlower": 94.46
     },
     {
       "name": "Gen Based",
-      "ops": 242,
-      "margin": 3.85,
-      "percentSlower": 93.41
+      "ops": 383,
+      "margin": 0.54,
+      "percentSlower": 93.93
     },
     {
       "name": "Alphabeta",
-      "ops": 610,
-      "margin": 2.19,
-      "percentSlower": 83.38
+      "ops": 1130,
+      "margin": 0.61,
+      "percentSlower": 82.08
+    },
+    {
+      "name": "Presort",
+      "ops": 372,
+      "margin": 0.36,
+      "percentSlower": 94.1
+    },
+    {
+      "name": "Postsort",
+      "ops": 280,
+      "margin": 0.71,
+      "percentSlower": 95.56
     },
     {
       "name": "Alphabeta presort",
-      "ops": 2349,
-      "margin": 1.66,
-      "percentSlower": 35.99
+      "ops": 4507,
+      "margin": 0.73,
+      "percentSlower": 28.52
     },
     {
       "name": "Alphabeta postsort",
-      "ops": 2066,
-      "margin": 1.75,
-      "percentSlower": 43.71
+      "ops": 3550,
+      "margin": 0.47,
+      "percentSlower": 43.7
     },
     {
       "name": "Alphabeta gen presort",
-      "ops": 3580,
-      "margin": 1.69,
-      "percentSlower": 2.45
+      "ops": 5859,
+      "margin": 0.34,
+      "percentSlower": 7.07
     },
     {
       "name": "Alphabeta gen postsort",
-      "ops": 3224,
-      "margin": 1.77,
-      "percentSlower": 12.15
+      "ops": 5115,
+      "margin": 0.47,
+      "percentSlower": 18.87
+    },
+    {
+      "name": "Alphabeta gen presort pathlength",
+      "ops": 6305,
+      "margin": 0.29,
+      "percentSlower": 0
     },
     {
       "name": "Optimal",
-      "ops": 3670,
-      "margin": 1.89,
-      "percentSlower": 0
+      "ops": 6257,
+      "margin": 0.24,
+      "percentSlower": 0.76
     }
   ],
   "fastest": {
-    "name": "Optimal",
-    "index": 7
+    "name": "Alphabeta gen presort pathlength",
+    "index": 9
   },
   "slowest": {
-    "name": "Standard settings",
-    "index": 0
+    "name": "Postsort",
+    "index": 4
   }
 }

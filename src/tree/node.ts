@@ -41,14 +41,14 @@ export class Node<GS, M, D> {
     /** Index of next move to be branched */
     moveInd = 0;
     /** Value of the gamestate at this node */
-    value = 0;
+    value = NaN;
     /** Value used for selection by parent of this node */
-    inheritedValue = 0;
+    inheritedValue = NaN;
     /**
      * Search depth when inherited value was assigned
      * Use to remove false selections when a-b pruning
      */
-    inheritedDepth = 0;
+    inheritedDepth = -1;
     /** Minimum number of moves required until a leaf node is reached. */
     pathLength = 1;
     /** Scores used for multiplayer minimax */

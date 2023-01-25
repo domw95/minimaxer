@@ -30,7 +30,11 @@ export class Tree<GS, M, D> {
     };
 
     EvaluateNode: EvaluateNodeFunc<GS, M, D> = (node: Node<GS, M, D>) => {
-        return node.value;
+        if (!isNaN(node.value)) {
+            return node.value;
+        } else {
+            throw Error("Value has not been defined");
+        }
     };
 
     /**
@@ -138,10 +142,15 @@ export class Tree<GS, M, D> {
                         return curNode;
                     } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
                         return curNode;
+                    } else {
+                        return prevNode;
                     }
+                } else {
+                    return prevNode;
                 }
+            } else {
+                return prevNode;
             }
-            return prevNode;
         });
     }
 
@@ -151,9 +160,12 @@ export class Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        return node.children.sort((a, b) => {
+        node.children.sort((a, b) => {
+            // Check if b and a were both updated at same depth
             if (b.inheritedDepth == a.inheritedDepth) {
+                // If option to prune for shorter wins and longer losses enabled
                 if (this.opts.pruneByPathLength) {
+                    // Only care if values are the same
                     if (b.inheritedValue == a.inheritedValue) {
                         if (b.inheritedValue >= 0) {
                             return a.pathLength - b.pathLength;
@@ -171,7 +183,8 @@ export class Tree<GS, M, D> {
             } else {
                 return 0;
             }
-        })[0];
+        });
+        return node.children[0];
     }
 
     /** Generator that yields all the nodes along the optimal
@@ -186,9 +199,7 @@ export class Tree<GS, M, D> {
     /** Generator that yields all the moves along the optimal path  */
     protected *optimalMoveGen(node: Node<GS, M, D>): Generator<M> {
         for (const child of this.routeGen(node)) {
-            if (child.move != undefined) {
-                yield child.move;
-            }
+            yield child.move;
         }
     }
 
