@@ -1,81 +1,57 @@
 {
-  "name": "Negamax varieties",
-  "date": "2023-01-25T17:33:55.345Z",
+  "name": "Sorting methods",
+  "date": "2023-01-25T21:06:50.631Z",
   "version": null,
   "results": [
     {
-      "name": "Standard settings",
-      "ops": 349,
-      "margin": 0.44,
-      "percentSlower": 94.46
-    },
-    {
-      "name": "Gen Based",
-      "ops": 383,
-      "margin": 0.54,
-      "percentSlower": 93.93
+      "name": "Standard",
+      "ops": 350,
+      "margin": 1.44,
+      "percentSlower": 94.65
     },
     {
       "name": "Alphabeta",
-      "ops": 1130,
-      "margin": 0.61,
-      "percentSlower": 82.08
+      "ops": 4657,
+      "margin": 0.35,
+      "percentSlower": 28.87
     },
     {
-      "name": "Presort",
-      "ops": 372,
-      "margin": 0.36,
-      "percentSlower": 94.1
+      "name": "Alphabeta Gen",
+      "ops": 5987,
+      "margin": 0.38,
+      "percentSlower": 8.55
     },
     {
-      "name": "Postsort",
-      "ops": 280,
-      "margin": 0.71,
-      "percentSlower": 95.56
+      "name": "Alphabeta Bubble",
+      "ops": 4663,
+      "margin": 1,
+      "percentSlower": 28.78
     },
     {
-      "name": "Alphabeta presort",
-      "ops": 4507,
-      "margin": 0.73,
-      "percentSlower": 28.52
+      "name": "Alphabeta Gen Bubble",
+      "ops": 6510,
+      "margin": 0.14,
+      "percentSlower": 0.57
     },
     {
-      "name": "Alphabeta postsort",
-      "ops": 3550,
-      "margin": 0.47,
-      "percentSlower": 43.7
+      "name": "Alphabeta Bubble Efficient",
+      "ops": 4725,
+      "margin": 0.13,
+      "percentSlower": 27.83
     },
     {
-      "name": "Alphabeta gen presort",
-      "ops": 5859,
-      "margin": 0.34,
-      "percentSlower": 7.07
-    },
-    {
-      "name": "Alphabeta gen postsort",
-      "ops": 5115,
-      "margin": 0.47,
-      "percentSlower": 18.87
-    },
-    {
-      "name": "Alphabeta gen presort pathlength",
-      "ops": 6305,
-      "margin": 0.29,
+      "name": "Alphabeta Gen Bubble Efficient",
+      "ops": 6547,
+      "margin": 0.16,
       "percentSlower": 0
-    },
-    {
-      "name": "Optimal",
-      "ops": 6257,
-      "margin": 0.24,
-      "percentSlower": 0.76
     }
   ],
   "fastest": {
-    "name": "Alphabeta gen presort pathlength",
-    "index": 9
+    "name": "Alphabeta Gen Bubble Efficient",
+    "index": 6
   },
   "slowest": {
-    "name": "Postsort",
-    "index": 4
+    "name": "Standard",
+    "index": 0
   }
 }

@@ -1,6 +1,7 @@
 import { Node, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
 import { SearchOpts } from "./search.js";
+import { bubbleSort, bubbleSortEfficient, SortMethod } from "./sorting.js";
 
 /**
  * Representation of a game tree for any turn based game with any number of players.
@@ -160,11 +161,11 @@ export class Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        node.children.sort((a, b) => {
-            // Check if b and a were both updated at same depth
+        const opts = this.opts;
+        function sortFunc(a: Node<GS, M, D>, b: Node<GS, M, D>) {
             if (b.inheritedDepth == a.inheritedDepth) {
                 // If option to prune for shorter wins and longer losses enabled
-                if (this.opts.pruneByPathLength) {
+                if (opts.pruneByPathLength) {
                     // Only care if values are the same
                     if (b.inheritedValue == a.inheritedValue) {
                         if (b.inheritedValue >= 0) {
@@ -183,7 +184,19 @@ export class Tree<GS, M, D> {
             } else {
                 return 0;
             }
-        });
+        }
+        switch (this.opts.sortMethod) {
+            case SortMethod.DEFAULT:
+                node.children.sort(sortFunc);
+                break;
+            case SortMethod.BUBBLE:
+                bubbleSort(node.children);
+                break;
+            case SortMethod.BUBBLE_EFFICIENT:
+                bubbleSortEfficient(node.children);
+                break;
+        }
+
         return node.children[0];
     }
 
