@@ -1,16 +1,17 @@
-// Check that the evaluations returned during a search hold true
-// i.e that the minimum and maximum values for the respective players in x turns holds true.
+// The following search methods should all have the same result when used with presort
+// Deepening, AB on/off, genbased on/off
 
 import * as mancala from "../examples/games/mancala.js";
 import * as minimax from "../dist/index.js";
-import { SearchMethod } from "../dist/tree/search.js";
 
-const DEPTH = 4;
+const DEPTH = 5;
 
 // Create standard game with moves
 const opts = new minimax.NegamaxOpts();
-opts.method = SearchMethod.DEPTH;
+opts.method = minimax.SearchMethod.DEEPENING;
 opts.depth = DEPTH;
+opts.presort = true;
+
 const game = new mancala.mancala();
 game.enableDoubleMove = true;
 game.start();
@@ -47,8 +48,10 @@ while (!game.end) {
 console.log(results.map((result) => result.value));
 
 //  Runs against the gamestates generated above, checking for same evaluations
-function compare_opts(opts: minimax.NegamaxOpts, check_move = true) {
+function compare_opts(opts: minimax.NegamaxOpts) {
     opts.depth = DEPTH;
+    opts.method = minimax.SearchMethod.DEEPENING;
+    opts.presort = true;
     gamestates.forEach((gamestate, ind) => {
         // Create root node
         const root = new minimax.Node(minimax.NodeType.ROOT, gamestate.clone(), 0, 0, aims[ind], gamestate.moves);
@@ -62,119 +65,71 @@ function compare_opts(opts: minimax.NegamaxOpts, check_move = true) {
 
         // Check result
         expect(result.value).toBe(results[ind].value);
-        if (check_move) {
-            expect(result.move).toBe(results[ind].move);
-            expect(result.pathLength).toBe(results[ind].pathLength);
-        }
+        expect(result.move).toBe(results[ind].move);
+        expect(result.pathLength).toBe(results[ind].pathLength);
         // expect(result.exit).toBe(results[ind].exit);
     });
 }
 
-test("Depth", () => {
-    // Depth search
+test("Gen based", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
-    compare_opts(opts);
-});
-
-test("Depth Presort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
-    opts.presort = true;
-    compare_opts(opts);
-});
-
-test("Depth genbased", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
     opts.genBased = true;
     compare_opts(opts);
 });
 
-test("Depth Postsort", () => {
-    // Depth search
+test("AB pruning", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
-    opts.postsort = true;
-    compare_opts(opts);
-});
-
-test("Depth AB", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     compare_opts(opts);
 });
 
-test("Depth AB, Gen, Presort, Postsort", () => {
-    // Depth search
+test("Gen + AB pruning", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
-    opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     compare_opts(opts);
 });
 
-test("Deepening", () => {
-    // Depth search
+test("Gen based Bubble", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    compare_opts(opts);
-});
-
-test("Deepening Presort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    opts.presort = true;
-    compare_opts(opts, false);
-});
-
-test("Deepening Gen", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
     opts.genBased = true;
+    opts.sortMethod = minimax.SortMethod.BUBBLE;
     compare_opts(opts);
 });
 
-test("Deepening Postsort", () => {
-    // Depth search
+test("AB pruning Bubble", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    opts.postsort = true;
-    compare_opts(opts, false);
-});
-
-test("Deepening AB", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
+    opts.sortMethod = minimax.SortMethod.BUBBLE;
     compare_opts(opts);
 });
 
-test("Deepening AB presort", () => {
-    // Depth search
+test("Gen + AB pruning Bubble", () => {
     const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
-    opts.presort = true;
-    compare_opts(opts, false);
-});
-
-test("Deepening AB presort postsort gen", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    opts.pruning = minimax.PruningType.ALPHA_BETA;
-    opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
-    compare_opts(opts, false);
+    opts.sortMethod = minimax.SortMethod.BUBBLE;
+    compare_opts(opts);
+});
+
+test("Gen based Bubble Efficient", () => {
+    const opts = new minimax.NegamaxOpts();
+    opts.genBased = true;
+    opts.sortMethod = minimax.SortMethod.BUBBLE_EFFICIENT;
+    compare_opts(opts);
+});
+
+test("AB pruning Bubble Efficient", () => {
+    const opts = new minimax.NegamaxOpts();
+    opts.pruning = minimax.PruningType.ALPHA_BETA;
+    opts.sortMethod = minimax.SortMethod.BUBBLE_EFFICIENT;
+    compare_opts(opts);
+});
+
+test("Gen + AB pruning Bubble Efficient", () => {
+    const opts = new minimax.NegamaxOpts();
+    opts.pruning = minimax.PruningType.ALPHA_BETA;
+    opts.genBased = true;
+    opts.sortMethod = minimax.SortMethod.BUBBLE_EFFICIENT;
+    compare_opts(opts);
 });

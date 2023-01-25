@@ -1,3 +1,5 @@
+import { SortMethod } from "./sorting.js";
+
 /**
  * Search method to use
  */
@@ -42,6 +44,8 @@ export class SearchOpts {
     depth = 0;
     /** Method used to search for best move */
     method = SearchMethod.DEPTH;
+    /** Method used to sort nodes */
+    sortMethod = SortMethod.DEFAULT;
     /** Node pruning type, default none */
     pruning: PruningType = PruningType.NONE;
     /**
