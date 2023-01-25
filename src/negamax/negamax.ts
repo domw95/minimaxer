@@ -34,11 +34,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param moves Array of moves playable from the initial gamestate
      * @param opts Control the behaviour of the negamax search
      */
-    constructor(gamestate: GS, aim: NodeAim, moves: M[], opts: NegamaxOpts = new NegamaxOpts()) {
-        super(gamestate, aim, moves, opts);
-        if (opts != undefined) {
-            this.opts = opts;
-        }
+    constructor(root: Node<GS, M, D>, opts: NegamaxOpts = new NegamaxOpts()) {
+        super(root, opts);
+        this.opts = opts;
     }
 
     /**
