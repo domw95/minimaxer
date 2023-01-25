@@ -7,7 +7,7 @@ import { GetMovesFunc, CreateChildNodeFunc } from "../dist/index.js";
 
 const number_of_moves = 1e2;
 
-const getMovesCallback: GetMovesFunc<number, number> = () => {
+const getMovesCallback: GetMovesFunc<number, number, unknown> = () => {
     return Array(number_of_moves).fill(-1);
 };
 
@@ -27,7 +27,7 @@ function createChildrenFor(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 
@@ -45,7 +45,7 @@ function createChildrenMap(node: Node<number, number, unknown>): boolean {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 
@@ -63,7 +63,7 @@ function createChildrenForEach(node: Node<number, number, unknown>): void {
     let n_moves = node.moves.length;
     // Get moves for nodes if not already there
     if (n_moves == 0) {
-        node.moves = getMovesCallback(node.gamestate);
+        node.moves = getMovesCallback(node);
         n_moves = node.moves.length;
     }
 

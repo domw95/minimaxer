@@ -1,4 +1,4 @@
-import { Node, NodeAim, NodeType } from "./node.js";
+import { Node, NodeType } from "./node.js";
 import { CreateChildNodeFunc, EvaluateNodeFunc, GetMovesFunc } from "./interfaces.js";
 import { SearchOpts } from "./search.js";
 
@@ -21,7 +21,7 @@ export class Tree<GS, M, D> {
     /** Depth of current search */
     protected activeDepth = 0;
 
-    GetMoves: GetMovesFunc<GS, M> = () => {
+    GetMoves: GetMovesFunc<GS, M, D> = () => {
         throw Error("Get moves callback is not implemented");
     };
 
@@ -56,7 +56,7 @@ export class Tree<GS, M, D> {
         let n_moves = node.moves.length;
         // Get moves for nodes if not already there
         if (n_moves == 0) {
-            node.moves = this.GetMoves(node.gamestate);
+            node.moves = this.GetMoves(node);
             n_moves = node.moves.length;
         }
 

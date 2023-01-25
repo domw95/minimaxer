@@ -318,7 +318,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         if (this.opts.genBased) {
             // Get moves if not already on node
             if (!node.moves.length) {
-                node.moves = this.GetMoves(node.gamestate);
+                node.moves = this.GetMoves(node);
             } else if (this.presortEnable) {
                 this.sortChildren(node);
             }
@@ -387,7 +387,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
 
             // Get moves if not already on node
             if (!node.moves.length) {
-                node.moves = this.GetMoves(node.gamestate);
+                node.moves = this.GetMoves(node);
             } else {
                 this.sortChildren(node);
             }

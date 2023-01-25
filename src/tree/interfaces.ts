@@ -5,8 +5,8 @@ import { Node } from "./node.js";
  * @param gamestate Generic gamestate of current node
  * @returns An array of moves
  */
-export interface GetMovesFunc<GS, M> {
-    (gamestate: GS): Array<M>;
+export interface GetMovesFunc<GS, M, D> {
+    (parent: Node<GS, M, D>): Array<M>;
 }
 
 /**
