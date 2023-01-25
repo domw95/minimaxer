@@ -5,12 +5,6 @@ import * as mancala from "../examples/games/mancala.js";
 import * as minimax from "../dist/index.js";
 import { SearchMethod } from "../dist/tree/search.js";
 
-const depth = 8;
-
-function callback(tree: minimax.Negamax<mancala.mancala, number, number>, result: minimax.NegamaxResult<number>) {
-    // console.log(result);
-}
-
 function run_searches(max_depth: number, opts: minimax.NegamaxOpts) {
     console.log(opts);
 
@@ -24,7 +18,6 @@ function run_searches(max_depth: number, opts: minimax.NegamaxOpts) {
         // Predicitions
         const minimums: number[] = [];
         const maximums: number[] = [];
-        let turn = 0;
 
         console.log("Depth", depth);
 
@@ -36,7 +29,6 @@ function run_searches(max_depth: number, opts: minimax.NegamaxOpts) {
             const tree = new minimax.Negamax(root, opts);
             // Assign callback
             tree.CreateChildNode = mancala.createChildCallback;
-            tree.depthCallback = callback;
 
             // Ger result
             const result = tree.evaluate();
@@ -54,7 +46,6 @@ function run_searches(max_depth: number, opts: minimax.NegamaxOpts) {
 
             // Play move
             game.playMove(result.move);
-            turn++;
 
             //  Prepare for next
             aim = -aim;

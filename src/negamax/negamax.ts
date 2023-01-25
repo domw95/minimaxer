@@ -1,5 +1,5 @@
 import { Tree } from "../tree/tree.js";
-import { Node, NodeAim, NodeType } from "../tree/node.js";
+import { Node, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit, SearchMethod } from "../tree/search.js";
 
@@ -191,7 +191,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             switch (this.opts.pruning) {
                 case PruningType.NONE:
                     // Iterate through node children
-                    for (const child of this.getChildren(node, depth)) {
+                    for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
@@ -202,7 +202,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
 
                 case PruningType.ALPHA_BETA:
                     // Iterate through node children
-                    for (const child of this.getChildren(node, depth)) {
+                    for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
@@ -314,7 +314,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
      * @param node Node to return an iterable of children
      * @returns An iterable for going through children of node
      */
-    protected getChildren(node: Node<GS, M, D>, depth: number): Iterable<Node<GS, M, D>> {
+    protected getChildren(node: Node<GS, M, D>): Iterable<Node<GS, M, D>> {
         if (this.opts.genBased) {
             // Get moves if not already on node
             if (!node.moves.length) {
