@@ -72,6 +72,8 @@ export class Tree<GS, M, D> {
             child.parent = node;
             node.children[i] = child;
             this.nodeCount++;
+            child.uuid = this.nodeCount;
+
             if (child.type == NodeType.LEAF) {
                 this.leafCount++;
             }

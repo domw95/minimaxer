@@ -56,6 +56,8 @@ export class Node<GS, M, D> {
 
     /** Best child as selected by  {@link Node.aim}*/
     child: Node<GS, M, D> | undefined;
+    /** Unique identifier */
+    uuid = 0;
 
     /**
      * @param type Defines location within tree. See {@link NodeType}
