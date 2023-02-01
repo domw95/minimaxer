@@ -13,7 +13,7 @@ export const enum SortMethod {
 }
 
 // Sort function that includes path length in selection
-function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>) {
+function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>): number {
     if (b.inheritedDepth == a.inheritedDepth) {
         // Only care if values are the same
         if (b.inheritedValue == a.inheritedValue) {
@@ -32,11 +32,11 @@ function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unkn
     }
 }
 
-function sortFuncNoPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>) {
+function sortFuncNoPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>): number {
     if (b.inheritedDepth == a.inheritedDepth) {
         return b.inheritedValue - a.inheritedValue;
     } else {
-        return b.inheritedDepth > a.inheritedDepth;
+        return Number(b.inheritedDepth > a.inheritedDepth);
     }
 }
 
@@ -44,6 +44,13 @@ function sortFuncNoPruneSimple(a: Node<unknown, unknown, unknown>, b: Node<unkno
     return b.inheritedValue - a.inheritedValue;
 }
 
+export function defaultSort(list: Node<unknown, unknown, unknown>[], pruneByPathLength = false) {
+    let sortFunc = sortFuncNoPrune;
+    if (pruneByPathLength) {
+        sortFunc = sortFuncPrune;
+    }
+    list.sort(sortFunc);
+}
 // Sort using bubblesort
 export function bubbleSort(list: Node<unknown, unknown, unknown>[], pruneByPathLength = false) {
     let sortFunc = sortFuncNoPrune;
