@@ -2,7 +2,7 @@ import * as minimax from "../../dist/index.js";
 
 export class mancala {
     pits: Array<Array<number>> = [];
-    ends: Array<number> = [];
+    stores: Array<number> = [];
     activePlayer = 0;
     moves: Array<number> = [];
     end = false;
@@ -17,7 +17,7 @@ export class mancala {
         this.pits.push(Array(6).fill(4));
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         this.pits.push(Array(6).fill(4));
-        this.ends = [0, 0];
+        this.stores = [0, 0];
         this.generateMoves();
     }
 
@@ -46,7 +46,7 @@ export class mancala {
             if (pit < 6) {
                 this.pits[this.activePlayer][pit] += 1;
             } else if (pit == 6) {
-                this.ends[this.activePlayer] += 1;
+                this.stores[this.activePlayer] += 1;
             } else if (pit == 13) {
                 continue;
             } else {
@@ -58,11 +58,9 @@ export class mancala {
         if (pit < 6 && this.pits[this.activePlayer][pit] == 1) {
             const op_ind = 5 - pit;
             const op_count = this.pits[this.activePlayer ^ 1][op_ind];
-            if (op_count) {
-                this.pits[this.activePlayer ^ 1][op_ind] = 0;
-                this.ends[this.activePlayer] += op_count + 1;
-                this.pits[this.activePlayer][pit] = 0;
-            }
+            this.pits[this.activePlayer][pit] = 0;
+            this.pits[this.activePlayer ^ 1][op_ind] = 0;
+            this.stores[this.activePlayer] += op_count + 1;
         }
 
         // Check end conditions
@@ -76,6 +74,7 @@ export class mancala {
             }
             if (end) {
                 this.end = true;
+                // Move all stones from
                 return;
             }
         }
@@ -98,7 +97,7 @@ export class mancala {
         clone.pits = this.pits.map((pit) => {
             return pit.slice();
         });
-        clone.ends = this.ends.slice();
+        clone.stores = this.stores.slice();
         clone.activePlayer = this.activePlayer;
         clone.moves = this.moves.slice(0);
         clone.end = this.end;
@@ -112,17 +111,15 @@ export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, n
     const new_gamestate = parent.gamestate.clone();
     // Apply the move
     new_gamestate.playMove(move);
-    // Return a new node with correct node type
-    const score = new_gamestate.ends[0] - new_gamestate.ends[1];
-    if (new_gamestate.end) {
-        const node = new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0);
-        node.value = score;
-        node.moves = new_gamestate.moves;
-        return node;
-    } else {
-        const node = new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0);
-        node.value = score;
-        node.moves = new_gamestate.moves;
-        return node;
-    }
+    // Create a new node with correct node type
+    const node = new minimax.Node(
+        new_gamestate.end ? minimax.NodeType.LEAF : minimax.NodeType.INNER,
+        new_gamestate,
+        move,
+        0,
+    );
+    // Assign value and moves and return.
+    node.value = new_gamestate.stores[0] - new_gamestate.stores[1];
+    node.moves = new_gamestate.moves;
+    return node;
 };
