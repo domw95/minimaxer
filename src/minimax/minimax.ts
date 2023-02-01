@@ -92,7 +92,12 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
                 return SearchExit.TIME;
             }
             // Assign the best child (and postsort if enabled)
-            this.assignBestChild(node, result.best);
+            if (result.best) {
+                node.child = result.best;
+                node.inheritedValue = result.best.inheritedValue;
+                node.inheritedDepth = this.activeDepth;
+                node.pathLength = result.best.pathLength + 1;
+            }
             return result.exit;
         }
     }

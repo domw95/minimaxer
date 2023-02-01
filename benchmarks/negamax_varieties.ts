@@ -18,12 +18,29 @@ function negamax(opts: minimax.NegamaxOpts): void {
     tree.evaluate();
 }
 
+function maximin(opts: minimax.MinimaxOpts): void {
+    // Create game and tree
+    const game = new mancala.mancala();
+    game.start();
+
+    const root = new minimax.Node(minimax.NodeType.ROOT, game, 0, 0, minimax.NodeAim.MAX, game.moves);
+    const tree = new minimax.Minimax(root, opts);
+    tree.CreateChildNode = mancala.createChildCallback;
+    tree.opts.depth = depth;
+    tree.opts.method = minimax.SearchMethod.DEEPENING;
+    tree.evaluate();
+}
+
 suite(
     "Negamax varieties",
 
-    add("Standard settings", () => {
+    add("Standard Negamax", () => {
         const opts = new minimax.NegamaxOpts();
         negamax(opts);
+    }),
+    add("Standard Minimax", () => {
+        const opts = new minimax.MinimaxOpts();
+        maximin(opts);
     }),
     add("Gen Based", () => {
         const opts = new minimax.NegamaxOpts();
