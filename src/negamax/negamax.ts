@@ -1,14 +1,14 @@
-import { Tree } from "../tree/tree.js";
 import { Node, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit, SearchMethod } from "../tree/search.js";
+import { SearchTree } from "../tree/searchtree.js";
 
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
  * Can be configured to do depth based, time based and deepening searches,
  * with or without alpha-beta pruning and other optimisations.
  */
-export class Negamax<GS, M, D> extends Tree<GS, M, D> {
+export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     /** Search options.
      * @see {@link Negamax.evalDepth}
      * @see {@link Negamax.evalDeepening}
