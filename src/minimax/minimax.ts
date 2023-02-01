@@ -1,11 +1,11 @@
 import { SearchTree } from "../tree/searchtree.js";
-import { MinimaxOpts } from "./index.js";
+import { MinimaxOpts, MinimaxResult } from "./index.js";
 import { Node, NodeAim, NodeType, PruningType, SearchExit } from "../index.js";
 
 /**
  * Interface for performing a minimax search
  */
-class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
+export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
     /**
      *
      * @param root Root node to start the tree from
@@ -13,6 +13,26 @@ class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
      */
     constructor(root: Node<GS, M, D>, opts = new MinimaxOpts()) {
         super(root, opts);
+    }
+
+    protected evalDepth(depth = this.opts.depth): MinimaxResult<M> {
+        // reset stats
+        this.outcomes = 0;
+        this.activeDepth = depth;
+        // reset fullDepth flag
+        this.fullDepth = true;
+        // Call negamax to depth
+        const exit = this.minimax(this.activeRoot, depth, -Infinity, Infinity);
+        // return result
+        return new MinimaxResult<M>(
+            exit,
+            this.activeRoot.child?.move as M,
+            -this.activeRoot.aim * this.activeRoot.inheritedValue,
+            depth,
+            this.outcomes,
+            this.nodeCount,
+            this.activeRoot.pathLength,
+        );
     }
 
     /**

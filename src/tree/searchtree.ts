@@ -1,7 +1,7 @@
 import { Tree } from "./tree.js";
 import { Node } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
-import { SearchExit, SearchOpts } from "./search.js";
+import { SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
 import { bubbleSort, bubbleSortEfficient, SortMethod } from "./sorting.js";
 
 /**
@@ -31,6 +31,76 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
             throw Error("Value has not been defined");
         }
     };
+
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    protected evalDepth(depth = this.opts.depth): SearchResult<M> {
+        throw Error("evalDepth not implemented");
+    }
+
+    /**
+     * Searches the tree repeatedly, incrementing the depth each time.
+     * Returns after reaching target depth, or early if tree is complete or time exceeded.
+     * ### Relevant {@link Negamax.opts | options}
+     * - {@link NegamaxOpts.depth} | Maximum depth to search for. 0 for unlimited
+     * - {@link NegamaxOpts.timeout} | Maximum time to search for. 0 for unlimited
+     * - {@link NegamaxOpts.pruning}
+     * - {@link NegamaxOpts.initialDepth}
+     * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
+     * - {@link NegamaxOpts.postsort}
+     * - {@link NegamaxOpts.presort}
+     *
+     * @param depth Overide the depth parameter set in {@link Negamax.opts}
+     * @returns The result of the search
+     */
+    protected evalDeepening(): SearchResult<M> {
+        // Get maximum depth
+        const max_depth = this.opts.depth ? this.opts.depth : Infinity;
+        // Set pre/post sort flags
+        this.presortEnable = this.opts.presort;
+        this.postsortEnable = this.opts.postsort;
+        // Iterate through depths
+        for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
+            const result = this.evalDepth(activeDepth);
+            this.depthCallback(this, result);
+            if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME || activeDepth == max_depth) {
+                return result;
+            }
+        }
+    }
+    /**
+     * Search the tree according to the options specified by {@link Negamax.opts}
+     * @returns Result from the tree search
+     */
+    evaluate(): SearchResult<M> {
+        switch (this.opts.method) {
+            case SearchMethod.DEPTH:
+                this.expireTime = 0;
+                return this.evalDepth();
+            case SearchMethod.DEEPENING:
+                // Don't use time related settings
+                this.expireTime = 0;
+                return this.evalDeepening();
+            case SearchMethod.TIME:
+                // Calculate timeout and set flag
+                if (this.opts.timeout > 0) {
+                    this.expireTime = Date.now() + this.opts.timeout;
+                    this.expired = false;
+                } else {
+                    this.expireTime = 0;
+                }
+                return this.evalDeepening();
+            default:
+                return this.evalDepth();
+        }
+    }
+
+    /**
+     *  Called during deepening search between each depth
+     */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    depthCallback(tree: SearchTree<GS, M, D>, result: SearchResult<M>): void {
+        //
+    }
 
     /**
      * Checks if expiry is enable and has happened
