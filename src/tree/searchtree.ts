@@ -1,13 +1,25 @@
 import { Tree } from "./tree.js";
 import { Node } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
-import { SearchOpts } from "./search.js";
+import { SearchExit, SearchOpts } from "./search.js";
 import { bubbleSort, bubbleSortEfficient, SortMethod } from "./sorting.js";
 
 /**
  * Extends the tree class with function specifically for minimax searches
  */
 export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
+    /** Tracks whether a searched has expired due to time */
+    protected expired = false;
+    /** Time the search will expire. 0 disables expiry */
+    protected expireTime = 0;
+    /** Flags that full depth has *not* been reached when set to false*/
+    protected fullDepth = true;
+    /** Enables postsort of children internally */
+    protected postsortEnable = false;
+    /** Enables presort of children internally */
+    protected presortEnable = false;
+    /** Number of leaf or depth = 0 reached during current call */
+    protected outcomes = 0;
     constructor(root: Node<GS, M, D>, public opts: SearchOpts = new SearchOpts()) {
         super(root);
     }
@@ -19,6 +31,69 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
             throw Error("Value has not been defined");
         }
     };
+
+    /**
+     * Checks if expiry is enable and has happened
+     * @returns `true` if time has expired, otherwise `false`
+     */
+    protected checkExpiry(): boolean {
+        if (this.expireTime) {
+            if (this.expired) {
+                return true;
+            } else if (Date.now() > this.expireTime) {
+                this.expired = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns either the array of node children or a generator which may create children on the fly
+     * Also presorts children if enabled
+     * @param node Node to return an iterable of children
+     * @returns An iterable for going through children of node
+     */
+    protected getChildren(node: Node<GS, M, D>): Iterable<Node<GS, M, D>> {
+        if (this.opts.genBased) {
+            // Get moves if not already on node
+            if (!node.moves.length) {
+                node.moves = this.GetMoves(node);
+            } else if (this.presortEnable) {
+                this.sortChildren(node);
+            }
+            return this.childGen(node);
+        } else {
+            // Create children if required
+            // sort enabled and children already present
+            if (!this.createChildren(node)) {
+                // Children already created, sort by inherited value
+                if (this.presortEnable) {
+                    this.sortChildren(node);
+                }
+            }
+            return node.children;
+        }
+    }
+
+    /**
+     * Gets the best child of `node`, assigns and sorts children if postsort is enabled
+     * @param node Node to find best child of
+     */
+    protected assignBestChild(node: Node<GS, M, D>, bestChild?: Node<GS, M, D>): void {
+        // Find the best child
+        if (this.postsortEnable) {
+            // sort children and pick best
+            node.child = this.sortChildren(node);
+        } else if (bestChild !== undefined) {
+            node.child = bestChild;
+        } else {
+            node.child = this.bestChild(node);
+        }
+        node.inheritedValue = -node.child.inheritedValue;
+        node.inheritedDepth = this.activeDepth;
+        node.pathLength = node.child.pathLength + 1;
+    }
 
     /**
      * Finds the child with maximum inherited value in children
