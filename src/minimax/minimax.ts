@@ -27,7 +27,7 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
         return new MinimaxResult<M>(
             exit,
             this.activeRoot.child?.move as M,
-            -this.activeRoot.aim * this.activeRoot.inheritedValue,
+            this.activeRoot.inheritedValue,
             depth,
             this.outcomes,
             this.nodeCount,
