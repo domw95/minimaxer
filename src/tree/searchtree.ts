@@ -2,7 +2,7 @@ import { Tree } from "./tree.js";
 import { Node } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
 import { SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
-import { bubbleSort, bubbleSortEfficient, SortMethod } from "./sorting.js";
+import { bubbleSort, bubbleSortEfficient, defaultSort, SortMethod } from "./sorting.js";
 
 /**
  * Extends the tree class with function specifically for minimax searches
@@ -158,41 +158,11 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         } else if (bestChild !== undefined) {
             node.child = bestChild;
         } else {
-            node.child = this.bestChild(node);
+            node.child = node.children[0];
         }
         node.inheritedValue = -node.child.inheritedValue;
         node.inheritedDepth = this.activeDepth;
         node.pathLength = node.child.pathLength + 1;
-    }
-
-    /**
-     * Finds the child with maximum inherited value in children
-     * @param node Node to find best child of
-     * @returns Best child of node
-     */
-    protected bestChild(node: Node<GS, M, D>): Node<GS, M, D> {
-        return node.children.reduce((prevNode, curNode) => {
-            if (curNode.inheritedDepth == this.activeDepth) {
-                if (curNode.inheritedValue > prevNode.inheritedValue) {
-                    return curNode;
-                } else if (curNode.inheritedValue == prevNode.inheritedValue) {
-                    if (!this.opts.pruneByPathLength) {
-                        return prevNode;
-                    }
-                    if (curNode.pathLength < prevNode.pathLength && curNode.inheritedValue > 0) {
-                        return curNode;
-                    } else if (curNode.pathLength > prevNode.pathLength && curNode.inheritedValue < 0) {
-                        return curNode;
-                    } else {
-                        return prevNode;
-                    }
-                } else {
-                    return prevNode;
-                }
-            } else {
-                return prevNode;
-            }
-        });
     }
 
     /**
@@ -201,33 +171,9 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        const opts = this.opts;
-        function sortFunc(a: Node<GS, M, D>, b: Node<GS, M, D>) {
-            if (b.inheritedDepth == a.inheritedDepth) {
-                // If option to prune for shorter wins and longer losses enabled
-                if (opts.pruneByPathLength) {
-                    // Only care if values are the same
-                    if (b.inheritedValue == a.inheritedValue) {
-                        if (b.inheritedValue >= 0) {
-                            return a.pathLength - b.pathLength;
-                        } else {
-                            return b.pathLength - a.pathLength;
-                        }
-                    } else {
-                        return b.inheritedValue - a.inheritedValue;
-                    }
-                } else {
-                    return b.inheritedValue - a.inheritedValue;
-                }
-            } else if (b.inheritedDepth > a.inheritedDepth) {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
         switch (this.opts.sortMethod) {
             case SortMethod.DEFAULT:
-                node.children.sort(sortFunc);
+                defaultSort(node.children);
                 break;
             case SortMethod.BUBBLE:
                 bubbleSort(node.children);

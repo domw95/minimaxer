@@ -108,8 +108,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            let value = -Infinity;
-            let bestChild: Node<GS, M, D> | undefined;
+            let best: Node<GS, M, D> | undefined;
 
             switch (this.opts.pruning) {
                 case PruningType.NONE:
@@ -119,6 +118,9 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
                             return SearchExit.TIME;
+                        }
+                        if (best == undefined || child.inheritedValue < best.inheritedValue) {
+                            best = child;
                         }
                     }
                     break;
@@ -132,29 +134,28 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                             return SearchExit.TIME;
                         }
                         // get best value with pathlength
-                        if (child.inheritedValue > value) {
-                            value = child.inheritedValue;
+                        if (best == undefined || child.inheritedValue > best.inheritedValue) {
                             alpha_path = child.pathLength;
-                            bestChild = child;
+                            best = child;
                             //  Update alpha
-                            alpha = Math.max(value, alpha);
-                        } else if (child.inheritedValue == value) {
+                            alpha = Math.max(best.inheritedValue, alpha);
+                        } else if (child.inheritedValue == best.inheritedValue) {
                             // Check if pathlength based pruning is enabled
                             if (!this.opts.pruneByPathLength) {
                                 continue;
                             }
                             // Check if winning
-                            if (value > 0) {
+                            if (best.inheritedValue > 0) {
                                 // Get the shortest path
                                 if (child.pathLength < alpha_path) {
                                     alpha_path = child.pathLength;
-                                    bestChild = child;
+                                    best = child;
                                 }
                             } else {
                                 // get the longest path as negative evaluation
                                 if (child.pathLength > alpha_path) {
                                     alpha_path = child.pathLength;
-                                    bestChild = child;
+                                    best = child;
                                 }
                             }
                         } else {
@@ -181,7 +182,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             }
 
             // Assign the best child (and postsort if enabled)
-            this.assignBestChild(node, bestChild);
+            this.assignBestChild(node, best);
             return exit;
         }
     }

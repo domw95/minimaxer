@@ -1,84 +1,84 @@
 {
   "name": "Negamax varieties",
-  "date": "2023-02-01T23:07:58.435Z",
+  "date": "2023-02-01T23:52:07.255Z",
   "version": null,
   "results": [
     {
       "name": "Standard Negamax",
-      "ops": 236,
-      "margin": 3.33,
+      "ops": 229.6,
+      "margin": 2.12,
       "percentSlower": 94.08
     },
     {
       "name": "Standard Minimax",
-      "ops": 249,
-      "margin": 2.96,
-      "percentSlower": 93.75
+      "ops": 230.1,
+      "margin": 3.29,
+      "percentSlower": 94.07
     },
     {
       "name": "Gen Based",
-      "ops": 250,
-      "margin": 2.66,
-      "percentSlower": 93.73
+      "ops": 236.7,
+      "margin": 3.49,
+      "percentSlower": 93.9
     },
     {
       "name": "Presort",
-      "ops": 247,
-      "margin": 3.96,
-      "percentSlower": 93.8
+      "ops": 239.2,
+      "margin": 2.13,
+      "percentSlower": 93.84
     },
     {
       "name": "Postsort",
-      "ops": 196,
-      "margin": 3.37,
-      "percentSlower": 95.08
+      "ops": 198.4,
+      "margin": 3.12,
+      "percentSlower": 94.89
     },
     {
       "name": "Alphabeta",
-      "ops": 654,
-      "margin": 1.86,
-      "percentSlower": 83.6
+      "ops": 588.2,
+      "margin": 2.12,
+      "percentSlower": 84.84
     },
     {
       "name": "Alphabeta presort",
-      "ops": 2444,
-      "margin": 1.77,
-      "percentSlower": 38.7
+      "ops": 2396,
+      "margin": 1.99,
+      "percentSlower": 38.27
     },
     {
       "name": "Alphabeta postsort",
-      "ops": 2218,
-      "margin": 1.66,
-      "percentSlower": 44.37
+      "ops": 2159.6,
+      "margin": 1.9,
+      "percentSlower": 44.36
     },
     {
       "name": "Alphabeta gen presort",
-      "ops": 3754,
-      "margin": 1.92,
-      "percentSlower": 5.84
+      "ops": 3629.5,
+      "margin": 1.86,
+      "percentSlower": 6.49
     },
     {
       "name": "Alphabeta gen postsort",
-      "ops": 3431,
-      "margin": 1.91,
-      "percentSlower": 13.95
+      "ops": 3281.3,
+      "margin": 1.7,
+      "percentSlower": 15.46
     },
     {
       "name": "Alphabeta gen presort pathlength",
-      "ops": 3987,
-      "margin": 1.86,
-      "percentSlower": 0
+      "ops": 3812.1,
+      "margin": 1.92,
+      "percentSlower": 1.78
     },
     {
       "name": "Optimal",
-      "ops": 3872,
-      "margin": 1.94,
-      "percentSlower": 2.88
+      "ops": 3881.2,
+      "margin": 1.9,
+      "percentSlower": 0
     }
   ],
   "fastest": {
-    "name": "Alphabeta gen presort pathlength",
-    "index": 10
+    "name": "Optimal",
+    "index": 11
   },
   "slowest": {
     "name": "Postsort",
