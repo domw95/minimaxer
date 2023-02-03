@@ -1,72 +1,72 @@
 {
   "name": "Negamax varieties",
-  "date": "2023-02-03T23:31:36.053Z",
+  "date": "2023-02-03T23:35:27.799Z",
   "version": null,
   "results": [
     {
       "name": "Negamax",
-      "ops": 215.3,
-      "margin": 1.94,
-      "percentSlower": 94.43
+      "ops": 222,
+      "margin": 2.45,
+      "percentSlower": 94.27
     },
     {
       "name": "Minimax",
-      "ops": 218.8,
-      "margin": 3.62,
-      "percentSlower": 94.34
-    },
-    {
-      "name": "Negamax Gen",
-      "ops": 220.9,
-      "margin": 3.81,
+      "ops": 221,
+      "margin": 2.1,
       "percentSlower": 94.29
     },
     {
+      "name": "Negamax Gen",
+      "ops": 218,
+      "margin": 2.49,
+      "percentSlower": 94.37
+    },
+    {
       "name": "Minimax Gen",
-      "ops": 221.3,
-      "margin": 1.93,
-      "percentSlower": 94.28
+      "ops": 219,
+      "margin": 1.95,
+      "percentSlower": 94.34
     },
     {
       "name": "Negamax Alphabeta",
-      "ops": 568.8,
-      "margin": 2.13,
-      "percentSlower": 85.3
+      "ops": 640,
+      "margin": 1.6,
+      "percentSlower": 83.47
     },
     {
       "name": "Minimax Alphabeta",
-      "ops": 294.6,
-      "margin": 2.82,
-      "percentSlower": 92.38
+      "ops": 306,
+      "margin": 1.88,
+      "percentSlower": 92.1
     },
     {
       "name": "Negamax Alphabeta presort",
-      "ops": 2317.1,
-      "margin": 1.77,
-      "percentSlower": 40.1
+      "ops": 2422,
+      "margin": 1.79,
+      "percentSlower": 37.45
     },
     {
       "name": "Minimax Alphabeta presort",
-      "ops": 1930.2,
-      "margin": 1.82,
-      "percentSlower": 50.1
+      "ops": 1971,
+      "margin": 1.75,
+      "percentSlower": 49.1
     },
     {
       "name": "Negamax Alphabeta presort gen",
-      "ops": 3509.7,
-      "margin": 1.68,
-      "percentSlower": 9.27
+      "ops": 3494,
+      "margin": 2.14,
+      "percentSlower": 9.76
     },
     {
       "name": "Minimax Alphabeta presort gen",
-      "ops": 2110,
-      "margin": 1.79,
-      "percentSlower": 45.45
+      "ops": 2135,
+      "margin": 1.76,
+      "percentSlower": 44.86
     },
     {
       "name": "Negamax Optimal",
-      "ops": 3868.1,
-      "margin": 2.15,
+      "ops": 3872,
+      "margin": 1.86,
       "percentSlower": 0
     }
   ],
@@ -75,7 +75,7 @@
     "index": 10
   },
   "slowest": {
-    "name": "Negamax",
-    "index": 0
+    "name": "Negamax Gen",
+    "index": 2
   }
 }
