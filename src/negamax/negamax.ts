@@ -110,7 +110,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
 
             let exit = SearchExit.FULL_DEPTH;
             let best: Node<GS, M, D> | undefined;
-            node.aim = NodeAim.MAX;
+            // node.aim = NodeAim.MAX;
 
             switch (this.opts.pruning) {
                 case PruningType.NONE:
@@ -121,7 +121,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                         if (exit == SearchExit.TIME) {
                             return SearchExit.TIME;
                         }
-                        if (best == undefined || child.inheritedValue < best.inheritedValue) {
+                        if (best == undefined || child.inheritedValue > best.inheritedValue) {
                             best = child;
                         }
                     }
@@ -214,6 +214,9 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         }
     }
 
+    protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
+        return super.sortChildren(node, false);
+    }
     /**
      * Same as {@link Negamax.negamax} but optimised for best performing options.
      *
@@ -245,7 +248,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            node.aim = NodeAim.MAX;
+            // node.aim = NodeAim.MAX;
 
             // Get moves if not already on node
             if (!node.moves.length) {

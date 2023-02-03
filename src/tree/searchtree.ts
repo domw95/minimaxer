@@ -170,18 +170,20 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
      * @param node Node of children to sort
      * @returns The child with the highest value
      */
-    protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
-        let reverse = false;
-        switch (node.aim) {
-            case NodeAim.MAX:
-                reverse = false;
-                break;
-            case NodeAim.MIN:
-                reverse = true;
-                break;
-            default:
-                return node.children[0];
+    protected sortChildren(node: Node<GS, M, D>, reverse?: boolean): Node<GS, M, D> {
+        if (reverse == undefined) {
+            switch (node.aim) {
+                case NodeAim.MAX:
+                    reverse = false;
+                    break;
+                case NodeAim.MIN:
+                    reverse = true;
+                    break;
+                default:
+                    return node.children[0];
+            }
         }
+
         switch (this.opts.sortMethod) {
             case SortMethod.DEFAULT:
                 defaultSort(node.children, reverse);

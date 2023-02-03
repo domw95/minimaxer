@@ -10,7 +10,7 @@ const depth = 8;
 function negamax(opts: minimax.NegamaxOpts): number[] {
     // Create game and tree
     const game = new mancala.mancala();
-    game.enableDoubleMove = true;
+    // game.enableDoubleMove = true;
     game.start();
     // game.playMove(2);
     // game.playMove(-1);
