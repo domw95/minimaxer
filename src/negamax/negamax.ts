@@ -183,8 +183,13 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     break;
             }
 
-            // Assign the best child (and postsort if enabled)
-            this.assignBestChild(node, best);
+            // Assign the best child to parent
+            if (best !== undefined) {
+                node.child = best;
+                node.inheritedValue = -node.child.inheritedValue;
+                node.inheritedDepth = this.activeDepth;
+                node.pathLength = node.child.pathLength + 1;
+            }
             return exit;
         }
     }
