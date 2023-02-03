@@ -14,8 +14,6 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     protected expireTime = 0;
     /** Flags that full depth has *not* been reached when set to false*/
     protected fullDepth = true;
-    /** Enables postsort of children internally */
-    protected postsortEnable = false;
     /** Enables presort of children internally */
     protected presortEnable = false;
     /** Number of leaf or depth = 0 reached during current call */
@@ -57,7 +55,6 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         const max_depth = this.opts.depth ? this.opts.depth : Infinity;
         // Set pre/post sort flags
         this.presortEnable = this.opts.presort;
-        this.postsortEnable = this.opts.postsort;
         // Iterate through depths
         for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
             const result = this.evalDepth(activeDepth);
@@ -144,25 +141,6 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
             }
             return node.children;
         }
-    }
-
-    /**
-     * Gets the best child of `node`, assigns and sorts children if postsort is enabled
-     * @param node Node to find best child of
-     */
-    protected assignBestChild(node: Node<GS, M, D>, bestChild?: Node<GS, M, D>): void {
-        // Find the best child
-        if (this.postsortEnable) {
-            // sort children and pick best
-            node.child = this.sortChildren(node);
-        } else if (bestChild !== undefined) {
-            node.child = bestChild;
-        } else {
-            node.child = node.children[0];
-        }
-        node.inheritedValue = -node.child.inheritedValue;
-        node.inheritedDepth = this.activeDepth;
-        node.pathLength = node.child.pathLength + 1;
     }
 
     /**

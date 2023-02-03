@@ -85,14 +85,6 @@ test("Depth genbased", () => {
     run_searches(6, opts);
 });
 
-test("Depth Postsort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
-    opts.postsort = true;
-    run_searches(6, opts);
-});
-
 test("Depth AB", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
@@ -109,13 +101,12 @@ test("Depth pathlength", () => {
     run_searches(6, opts);
 });
 
-test("Depth AB, Gen, Presort, Postsort, pathlength", () => {
+test("Depth AB, Gen, Presort, pathlength", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
     opts.method = SearchMethod.DEPTH;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     opts.pruneByPathLength = true;
     run_searches(6, opts);
@@ -152,14 +143,6 @@ test("Deepening Gen", () => {
     run_searches(6, opts);
 });
 
-test("Deepening Postsort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    opts.postsort = true;
-    run_searches(6, opts);
-});
-
 test("Deepening AB", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
@@ -185,24 +168,22 @@ test("Deepening AB presort", () => {
     run_searches(8, opts);
 });
 
-test("Deepening AB presort postsort gen", () => {
+test("Deepening AB presort gen", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
     opts.method = SearchMethod.DEEPENING;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     run_searches(8, opts);
 });
 
-test("Deepening AB presort postsort gen pathlength", () => {
+test("Deepening AB presort gen pathlength", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
     opts.method = SearchMethod.DEEPENING;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     opts.pruneByPathLength = true;
     run_searches(8, opts);
