@@ -18,3 +18,4 @@ tree.depthCallback = (tree, result) => {
     console.log(result);
 };
 console.log(tree.evaluate());
+console.log(tree.getOptimalMoves());
