@@ -1,5 +1,5 @@
 import { Tree } from "./tree.js";
-import { Node } from "./node.js";
+import { Node, NodeAim } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
 import { SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
 import { bubbleSort, bubbleSortEfficient, defaultSort, SortMethod } from "./sorting.js";
@@ -171,12 +171,23 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
+        let reverse = false;
+        switch (node.aim) {
+            case NodeAim.MAX:
+                reverse = false;
+                break;
+            case NodeAim.MIN:
+                reverse = true;
+                break;
+            default:
+                return node.children[0];
+        }
         switch (this.opts.sortMethod) {
             case SortMethod.DEFAULT:
-                defaultSort(node.children);
+                defaultSort(node.children, reverse);
                 break;
             case SortMethod.BUBBLE:
-                bubbleSort(node.children);
+                bubbleSort(node.children, reverse);
                 break;
             case SortMethod.BUBBLE_EFFICIENT:
                 bubbleSortEfficient(node.children);

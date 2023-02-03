@@ -1,4 +1,4 @@
-import { Node, NodeType } from "../tree/node.js";
+import { Node, NodeAim, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit } from "../tree/search.js";
 import { SearchTree } from "../tree/searchtree.js";
@@ -109,6 +109,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
 
             let exit = SearchExit.FULL_DEPTH;
             let best: Node<GS, M, D> | undefined;
+            node.aim = NodeAim.MAX;
 
             switch (this.opts.pruning) {
                 case PruningType.NONE:
