@@ -2,6 +2,7 @@ import { Node, NodeAim, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit } from "../tree/search.js";
 import { SearchTree } from "../tree/searchtree.js";
+import { bubbleSortEfficient } from "../tree/sorting.js";
 
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
@@ -244,16 +245,17 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            let value = -Infinity;
+            node.aim = NodeAim.MAX;
 
             // Get moves if not already on node
             if (!node.moves.length) {
                 node.moves = this.GetMoves(node);
             } else {
-                this.sortChildren(node);
+                // this.sortChildren(node);
+                bubbleSortEfficient(node.children);
             }
             const gen = this.childGen(node);
-            let bestChild: Node<GS, M, D> | undefined;
+            let best: Node<GS, M, D> | undefined;
 
             // Iterate through node children
             for (const child of gen) {
@@ -263,11 +265,10 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     return SearchExit.TIME;
                 }
                 // get best value with pathlength
-                if (child.inheritedValue > value) {
-                    value = child.inheritedValue;
-                    bestChild = child;
+                if (best == undefined || child.inheritedValue > best.inheritedValue) {
+                    best = child;
                     //  Update alpha
-                    alpha = Math.max(value, alpha);
+                    alpha = Math.max(best.inheritedValue, alpha);
 
                     // If alpha is greater than beta, this node will never be reached
                     if (alpha >= beta) {
@@ -275,8 +276,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     }
                 }
             }
-            if (bestChild !== undefined) {
-                node.child = bestChild;
+            if (best !== undefined) {
+                node.child = best;
                 node.inheritedValue = -node.child.inheritedValue;
                 node.inheritedDepth = this.activeDepth;
                 node.pathLength = node.child.pathLength + 1;
