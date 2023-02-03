@@ -75,18 +75,6 @@ suite(
         opts.presort = true;
         minimax(opts);
     }),
-    add("Negamax Alphabeta postsort", () => {
-        const opts = new mx.NegamaxOpts();
-        opts.pruning = mx.PruningType.ALPHA_BETA;
-        opts.postsort = true;
-        negamax(opts);
-    }),
-    add("Minimax Alphabeta postsort", () => {
-        const opts = new mx.MinimaxOpts();
-        opts.pruning = mx.PruningType.ALPHA_BETA;
-        opts.postsort = true;
-        minimax(opts);
-    }),
     add("Negamax Alphabeta presort gen", () => {
         const opts = new mx.NegamaxOpts();
         opts.pruning = mx.PruningType.ALPHA_BETA;

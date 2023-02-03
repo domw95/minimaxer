@@ -17,10 +17,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     opts: NegamaxOpts = new NegamaxOpts();
 
     /**
-     *
-     * @param gamestate Gamestate for root node.
-     * @param aim The aim of the player in the current gamestate {@link NodeAim}
-     * @param moves Array of moves playable from the initial gamestate
+     * @param root Root to start the
      * @param opts Control the behaviour of the negamax search
      */
     constructor(root: Node<GS, M, D>, opts: NegamaxOpts = new NegamaxOpts()) {
@@ -36,7 +33,6 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
      * - {@link NegamaxOpts.pruning}
      * - {@link NegamaxOpts.initialDepth}
      * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
-     * - {@link NegamaxOpts.postsort}
      * - {@link NegamaxOpts.presort}
      * - {@link NegamaxOpts.optimal}
      *

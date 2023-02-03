@@ -58,12 +58,6 @@ export class SearchOpts {
      * Should be faster and use less memory
      */
     genBased = false;
-    /**
-     * Postsort sorts child nodes after finding value instead of just finding max
-     * In theory slower than max, but useful for alpha-beta deepening operation
-     * -1 = always, 0 = never, >0 = up to that depth
-     */
-    postsort = false; //
     /** Sort children of node before searching deeper */
     presort = false;
     /** Set to `true` to shorten winning paths and lengthen losing paths.

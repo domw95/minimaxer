@@ -1,93 +1,81 @@
 {
   "name": "Negamax varieties",
-  "date": "2023-02-03T23:27:22.417Z",
+  "date": "2023-02-03T23:31:36.053Z",
   "version": null,
   "results": [
     {
       "name": "Negamax",
-      "ops": 223.93,
-      "margin": 2.51,
-      "percentSlower": 96.75
+      "ops": 215.3,
+      "margin": 1.94,
+      "percentSlower": 94.43
     },
     {
       "name": "Minimax",
-      "ops": 219.17,
-      "margin": 2.03,
-      "percentSlower": 96.82
+      "ops": 218.8,
+      "margin": 3.62,
+      "percentSlower": 94.34
     },
     {
       "name": "Negamax Gen",
-      "ops": 214.37,
-      "margin": 2.18,
-      "percentSlower": 96.88
+      "ops": 220.9,
+      "margin": 3.81,
+      "percentSlower": 94.29
     },
     {
       "name": "Minimax Gen",
-      "ops": 354.95,
-      "margin": 0.78,
-      "percentSlower": 94.84
+      "ops": 221.3,
+      "margin": 1.93,
+      "percentSlower": 94.28
     },
     {
       "name": "Negamax Alphabeta",
-      "ops": 1330.21,
-      "margin": 0.7,
-      "percentSlower": 80.67
+      "ops": 568.8,
+      "margin": 2.13,
+      "percentSlower": 85.3
     },
     {
       "name": "Minimax Alphabeta",
-      "ops": 647.99,
-      "margin": 0.61,
-      "percentSlower": 90.58
+      "ops": 294.6,
+      "margin": 2.82,
+      "percentSlower": 92.38
     },
     {
       "name": "Negamax Alphabeta presort",
-      "ops": 4191.33,
-      "margin": 0.6,
-      "percentSlower": 39.1
+      "ops": 2317.1,
+      "margin": 1.77,
+      "percentSlower": 40.1
     },
     {
       "name": "Minimax Alphabeta presort",
-      "ops": 3723.23,
-      "margin": 0.58,
-      "percentSlower": 45.9
-    },
-    {
-      "name": "Negamax Alphabeta postsort",
-      "ops": 1330.2,
-      "margin": 0.92,
-      "percentSlower": 80.67
-    },
-    {
-      "name": "Minimax Alphabeta postsort",
-      "ops": 649.15,
-      "margin": 0.62,
-      "percentSlower": 90.57
+      "ops": 1930.2,
+      "margin": 1.82,
+      "percentSlower": 50.1
     },
     {
       "name": "Negamax Alphabeta presort gen",
-      "ops": 5897.15,
-      "margin": 0.6,
-      "percentSlower": 14.31
+      "ops": 3509.7,
+      "margin": 1.68,
+      "percentSlower": 9.27
     },
     {
       "name": "Minimax Alphabeta presort gen",
-      "ops": 3736.39,
-      "margin": 0.88,
-      "percentSlower": 45.71
+      "ops": 2110,
+      "margin": 1.79,
+      "percentSlower": 45.45
     },
     {
       "name": "Negamax Optimal",
-      "ops": 6881.79,
-      "margin": 0.57,
+      "ops": 3868.1,
+      "margin": 2.15,
       "percentSlower": 0
     }
   ],
   "fastest": {
     "name": "Negamax Optimal",
-    "index": 12
+    "index": 10
   },
   "slowest": {
-    "name": "Negamax Gen",
-    "index": 2
+    "name": "Negamax",
+    "index": 0
   }
 }
