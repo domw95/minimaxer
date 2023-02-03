@@ -1,4 +1,4 @@
-import { Node, NodeAim, NodeType } from "../tree/node.js";
+import { Node, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
 import { PruningType, SearchExit } from "../tree/search.js";
 import { SearchTree } from "../tree/searchtree.js";
