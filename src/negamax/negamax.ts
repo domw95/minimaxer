@@ -1,31 +1,20 @@
-import { Tree } from "../tree/tree.js";
-import { Node, NodeType } from "../tree/node.js";
+import { Node, NodeAim, NodeType } from "../tree/node.js";
 import { NegamaxOpts, NegamaxResult } from "./index.js";
-import { PruningType, SearchExit, SearchMethod } from "../tree/search.js";
+import { PruningType, SearchExit } from "../tree/search.js";
+import { SearchTree } from "../tree/searchtree.js";
+import { bubbleSortEfficient } from "../tree/sorting.js";
 
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
  * Can be configured to do depth based, time based and deepening searches,
  * with or without alpha-beta pruning and other optimisations.
  */
-export class Negamax<GS, M, D> extends Tree<GS, M, D> {
+export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     /** Search options.
      * @see {@link Negamax.evalDepth}
      * @see {@link Negamax.evalDeepening}
      * @see {@link Negamax.evaluate}*/
     opts: NegamaxOpts = new NegamaxOpts();
-    /** Tracks whether a searched has expired due to time */
-    protected expired = false;
-    /** Time the search will expire. 0 disables expiry */
-    protected expireTime = 0;
-    /** Flags that full depth has *not* been reached when set to false*/
-    protected fullDepth = true;
-    /** Enables postsort of children internally */
-    protected postsortEnable = false;
-    /** Enables presort of children internally */
-    protected presortEnable = false;
-    /** Number of leaf or depth = 0 reached during current call */
-    protected outcomes = 0;
 
     /**
      *
@@ -80,71 +69,6 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
     }
 
     /**
-     * Searches the tree repeatedly, incrementing the depth each time.
-     * Returns after reaching target depth, or early if tree is complete or time exceeded.
-     * ### Relevant {@link Negamax.opts | options}
-     * - {@link NegamaxOpts.depth} | Maximum depth to search for. 0 for unlimited
-     * - {@link NegamaxOpts.timeout} | Maximum time to search for. 0 for unlimited
-     * - {@link NegamaxOpts.pruning}
-     * - {@link NegamaxOpts.initialDepth}
-     * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
-     * - {@link NegamaxOpts.postsort}
-     * - {@link NegamaxOpts.presort}
-     *
-     * @param depth Overide the depth parameter set in {@link Negamax.opts}
-     * @returns The result of the search
-     */
-    protected evalDeepening(): NegamaxResult<M> {
-        // Get maximum depth
-        const max_depth = this.opts.depth ? this.opts.depth : Infinity;
-        // Set pre/post sort flags
-        this.presortEnable = this.opts.presort;
-        this.postsortEnable = this.opts.postsort;
-        // Iterate through depths
-        for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
-            const result = this.evalDepth(activeDepth);
-            this.depthCallback(this, result);
-            if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME || activeDepth == max_depth) {
-                return result;
-            }
-        }
-    }
-    /**
-     * Search the tree according to the options specified by {@link Negamax.opts}
-     * @returns Result from the tree search
-     */
-    evaluate(): NegamaxResult<M> {
-        switch (this.opts.method) {
-            case SearchMethod.DEPTH:
-                this.expireTime = 0;
-                return this.evalDepth();
-            case SearchMethod.DEEPENING:
-                // Don't use time related settings
-                this.expireTime = 0;
-                return this.evalDeepening();
-            case SearchMethod.TIME:
-                // Calculate timeout and set flag
-                if (this.opts.timeout > 0) {
-                    this.expireTime = Date.now() + this.opts.timeout;
-                    this.expired = false;
-                } else {
-                    this.expireTime = 0;
-                }
-                return this.evalDeepening();
-            default:
-                return this.evalDepth();
-        }
-    }
-
-    /**
-     *  Called during deepening search between each depth
-     */
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    depthCallback(tree: Negamax<GS, M, D>, result: NegamaxResult<M>): void {
-        //
-    }
-
-    /**
      * Implements the negamax algorithm up to a given depth of search.
      * Recursively calls itself until `depth` is `0` or {@link NodeType.LEAF} node is reached and evaluated.
      * Node values are then passed back up the tree according to the {@link NodeAim} of the parent nodes.
@@ -185,8 +109,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            let value = -Infinity;
-            let bestChild: Node<GS, M, D> | undefined;
+            let best: Node<GS, M, D> | undefined;
+            node.aim = NodeAim.MAX;
 
             switch (this.opts.pruning) {
                 case PruningType.NONE:
@@ -196,6 +120,9 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
                         if (exit == SearchExit.TIME) {
                             return SearchExit.TIME;
+                        }
+                        if (best == undefined || child.inheritedValue < best.inheritedValue) {
+                            best = child;
                         }
                     }
                     break;
@@ -209,29 +136,28 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                             return SearchExit.TIME;
                         }
                         // get best value with pathlength
-                        if (child.inheritedValue > value) {
-                            value = child.inheritedValue;
+                        if (best == undefined || child.inheritedValue > best.inheritedValue) {
                             alpha_path = child.pathLength;
-                            bestChild = child;
+                            best = child;
                             //  Update alpha
-                            alpha = Math.max(value, alpha);
-                        } else if (child.inheritedValue == value) {
+                            alpha = Math.max(best.inheritedValue, alpha);
+                        } else if (child.inheritedValue == best.inheritedValue) {
                             // Check if pathlength based pruning is enabled
                             if (!this.opts.pruneByPathLength) {
                                 continue;
                             }
                             // Check if winning
-                            if (value > 0) {
+                            if (best.inheritedValue > 0) {
                                 // Get the shortest path
                                 if (child.pathLength < alpha_path) {
                                     alpha_path = child.pathLength;
-                                    bestChild = child;
+                                    best = child;
                                 }
                             } else {
                                 // get the longest path as negative evaluation
                                 if (child.pathLength > alpha_path) {
                                     alpha_path = child.pathLength;
-                                    bestChild = child;
+                                    best = child;
                                 }
                             }
                         } else {
@@ -258,7 +184,7 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             }
 
             // Assign the best child (and postsort if enabled)
-            this.assignBestChild(node, bestChild);
+            this.assignBestChild(node, best);
             return exit;
         }
     }
@@ -280,79 +206,12 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
         // Check if leaf node
         if (leaf) {
             node.pathLength = 0;
-            if (this.fullDepth) {
-                return SearchExit.FULL_DEPTH;
-            } else {
-                return SearchExit.DEPTH;
-            }
+            return this.fullDepth ? SearchExit.FULL_DEPTH : SearchExit.DEPTH;
         } else {
             node.pathLength = 1;
             this.fullDepth = false;
             return SearchExit.DEPTH;
         }
-    }
-
-    /**
-     * Checks if expiry is enable and has happened
-     * @returns `true` if time has expired, otherwise `false`
-     */
-    protected checkExpiry(): boolean {
-        if (this.expireTime) {
-            if (this.expired) {
-                return true;
-            } else if (Date.now() > this.expireTime) {
-                this.expired = true;
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * Returns either the array of node children or a generator which may create children on the fly
-     * Also presorts children if enabled
-     * @param node Node to return an iterable of children
-     * @returns An iterable for going through children of node
-     */
-    protected getChildren(node: Node<GS, M, D>): Iterable<Node<GS, M, D>> {
-        if (this.opts.genBased) {
-            // Get moves if not already on node
-            if (!node.moves.length) {
-                node.moves = this.GetMoves(node);
-            } else if (this.presortEnable) {
-                this.sortChildren(node);
-            }
-            return this.childGen(node);
-        } else {
-            // Create children if required
-            // sort enabled and children already present
-            if (!this.createChildren(node)) {
-                // Children already created, sort by inherited value
-                if (this.presortEnable) {
-                    this.sortChildren(node);
-                }
-            }
-            return node.children;
-        }
-    }
-
-    /**
-     * Gets the best child of `node`, assigns and sorts children if postsort is enabled
-     * @param node Node to find best child of
-     */
-    protected assignBestChild(node: Node<GS, M, D>, bestChild?: Node<GS, M, D>): void {
-        // Find the best child
-        if (this.postsortEnable) {
-            // sort children and pick best
-            node.child = this.sortChildren(node);
-        } else if (bestChild !== undefined) {
-            node.child = bestChild;
-        } else {
-            node.child = this.bestChild(node);
-        }
-        node.inheritedValue = -node.child.inheritedValue;
-        node.inheritedDepth = this.activeDepth;
-        node.pathLength = node.child.pathLength + 1;
     }
 
     /**
@@ -386,16 +245,17 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            let value = -Infinity;
+            node.aim = NodeAim.MAX;
 
             // Get moves if not already on node
             if (!node.moves.length) {
                 node.moves = this.GetMoves(node);
             } else {
-                this.sortChildren(node);
+                // this.sortChildren(node);
+                bubbleSortEfficient(node.children);
             }
             const gen = this.childGen(node);
-            let bestChild: Node<GS, M, D> | undefined;
+            let best: Node<GS, M, D> | undefined;
 
             // Iterate through node children
             for (const child of gen) {
@@ -405,11 +265,10 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                     return SearchExit.TIME;
                 }
                 // get best value with pathlength
-                if (child.inheritedValue > value) {
-                    value = child.inheritedValue;
-                    bestChild = child;
+                if (best == undefined || child.inheritedValue > best.inheritedValue) {
+                    best = child;
                     //  Update alpha
-                    alpha = Math.max(value, alpha);
+                    alpha = Math.max(best.inheritedValue, alpha);
 
                     // If alpha is greater than beta, this node will never be reached
                     if (alpha >= beta) {
@@ -417,8 +276,8 @@ export class Negamax<GS, M, D> extends Tree<GS, M, D> {
                     }
                 }
             }
-            if (bestChild !== undefined) {
-                node.child = bestChild;
+            if (best !== undefined) {
+                node.child = best;
                 node.inheritedValue = -node.child.inheritedValue;
                 node.inheritedDepth = this.activeDepth;
                 node.pathLength = node.child.pathLength + 1;

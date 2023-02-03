@@ -5,3 +5,5 @@ export { EvaluateNodeFunc, GetMovesFunc, CreateChildNodeFunc } from "./tree/inte
 export { Negamax } from "./negamax/negamax.js";
 export { NegamaxResult, NegamaxOpts } from "./negamax/index.js";
 export { SortMethod } from "./tree/sorting.js";
+export { Minimax } from "./minimax/minimax.js";
+export { MinimaxOpts, MinimaxResult } from "./minimax/index.js";

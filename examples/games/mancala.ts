@@ -114,15 +114,9 @@ export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, n
     new_gamestate.playMove(move);
     // Return a new node with correct node type
     const score = new_gamestate.ends[0] - new_gamestate.ends[1];
-    if (new_gamestate.end) {
-        const node = new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0);
-        node.value = score;
-        node.moves = new_gamestate.moves;
-        return node;
-    } else {
-        const node = new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0);
-        node.value = score;
-        node.moves = new_gamestate.moves;
-        return node;
-    }
+    const type = new_gamestate.end ? minimax.NodeType.LEAF : minimax.NodeType.INNER;
+    const aim = new_gamestate.activePlayer == 0 ? minimax.NodeAim.MAX : minimax.NodeAim.MIN;
+    const node = new minimax.Node(type, new_gamestate, move, 0, aim, new_gamestate.moves);
+    node.value = score;
+    return node;
 };
