@@ -1,16 +1,7 @@
-import {
-    EvaluateNodeFunc,
-    Minimax,
-    MinimaxResult,
-    Node,
-    NodeAim,
-    NodeType,
-    PruningType,
-    SearchExit,
-} from "../index.js";
+import { MinimaxResult, Node, NodeType, SearchExit } from "../index.js";
 import { GetScoresFunc } from "../tree/interfaces.js";
 import { SearchTree } from "../tree/searchtree.js";
-import { MaxnNode, MaxnOpts } from "./index.js";
+import { MaxnOpts } from "./index.js";
 
 /**
  * Interface for performing a minimax search
@@ -36,7 +27,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
         // reset fullDepth flag
         this.fullDepth = true;
         // Call negamax to depth
-        const exit = this.maxn(this.activeRoot, depth, -Infinity, Infinity);
+        const exit = this.maxn(this.activeRoot, depth);
         // return result
         return new MinimaxResult<M>(
             exit,
@@ -69,7 +60,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
      * @param beta_path Best guaranteed path for minimising player
      * @returns `false` if time expired during search, `true` if search should continue
      */
-    protected maxn(node: Node<GS, M, D>, depth: number, alpha: number, beta: number): SearchExit {
+    protected maxn(node: Node<GS, M, D>, depth: number): SearchExit {
         // Check if this node should be assigned a direct value
         if (node.type == NodeType.LEAF) {
             return this.assignNodeValue(node, true);
@@ -85,7 +76,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
             let best: Node<GS, M, D> | undefined;
             // Iterate through node children
             for (const child of this.getChildren(node)) {
-                exit = this.maxn(child, depth - 1, -Infinity, Infinity);
+                exit = this.maxn(child, depth - 1);
                 if (exit == SearchExit.TIME) {
                     return SearchExit.TIME;
                 }
@@ -109,7 +100,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
         }
     }
 
-    protected assignNodeValue(node: MaxnNode<GS, M, D>, leaf: boolean) {
+    protected assignNodeValue(node: Node<GS, M, D>, leaf: boolean) {
         // Fetch the node scores if they havent already been assigned
         if (!node.scores.length) {
             this.getScores(node);
