@@ -18,7 +18,7 @@
         "build:docs": "npm run build && typedoc --includeVersion",
         "format": "prettier --write \"src/**/*.ts\"",
         "lint": "eslint .",
-        "prepare": "npm run build",
+        "prepare": "npm run cleanBuild",
         "prepublishOnly": "npx git-branch-is -r release* && npm run lint && npm test",
         "preversion": "npx git-branch-is -r release* && npm run lint",
         "version": "npm run build:docs && git add docs",
