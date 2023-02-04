@@ -24,3 +24,10 @@ export interface CreateChildNodeFunc<GS, M, D> {
 export interface EvaluateNodeFunc<GS, M, D> {
     (node: Node<GS, M, D>): number;
 }
+
+/**
+ * Callback for maxn evaluation to return an array of scores for node
+ */
+export interface GetScoresFunc<GS, M, D> {
+    (node: Node<GS, M, D>): void;
+}

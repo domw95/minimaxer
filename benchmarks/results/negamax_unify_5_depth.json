@@ -1,57 +1,81 @@
 {
-  "name": "Sorting methods",
-  "date": "2023-01-25T21:06:50.631Z",
+  "name": "Negamax varieties",
+  "date": "2023-02-03T23:35:27.799Z",
   "version": null,
   "results": [
     {
-      "name": "Standard",
-      "ops": 350,
-      "margin": 1.44,
-      "percentSlower": 94.65
+      "name": "Negamax",
+      "ops": 222,
+      "margin": 2.45,
+      "percentSlower": 94.27
     },
     {
-      "name": "Alphabeta",
-      "ops": 4657,
-      "margin": 0.35,
-      "percentSlower": 28.87
+      "name": "Minimax",
+      "ops": 221,
+      "margin": 2.1,
+      "percentSlower": 94.29
     },
     {
-      "name": "Alphabeta Gen",
-      "ops": 5987,
-      "margin": 0.38,
-      "percentSlower": 8.55
+      "name": "Negamax Gen",
+      "ops": 218,
+      "margin": 2.49,
+      "percentSlower": 94.37
     },
     {
-      "name": "Alphabeta Bubble",
-      "ops": 4663,
-      "margin": 1,
-      "percentSlower": 28.78
+      "name": "Minimax Gen",
+      "ops": 219,
+      "margin": 1.95,
+      "percentSlower": 94.34
     },
     {
-      "name": "Alphabeta Gen Bubble",
-      "ops": 6510,
-      "margin": 0.14,
-      "percentSlower": 0.57
+      "name": "Negamax Alphabeta",
+      "ops": 640,
+      "margin": 1.6,
+      "percentSlower": 83.47
     },
     {
-      "name": "Alphabeta Bubble Efficient",
-      "ops": 4725,
-      "margin": 0.13,
-      "percentSlower": 27.83
+      "name": "Minimax Alphabeta",
+      "ops": 306,
+      "margin": 1.88,
+      "percentSlower": 92.1
     },
     {
-      "name": "Alphabeta Gen Bubble Efficient",
-      "ops": 6547,
-      "margin": 0.16,
+      "name": "Negamax Alphabeta presort",
+      "ops": 2422,
+      "margin": 1.79,
+      "percentSlower": 37.45
+    },
+    {
+      "name": "Minimax Alphabeta presort",
+      "ops": 1971,
+      "margin": 1.75,
+      "percentSlower": 49.1
+    },
+    {
+      "name": "Negamax Alphabeta presort gen",
+      "ops": 3494,
+      "margin": 2.14,
+      "percentSlower": 9.76
+    },
+    {
+      "name": "Minimax Alphabeta presort gen",
+      "ops": 2135,
+      "margin": 1.76,
+      "percentSlower": 44.86
+    },
+    {
+      "name": "Negamax Optimal",
+      "ops": 3872,
+      "margin": 1.86,
       "percentSlower": 0
     }
   ],
   "fastest": {
-    "name": "Alphabeta Gen Bubble Efficient",
-    "index": 6
+    "name": "Negamax Optimal",
+    "index": 10
   },
   "slowest": {
-    "name": "Standard",
-    "index": 0
+    "name": "Negamax Gen",
+    "index": 2
   }
 }

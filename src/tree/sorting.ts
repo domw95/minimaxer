@@ -13,7 +13,7 @@ export const enum SortMethod {
 }
 
 // Sort function that includes path length in selection
-function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>) {
+function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>): number {
     if (b.inheritedDepth == a.inheritedDepth) {
         // Only care if values are the same
         if (b.inheritedValue == a.inheritedValue) {
@@ -25,31 +25,52 @@ function sortFuncPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unkn
         } else {
             return b.inheritedValue - a.inheritedValue;
         }
-    } else if (b.inheritedDepth > a.inheritedDepth) {
-        return 1;
     } else {
-        return 0;
+        return b.inheritedDepth - a.inheritedDepth;
     }
 }
 
-function sortFuncNoPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>) {
+// Sort based on inherited depth and value
+function sortFuncNoPrune(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>): number {
     if (b.inheritedDepth == a.inheritedDepth) {
         return b.inheritedValue - a.inheritedValue;
     } else {
-        return b.inheritedDepth > a.inheritedDepth;
+        return b.inheritedDepth - a.inheritedDepth;
     }
 }
 
-function sortFuncNoPruneSimple(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>) {
-    return b.inheritedValue - a.inheritedValue;
+// Sort based on inherited depth and reversed value
+function sortFuncNoPruneReverse(a: Node<unknown, unknown, unknown>, b: Node<unknown, unknown, unknown>): number {
+    if (b.inheritedDepth == a.inheritedDepth) {
+        return a.inheritedValue - b.inheritedValue;
+    } else {
+        return a.inheritedDepth - b.inheritedDepth;
+    }
+}
+
+// Return the correct search function
+function getSortFunc(reverse: boolean, prune: boolean) {
+    if (prune) {
+        return sortFuncPrune;
+    } else {
+        if (reverse) {
+            return sortFuncNoPruneReverse;
+        } else {
+            return sortFuncNoPrune;
+        }
+    }
+}
+
+// Sort using in build sort function
+export function defaultSort(list: Node<unknown, unknown, unknown>[], reverse = false, pruneByPathLength = false) {
+    const sortFunc = getSortFunc(reverse, pruneByPathLength);
+    list.sort(sortFunc);
 }
 
 // Sort using bubblesort
-export function bubbleSort(list: Node<unknown, unknown, unknown>[], pruneByPathLength = false) {
-    let sortFunc = sortFuncNoPrune;
-    if (pruneByPathLength) {
-        sortFunc = sortFuncPrune;
-    }
+export function bubbleSort(list: Node<unknown, unknown, unknown>[], reverse = false, pruneByPathLength = false) {
+    const sortFunc = getSortFunc(reverse, pruneByPathLength);
+
     for (;;) {
         // Mark as not changed for this pass
         let changed = false;
@@ -74,7 +95,11 @@ export function bubbleSort(list: Node<unknown, unknown, unknown>[], pruneByPathL
 }
 
 // Sort using bubblesort, stopping at nodes that havent been updated
-export function bubbleSortEfficient(list: Node<unknown, unknown, unknown>[], pruneByPathLength = false) {
+export function bubbleSortEfficient(
+    list: Node<unknown, unknown, unknown>[],
+    reverse = false,
+    pruneByPathLength = false,
+) {
     for (;;) {
         // Mark as not changed for this pass
         let changed = false;
@@ -84,12 +109,12 @@ export function bubbleSortEfficient(list: Node<unknown, unknown, unknown>[], pru
             const a = list[i - 1];
             const b = list[i];
             // Check if reached un updated nodes
-            if (b.inheritedDepth - a.inheritedDepth < 0) {
+            if (b.inheritedDepth > a.inheritedDepth) {
                 // Stop this iteration
                 break;
             }
             // Returns positive if b should switch with a
-            if (b.inheritedValue - a.inheritedValue > 0) {
+            if ((!reverse && b.inheritedValue > a.inheritedValue) || (reverse && b.inheritedValue < a.inheritedValue)) {
                 list[i - 1] = b;
                 list[i] = a;
                 changed = true;

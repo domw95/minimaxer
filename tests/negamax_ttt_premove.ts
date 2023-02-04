@@ -53,28 +53,6 @@ test("Alphabeta pruning", () => {
     expect(result.pathLength).toBe(5);
 });
 
-test("Alphabeta pruning, postsort", () => {
-    const opts = new minimax.NegamaxOpts();
-    opts.timeout = 5000;
-    opts.pruning = minimax.PruningType.ALPHA_BETA;
-    opts.postsort = true;
-    opts.pruneByPathLength = true;
-    opts.method = SearchMethod.TIME;
-
-    const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
-    const tree = new minimax.Negamax(root, opts);
-    tree.CreateChildNode = ttt.createChildCallback;
-    tree.EvaluateNode = ttt.evaluateGamestateCallback;
-    tree.GetMoves = ttt.getMovesCallback;
-
-    // const now = Date.now();
-    const result = tree.evaluate();
-    // const elapsed = (Date.now() - now) / 1000;
-    expect(result.value).toBe(1);
-    expect(result.depth).toBe(8);
-    expect(result.pathLength).toBe(5);
-});
-
 test("Alphabeta pruning, genbased and presort", () => {
     const opts = new minimax.NegamaxOpts();
     opts.timeout = 5000;

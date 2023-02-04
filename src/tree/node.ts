@@ -53,6 +53,10 @@ export class Node<GS, M, D> {
     pathLength = 1;
     /** Scores used for multiplayer minimax */
     scores: number[] = [];
+    /** scores inherited from best child */
+    inheritedScores: number[] = [];
+    /** Player to play turn from this node */
+    activePlayer = 0;
 
     /** Best child as selected by  {@link Node.aim}*/
     child: Node<GS, M, D> | undefined;

@@ -9,7 +9,6 @@ game.start();
 const root = new minimax.Node(minimax.NodeType.ROOT, game.clone(), [0, 0], 0, minimax.NodeAim.MAX, game.moves);
 const tree = new minimax.Tree(root);
 tree.CreateChildNode = ttt.createChildCallback;
-tree.EvaluateNode = ttt.evaluateGamestateCallback;
 tree.GetMoves = ttt.getMovesCallback;
 
 // Time how long it takes to make a full tree

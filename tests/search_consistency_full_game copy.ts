@@ -93,14 +93,6 @@ test("Depth genbased", () => {
     compare_opts(opts);
 });
 
-test("Depth Postsort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEPTH;
-    opts.postsort = true;
-    compare_opts(opts);
-});
-
 test("Depth AB", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
@@ -109,13 +101,12 @@ test("Depth AB", () => {
     compare_opts(opts);
 });
 
-test("Depth AB, Gen, Presort, Postsort", () => {
+test("Depth AB, Gen, Presort", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
     opts.method = SearchMethod.DEPTH;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     compare_opts(opts);
 });
@@ -143,14 +134,6 @@ test("Deepening Gen", () => {
     compare_opts(opts);
 });
 
-test("Deepening Postsort", () => {
-    // Depth search
-    const opts = new minimax.NegamaxOpts();
-    opts.method = SearchMethod.DEEPENING;
-    opts.postsort = true;
-    compare_opts(opts, false);
-});
-
 test("Deepening AB", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
@@ -168,13 +151,12 @@ test("Deepening AB presort", () => {
     compare_opts(opts, false);
 });
 
-test("Deepening AB presort postsort gen", () => {
+test("Deepening AB presort gen", () => {
     // Depth search
     const opts = new minimax.NegamaxOpts();
     opts.method = SearchMethod.DEEPENING;
     opts.pruning = minimax.PruningType.ALPHA_BETA;
     opts.presort = true;
-    opts.postsort = true;
     opts.genBased = true;
     compare_opts(opts, false);
 });
