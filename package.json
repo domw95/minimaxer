@@ -1,6 +1,6 @@
 {
     "name": "minimaxer",
-    "version": "3.2.1",
+    "version": "3.2.2",
     "description": "Library for building game trees and running the minimax algorithm for turn-based games",
     "keywords": [
         "minimax",
