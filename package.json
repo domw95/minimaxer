@@ -12,14 +12,16 @@
     "scripts": {
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
         "build": "tsc",
+        "cleanBuild": "rm -rf dist && tsc",
         "build:examples": "npm run build && npx tsc -p examples/",
         "build:benchmarks": "npm run build && npx tsc -p benchmarks/",
-        "build:docs": "npm run build && typedoc",
+        "build:docs": "npm run build && typedoc --includeVersion",
         "format": "prettier --write \"src/**/*.ts\"",
         "lint": "eslint .",
         "prepare": "npm run build",
         "prepublishOnly": "npx git-branch-is -r release* && npm run lint && npm test",
-        "preversion": "npx git-branch-is -r release* && npm run lint && npm run build:docs",
+        "preversion": "npx git-branch-is -r release* && npm run lint",
+        "version": "npm run build:docs && git add docs",
         "postversion": "git push && git push --tags"
     },
     "repository": {
