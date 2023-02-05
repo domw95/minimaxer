@@ -106,6 +106,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         beta: number,
         beta_path: number,
     ): SearchExit {
+        // Mark node as not pruned before starting search
+        node.pruned = false;
         // Check if this node should be assigned a direct value
         if (node.type == NodeType.LEAF) {
             return this.assignNodeValue(node, depth, colour, true);
@@ -119,7 +121,6 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
 
             let exit = SearchExit.FULL_DEPTH;
             let best: Node<GS, M, D> | undefined;
-            // node.aim = NodeAim.MAX;
 
             switch (this.opts.pruning) {
                 case PruningType.NONE:
@@ -145,6 +146,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                             return SearchExit.TIME;
                         }
                         // get best value with pathlength
+                        node.pruned ||= child.pruned;
                         if (best == undefined || child.inheritedValue > best.inheritedValue) {
                             alpha_path = child.pathLength;
                             best = child;
@@ -174,17 +176,21 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                         }
                         // If alpha is greater than beta, this node will never be reached
                         if (alpha > beta) {
+                            node.pruned = true;
                             break;
                         } else if (alpha == beta) {
                             if (!this.opts.pruneByPathLength) {
+                                node.pruned = true;
                                 break;
                             }
                             // Need to check path length
                             // If alpha is positive, minimiser wont select if path is short
                             if (alpha >= 0 && alpha_path <= beta_path) {
+                                node.pruned = true;
                                 break;
                                 // If alpha is negative, minimiser goes for quick win
                             } else if (alpha < 0 && alpha_path >= beta_path) {
+                                node.pruned = true;
                                 break;
                             }
                         }
@@ -198,6 +204,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                 node.inheritedValue = -node.child.inheritedValue;
                 node.inheritedDepth = this.activeDepth;
                 node.pathLength = node.child.pathLength + 1;
+            } else {
+                throw Error("Failed to find best");
             }
             return exit;
         }
@@ -250,6 +258,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         alpha: number,
         beta: number,
     ): SearchExit {
+        node.pruned = false;
         // Check if this node should be assigned a direct value
         if (node.type == NodeType.LEAF) {
             return this.assignNodeValue(node, depth, colour, true);
@@ -281,6 +290,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                 if (exit == SearchExit.TIME) {
                     return SearchExit.TIME;
                 }
+                node.pruned ||= child.pruned;
                 // get best value with pathlength
                 if (best == undefined || child.inheritedValue > best.inheritedValue) {
                     best = child;
@@ -289,6 +299,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
 
                     // If alpha is greater than beta, this node will never be reached
                     if (alpha >= beta) {
+                        node.pruned = true;
                         break;
                     }
                 }

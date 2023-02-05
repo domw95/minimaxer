@@ -37,6 +37,7 @@ export class Tree<GS, M, D> {
         this.root = root;
         this.activeRoot = this.root;
     }
+
     /**
      * Generates all children of given node. Does nothing if branches and children already present
      * @param node Node to create children for

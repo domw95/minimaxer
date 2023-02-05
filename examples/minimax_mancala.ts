@@ -15,9 +15,10 @@ tree.opts.depth = depth;
 tree.opts.timeout = 100;
 tree.opts.method = minimax.SearchMethod.DEEPENING;
 tree.opts.method = minimax.SearchMethod.TIME;
-// tree.opts.randomBest = true;
-tree.opts.randomWeight = 5;
-// tree.opts.pruning = minimax.PruningType.ALPHA_BETA;
+tree.opts.randomBest = true;
+tree.opts.optimal = true;
+// tree.opts.randomWeight = 5;
+tree.opts.pruning = minimax.PruningType.ALPHA_BETA;
 tree.depthCallback = (tree, result) => {
     console.log(result);
 };
