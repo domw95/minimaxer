@@ -64,6 +64,8 @@ export class SearchOpts {
      *  Only works when combined with {@link PruningType.ALPHA_BETA}
      */
     pruneByPathLength = false;
+    /** Select random best child (same value) */
+    randomBest = false;
 }
 
 export class SearchResult<M> {

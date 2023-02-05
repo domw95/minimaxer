@@ -56,11 +56,20 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         // Set pre/post sort flags
         this.presortEnable = this.opts.presort;
         // Iterate through depths
+        let prevResult: SearchResult<M> | undefined;
         for (let activeDepth = this.opts.initialDepth; ; activeDepth++) {
             const result = this.evalDepth(activeDepth);
             this.depthCallback(this, result);
-            if (result.exit == SearchExit.FULL_DEPTH || result.exit == SearchExit.TIME || activeDepth == max_depth) {
+            if (result.exit == SearchExit.FULL_DEPTH || activeDepth == max_depth) {
                 return result;
+            } else if (result.exit == SearchExit.TIME) {
+                if (prevResult != undefined) {
+                    result.move = prevResult.move;
+                    result.value = prevResult.value;
+                }
+                return result;
+            } else {
+                prevResult = result;
             }
         }
     }

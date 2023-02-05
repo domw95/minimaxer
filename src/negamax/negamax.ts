@@ -52,6 +52,34 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         } else {
             exit = this.negamax_optimal(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity);
         }
+        // Select random move if enabled
+        if (this.opts.randomBest && exit != SearchExit.TIME) {
+            const children: Node<GS, M, D>[] = [];
+            const value = this.activeRoot.child?.inheritedValue as number;
+            for (let i = 0; i < this.activeRoot.children.length; i++) {
+                const child = this.activeRoot.children[i];
+                if (child.inheritedDepth == this.activeDepth) {
+                    if (child.inheritedValue == value) {
+                        children.push(child);
+                    }
+                } else {
+                    break;
+                }
+            }
+            console.log("Found", children.length, "Children for random");
+            const best = children[Math.floor(children.length * Math.random())];
+
+            return new NegamaxResult<M>(
+                exit,
+                best.move,
+                -this.activeRoot.aim * this.activeRoot.inheritedValue,
+                depth,
+                this.outcomes,
+                this.nodeCount,
+                this.activeRoot.pathLength,
+            );
+        }
+
         // return result
         return new NegamaxResult<M>(
             exit,
