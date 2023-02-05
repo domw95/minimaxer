@@ -212,28 +212,32 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
 
     protected randomWeightedChild(node: Node<GS, M, D>, weight: number): Node<GS, M, D> {
         // List of children and corresponding cumulative weights
-        const children: { child: Node<GS, M, D>; weight: number }[] = [];
+        const children: { child: Node<GS, M, D>; weight: number; cumulative_weight: number }[] = [];
         // Cumulative weighting of all children
         let cumulative_weight = 0;
         // Depth of current best
         const depth = node.child?.inheritedDepth as number;
+        // Normalise so values dont get stupid large.
+        const best_value = node.child?.inheritedValue as number;
 
         for (let i = 0; i < node.children.length; i++) {
             const child = node.children[i];
             if (child.inheritedDepth == depth && !child.pruned) {
                 // Child valid for selection
-                cumulative_weight += Math.pow(weight, child.inheritedValue);
-                children.push({ child: child, weight: cumulative_weight });
+                const child_weight = Math.pow(weight, child.inheritedValue - best_value);
+                cumulative_weight += child_weight;
+                children.push({ child: child, weight: child_weight, cumulative_weight: cumulative_weight });
             }
         }
         // If no eligible children, return current best
         if (!children.length) {
             return node.child as Node<GS, M, D>;
         }
+        console.log("Selecting from ", children);
         // Choose a random number to select child
         const random_weight = Math.random() * cumulative_weight;
         for (let i = 0; i < children.length; i++) {
-            if (random_weight < children[i].weight) {
+            if (random_weight < children[i].cumulative_weight) {
                 return children[i].child;
             }
         }
