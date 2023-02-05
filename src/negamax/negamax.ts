@@ -52,39 +52,24 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         } else {
             exit = this.negamax_optimal(this.activeRoot, depth, this.activeRoot.aim, -Infinity, Infinity);
         }
-        // Select random move if enabled
-        if (this.opts.randomBest && exit != SearchExit.TIME) {
-            const children: Node<GS, M, D>[] = [];
-            const value = this.activeRoot.child?.inheritedValue as number;
-            for (let i = 0; i < this.activeRoot.children.length; i++) {
-                const child = this.activeRoot.children[i];
-                if (child.inheritedDepth == this.activeDepth) {
-                    if (child.inheritedValue == value) {
-                        children.push(child);
-                    }
-                } else {
-                    break;
-                }
-            }
-            console.log("Found", children.length, "Children for random");
-            const best = children[Math.floor(children.length * Math.random())];
 
-            return new NegamaxResult<M>(
-                exit,
-                best.move,
-                -this.activeRoot.aim * this.activeRoot.inheritedValue,
-                depth,
-                this.outcomes,
-                this.nodeCount,
-                this.activeRoot.pathLength,
-            );
+        // Default best is the one assigned to root
+        let best = this.activeRoot.child as Node<GS, M, D>;
+
+        // Select random best if enabled
+        if (this.opts.randomBest && exit != SearchExit.TIME) {
+            // Get randomly selected best move
+            best = this.randomBestChild(this.activeRoot);
+        } else if (this.opts.randomWeight && exit != SearchExit.TIME) {
+            // Get weighted random best move
+            best = this.randomWeightedChild(this.activeRoot, this.opts.randomWeight);
         }
 
         // return result
         return new NegamaxResult<M>(
             exit,
-            this.activeRoot.child?.move as M,
-            -this.activeRoot.aim * this.activeRoot.inheritedValue,
+            best.move,
+            this.activeRoot.aim * best.inheritedValue,
             depth,
             this.outcomes,
             this.nodeCount,

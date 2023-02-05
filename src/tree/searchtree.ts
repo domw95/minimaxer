@@ -186,6 +186,60 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         return node.children[0];
     }
 
+    /**
+     * Selects from the nodes children which all have an equal best value (and depth)
+     * Uniform random weighting
+     * Node.child must already represent best child
+     * @param node Parent to select best child from
+     * @returns randomly selected best child with same value as best
+     */
+    protected randomBestChild(node: Node<GS, M, D>): Node<GS, M, D> {
+        // List to hold children to randomly choose from
+        const children: Node<GS, M, D>[] = [];
+        // Depth and value of current best
+        const depth = node.child?.inheritedDepth as number;
+        const value = node.child?.inheritedValue as number;
+        // Finding children matching depth and value
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            if (child.inheritedDepth == depth && child.inheritedValue == value) {
+                children.push(child);
+            }
+        }
+        return children[Math.floor(children.length * Math.random())];
+    }
+
+    protected randomWeightedChild(node: Node<GS, M, D>, weight: number): Node<GS, M, D> {
+        // List of children and corresponding cumulative weights
+        const children: { child: Node<GS, M, D>; weight: number }[] = [];
+        // Cumulative weighting of all children
+        let cumulative_weight = 0;
+        // Depth of current best
+        const depth = node.child?.inheritedDepth as number;
+
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            if (child.inheritedDepth == depth) {
+                // Child valid for selection
+                cumulative_weight += Math.pow(weight, child.inheritedValue);
+                children.push({ child: child, weight: cumulative_weight });
+            }
+        }
+        console.log(
+            children.map((obj) => {
+                return [obj.child.inheritedValue, obj.weight];
+            }),
+        );
+        // Choose a random number to select child
+        const random_weight = Math.random() * cumulative_weight;
+        for (let i = 0; i < children.length; i++) {
+            if (random_weight < children[i].weight) {
+                return children[i].child;
+            }
+        }
+        throw Error("Failed to select weighted random child");
+    }
+
     /** Generator that yields all the nodes along the optimal
      * path, starting from and including `node` */
     protected *routeGen(node: Node<GS, M, D>): Generator<Node<GS, M, D>> {
