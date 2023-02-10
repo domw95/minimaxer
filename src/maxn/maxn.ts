@@ -28,11 +28,22 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
         this.fullDepth = true;
         // Call negamax to depth
         const exit = this.maxn(this.activeRoot, depth);
+        // Default best is the one assigned to root
+        let best = this.activeRoot.child as Node<GS, M, D>;
+
+        // Select random best if enabled
+        if (this.opts.randomBest && exit != SearchExit.TIME) {
+            // Get randomly selected best move
+            best = this.randomBestChild(this.activeRoot);
+        } else if (this.opts.randomWeight && exit != SearchExit.TIME) {
+            // Get weighted random best move
+            best = this.randomWeightedChild(this.activeRoot, this.opts.randomWeight);
+        }
         // return result
         return new MinimaxResult<M>(
             exit,
-            this.activeRoot.child?.move as M,
-            this.activeRoot.inheritedValue,
+            best.move,
+            best.inheritedValue,
             depth,
             this.outcomes,
             this.nodeCount,
@@ -83,6 +94,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
 
                 // Assign a value according to this nodes player
                 child.inheritedValue = child.inheritedScores[node.activePlayer];
+                child.inheritedDepth = this.activeDepth;
 
                 if (best == undefined || child.inheritedValue > best.inheritedValue) {
                     best = child;
@@ -105,9 +117,8 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
         if (!node.scores.length) {
             this.getScores(node);
         }
-        // Set nodes values as the score of its parent player
-        node.inheritedValue = node.scores[node.parent?.activePlayer as number];
         node.inheritedDepth = this.activeDepth;
+        node.inheritedScores = node.scores;
         // tally
         this.outcomes++;
         if (leaf) {
