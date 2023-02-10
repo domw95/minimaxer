@@ -95,6 +95,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
                     this.expireTime = 0;
                 }
                 return this.evalDeepening();
+
             default:
                 return this.evalDepth();
         }
@@ -233,7 +234,6 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         if (!children.length) {
             return node.child as Node<GS, M, D>;
         }
-        console.log("Selecting from ", children);
         // Choose a random number to select child
         const random_weight = Math.random() * cumulative_weight;
         for (let i = 0; i < children.length; i++) {
