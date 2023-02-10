@@ -60,6 +60,8 @@ export class Node<GS, M, D> {
 
     /** Best child as selected by  {@link Node.aim}*/
     child: Node<GS, M, D> | undefined;
+    /**`true` if any children of node have been pruned, `false` if full search */
+    pruned = false;
 
     /**
      * @param type Defines location within tree. See {@link NodeType}

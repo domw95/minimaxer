@@ -12,6 +12,8 @@ export const enum SearchMethod {
     DEEPENING,
     /**  */
     TIME,
+
+    TIME_AND_DEPTH,
 }
 
 /**
@@ -64,6 +66,19 @@ export class SearchOpts {
      *  Only works when combined with {@link PruningType.ALPHA_BETA}
      */
     pruneByPathLength = false;
+    /**
+     * Select random best child (same value)
+     * Does not choose from pruned branches
+     */
+    randomBest = false;
+    /**
+     * Select randomly, weighted in favour of better values
+     * Weighting is determined by config value.
+     * randomWeight = 0, disabled
+     * randomWeight = 1, equal probabilty
+     * randomWeight = 5, 5 times more likely for every +1 valuation
+     */
+    randomWeight = 0;
 }
 
 export class SearchResult<M> {
