@@ -12,6 +12,8 @@ export const enum SearchMethod {
     DEEPENING,
     /**  */
     TIME,
+
+    TIME_AND_DEPTH,
 }
 
 /**
