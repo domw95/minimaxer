@@ -3,6 +3,9 @@ import { CreateChildNodeFunc, GetMovesFunc } from "./interfaces.js";
 
 /**
  * Representation of a game tree for any turn based game with any number of players.
+ * @typeParam GS - The object representing the state of the game
+ * @typeParam M - The object representing a move in the game
+ * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
 export class Tree<GS, M, D> {
     /**
@@ -89,9 +92,9 @@ export class Tree<GS, M, D> {
 
     /**
      * Creates the full game tree starting from {@link Tree.activeRoot}.
-     * 
+     *
      * Uses the {@link Tree.GetMoves} and {@link Tree.CreateChildNode} callbacks.
-     * 
+     *
      */
     createFullTree(): void {
         // Call the createTree recursive function from activeRoot

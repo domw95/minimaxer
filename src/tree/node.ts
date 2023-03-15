@@ -32,11 +32,11 @@ export const enum NodeAim {
 
 /**
  * Representation of a node in the game {@link Tree}.
- * 
+ *
  * Holds the gamestate, a list of moves and a list of child nodes.
- * @typeparam GS - The object representing the state of the game
- * @typeparam M - The object representing a move in the game
- * @typeparam D - Extra data used in evaluation not suitable for storing in the gamestate
+ * @typeParam GS - The object representing the state of the game
+ * @typeParam M - The object representing a move in the game
+ * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
 export class Node<GS, M, D> {
     /** parent of this node, undefined if node is root */
@@ -83,5 +83,5 @@ export class Node<GS, M, D> {
         public data: D,
         public aim = NodeAim.NONE,
         public moves: Array<M> = [],
-    ) { }
+    ) {}
 }
