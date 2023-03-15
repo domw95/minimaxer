@@ -9,25 +9,26 @@ import { SortMethod } from "./sorting.js";
  * Located in an instance of {@link SearchOpts} at {@link SearchOpts.method | SearchOpts.method}.
  */
 export const enum SearchMethod {
-    /** Go to depth specified by {@link SearchOpts.depth | SearchOpts.depth} in SearchOpts */
+    /** Go to depth specified by 
+     * {@link SearchOpts.depth | SearchOpts.depth}. */
     DEPTH,
-    /** @alpha Search the entire tree i.e all leaf nodes */
-    FULL_DEPTH,
     /** 
      * Search iteratively deeper starting from {@link SearchOpts.initialDepth | SearchOpts.initialDepth} 
-     * up to {@link SearchOpts.depth | SearchOpts.depth}
+     * up to {@link SearchOpts.depth | SearchOpts.depth}.
      */
     DEEPENING,
     /** 
      * Same as {@link SearchMethod.DEEPENING} but stops after the time
      * in {@link SearchOpts.timeout | SearchOpts.timeout} has elapsed.
+     * 
+     * If {@link SearchOpts.depth | SearchOpts.depth} is non-zero, performs a time
+     * and depth limited search.
+     * 
+     * If {@link SearchOpts.timeout | SearchOpts.timeout}
+     * and {@link SearchOpts.depth | SearchOpts.depth} 
+     * are 0, performs a full depth search.
      */
     TIME,
-    /**
-     * Search is limited by time or depth, whichever comes first.
-     * @alpha Not yet implemented
-     */
-    TIME_AND_DEPTH,
 }
 
 /**
