@@ -17,13 +17,15 @@ import { bubbleSortEfficient } from "../tree/sorting.js";
  * For configuring the search options, see the {@link NegamaxOpts} page.
  *
  * ## Usage
- * ### Implementing callback
+ * ### Implementing callbacks
+ * 4 callbacks: moves, child, eval, depth.
+ * Show examples of each
  * Code examples
  * ```ts
  * function hello(){
  * }
  * ```
- *
+ * Also need to check all the function comments
  *
  * @typeParam GS - The object representing the state of the game
  * @typeParam M - The object representing a move in the game
@@ -257,6 +259,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         }
     }
 
+    /** Wrapper around default children sort that specifices reverse=`false`*/
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
         return super.sortChildren(node, false);
     }
