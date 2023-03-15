@@ -8,6 +8,10 @@
     "readme": "none",
     "gitRevision": "main",
     "searchInComments": true,
+    "navigationLinks": {
+        "GitHub": "https://github.com/domw95/minimaxer",
+        "Blog": "https://domwil.co.uk/minimaxer/"
+    }
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],
