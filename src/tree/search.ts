@@ -5,32 +5,31 @@ import { SortMethod } from "./sorting.js";
 
 /**
  * Search method to use when traversing the game tree.
- * 
+ *
  * Located in an instance of {@link SearchOpts} at {@link SearchOpts.method | SearchOpts.method}.
  */
 export const enum SearchMethod {
-    /** Go to depth specified by 
+    /** Go to depth specified by
      * {@link SearchOpts.depth | SearchOpts.depth}. */
     DEPTH,
-    /** 
-     * Search iteratively deeper starting from {@link SearchOpts.initialDepth | SearchOpts.initialDepth} 
+    /**
+     * Search iteratively deeper starting from {@link SearchOpts.initialDepth | SearchOpts.initialDepth}
      * up to {@link SearchOpts.depth | SearchOpts.depth}.
      */
     DEEPENING,
-    /** 
+    /**
      * Same as {@link SearchMethod.DEEPENING} but stops after the time
      * in {@link SearchOpts.timeout | SearchOpts.timeout} has elapsed.
-     * 
+     *
      * If {@link SearchOpts.depth | SearchOpts.depth} is non-zero, performs a time
      * and depth limited search.
-     * 
+     *
      * If {@link SearchOpts.timeout | SearchOpts.timeout}
-     * and {@link SearchOpts.depth | SearchOpts.depth} 
+     * and {@link SearchOpts.depth | SearchOpts.depth}
      * are 0, performs a full depth search.
      */
     TIME,
 }
-
 
 /** Pruning types. Located in an instance of {@link SearchOpts} at {@link SearchOpts.pruning | SearchOpts.pruning}.*/
 export const enum PruningType {
@@ -42,7 +41,7 @@ export const enum PruningType {
 
 /**
  * Class representing common options for searching a {@link Tree}.
- * 
+ *
  * Derived classes are used and attached to their corresponding tree.
  */
 export class SearchOpts {
@@ -52,9 +51,9 @@ export class SearchOpts {
     timeout = 0;
     /** Default search depth for depth and deepening searches.*/
     depth = 0;
-    /** Node pruning type, default none 
+    /** Node pruning type, default none
      * @see [Alpha-beta pruning in blog post](https://domwil.co.uk/minimaxer/part2/#alpha-beta-pruning).
-    */
+     */
     pruning: PruningType = PruningType.NONE;
     /**
      * Depth to start from for deepening and time based.
@@ -64,13 +63,13 @@ export class SearchOpts {
     /**
      * Use the child generator instead of creating all children for each node.
      * Should be faster and use less memory.
-     * 
+     *
      * @see [Generators in blog post](https://domwil.co.uk/minimaxer/part4/#the-node-generator).
      */
     genBased = false;
     /** Sort children of node before searching deeper.
      * @see [Presort in blog post](https://domwil.co.uk/minimaxer/part2/#pre-sorting)
-    */
+     */
     presort = false;
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
@@ -79,36 +78,36 @@ export class SearchOpts {
      */
     pruneByPathLength = false;
     /**
-     * @experimental 
+     * @experimental
      * Select random best child (same value)
      * Does not choose from pruned branches
      */
     randomBest = false;
     /**
-     * @experimental 
+     * @experimental
      * Select randomly, weighted in favour of better values
      * Weighting is determined by config value.
-     * randomWeight = 0, disabled
-     * randomWeight = 1, equal probabilty
-     * randomWeight = 5, 5 times more likely for every +1 valuation
+     * - randomWeight = 0, disabled
+     * - randomWeight = 1, equal probabilty
+     * - randomWeight = 5, 5 times more likely for every +1 valuation
      */
     randomWeight = 0;
 }
 
 /**
  * Represents the reason for terminating the search.
- * 
+ *
  * Property of {@link SearchResult}.
  */
 export const enum SearchExit {
-    /** 
+    /**
      * At least 1 path did not reach a leaf node, and the depth set by
      * {@link SearchOpts.depth | SearchOpts.depth} was reached.
-    */
+     */
     DEPTH,
     /** All paths reached leaf nodes */
     FULL_DEPTH,
-    /** Searched concluded because of timeout set in 
+    /** Searched concluded because of timeout set in
      * {@link SearchOpts.timeout | SearchOpts.timeout}.
      */
     TIME,
@@ -133,5 +132,5 @@ export class SearchResult<M> {
         public outcomes: number,
         public nodes: number,
         public pathLength: number,
-    ) { }
+    ) {}
 }
