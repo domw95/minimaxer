@@ -1,7 +1,12 @@
 {
-    "entryPoints": ["src/index.ts"],
+    "entryPoints": [
+        "src/index.ts"
+    ],
     "entryPointStrategy": "expand",
-    "out": "docs"
+    "out": "docs",
+    "includeVersion": true,
+    "readme": "none",
+    "gitRevision": "main"
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],
