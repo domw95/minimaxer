@@ -7,7 +7,27 @@ import { bubbleSortEfficient } from "../tree/sorting.js";
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
  * Can be configured to do depth based, time based and deepening searches,
- * with or without alpha-beta pruning and other optimisations.
+ * with a number of tuning options.
+ *
+ * For an example implementation, see the
+ * [mancala game and required callback function](https://github.com/domw95/minimaxer/blob/main/examples/games/mancala.ts)
+ * and the
+ * [usage](https://github.com/domw95/minimaxer/blob/main/examples/minimax_mancala.ts).
+ *
+ * For configuring the search options, see the {@link NegamaxOpts} page.
+ *
+ * ## Usage
+ * ### Implementing callback
+ * Code examples
+ * ```ts
+ * function hello(){
+ * }
+ * ```
+ *
+ *
+ * @typeParam GS - The object representing the state of the game
+ * @typeParam M - The object representing a move in the game
+ * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
 export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     /** Search options.
@@ -19,6 +39,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     /**
      * @param root Root to start the
      * @param opts Control the behaviour of the negamax search
+     *
      */
     constructor(root: Node<GS, M, D>, opts: NegamaxOpts = new NegamaxOpts()) {
         super(root, opts);
