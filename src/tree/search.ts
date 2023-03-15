@@ -61,14 +61,12 @@ export const enum PruningType {
  * Derived classes are used and attached to their corresponding tree.
  */
 export class SearchOpts {
-    /** Timeout used for **all** searches */
-    timeout = 0;
-    /** Default depth for depth and deepening searches */
-    depth = 0;
     /** Method used to search for best move. See {@link SearchMethod} for details*/
     method = SearchMethod.DEPTH;
-    /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
-    sortMethod = SortMethod.DEFAULT;
+    /** Timeout used for **all** searches. Timeout disabled when set to 0.*/
+    timeout = 0;
+    /** Default search depth for depth and deepening searches.*/
+    depth = 0;
     /** Node pruning type, default none 
      * @see [Alpha-beta pruning in blog post](https://domwil.co.uk/minimaxer/part2/#alpha-beta-pruning).
     */
@@ -89,8 +87,10 @@ export class SearchOpts {
      * @see [Presort in blog post](https://domwil.co.uk/minimaxer/part2/#pre-sorting)
     */
     presort = false;
+    /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
+    sortMethod = SortMethod.DEFAULT;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
-     *  Only works when combined with {@link PruningType.ALPHA_BETA}
+     *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}
      */
     pruneByPathLength = false;
     /**
