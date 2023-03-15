@@ -11,7 +11,24 @@
     "navigationLinks": {
         "GitHub": "https://github.com/domw95/minimaxer",
         "Blog": "https://domwil.co.uk/minimaxer/"
-    }
+    },
+    "validation": {
+        "invalidLink": true,
+        "notDocumented": true,
+        "notExported": true
+    },
+    "requiredToBeDocumented": [
+        "Enum",
+        "EnumMember",
+        "Variable",
+        "Function",
+        "Class",
+        "Interface",
+        "Property",
+        "Method",
+        "Accessor",
+        "TypeAlias"
+    ]
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],
