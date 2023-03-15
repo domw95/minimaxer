@@ -36,6 +36,7 @@ export interface EvaluateNodeFunc<GS, M, D> {
 }
 
 /**
+ * @hidden
  * Callback for maxn evaluation to return an array of scores for node
  * 
  * **===== Not currently used =======**
