@@ -31,22 +31,6 @@ export const enum SearchMethod {
     TIME,
 }
 
-/**
- * Represents the reason for terminating the search
- */
-export const enum SearchExit {
-    /** 
-     * At least 1 path did not reach a leaf node, and the depth set by
-     * {@link SearchOpts.depth | SearchOpts.depth} was reached.
-    */
-    DEPTH,
-    /** All paths reached leaf nodes */
-    FULL_DEPTH,
-    /** Searched concluded because of timeout set in 
-     * {@link SearchOpts.timeout | SearchOpts.timeout}.
-     */
-    TIME,
-}
 
 /** Pruning types. Located in an instance of {@link SearchOpts} at {@link SearchOpts.pruning | SearchOpts.pruning}.*/
 export const enum PruningType {
@@ -111,6 +95,26 @@ export class SearchOpts {
     randomWeight = 0;
 }
 
+/**
+ * Represents the reason for terminating the search.
+ * 
+ * Property of {@link SearchResult}.
+ */
+export const enum SearchExit {
+    /** 
+     * At least 1 path did not reach a leaf node, and the depth set by
+     * {@link SearchOpts.depth | SearchOpts.depth} was reached.
+    */
+    DEPTH,
+    /** All paths reached leaf nodes */
+    FULL_DEPTH,
+    /** Searched concluded because of timeout set in 
+     * {@link SearchOpts.timeout | SearchOpts.timeout}.
+     */
+    TIME,
+}
+
+/** Object that is returned after a search has been completed */
 export class SearchResult<M> {
     /**
      * @param exit Reason the search has stopped and result returned.
