@@ -6,7 +6,8 @@
     "out": "docs",
     "includeVersion": true,
     "readme": "none",
-    "gitRevision": "main"
+    "gitRevision": "main",
+    "searchInComments": true,
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],
