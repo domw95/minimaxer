@@ -8,6 +8,9 @@
     "readme": "none",
     "gitRevision": "main",
     "searchInComments": true,
+    "sort": [
+        "enum-value-ascending"
+    ],
     "navigationLinks": {
         "GitHub": "https://github.com/domw95/minimaxer",
         "Blog": "https://domwil.co.uk/minimaxer/"
