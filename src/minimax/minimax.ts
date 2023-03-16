@@ -3,7 +3,25 @@ import { MinimaxOpts, MinimaxResult } from "./index.js";
 import { Node, NodeAim, NodeType, PruningType, SearchExit } from "../index.js";
 
 /**
- * Interface for performing a minimax search
+ * Class for performing a minimax search.
+ *
+ * **Probability based searches coming soon**
+ *
+ * ## Usage
+ * See the {@link Negamax} documentation for general usage, its is very similar.
+ *
+ * The differences are as follows:
+ * - The {@link NegamaxOpts.optimal} flag is not supported (and won't be)
+ * - The {@link MinimaxOpts.pruneByPathLength}, {@link MinimaxOpts.randomBest} and
+ * {@link MinimaxOpts.randomWeight} options are not yet available.
+ * - In the {@link Minimax.CreateChildNode} callback, the {@link NodeAim} must be
+ * explicitly set according to the players turn. This allows repeated turns, i.e setting it as {@link NodeAim.MAX}
+ * two turns in a row.
+ *
+ *
+ * @typeParam GS - The object representing the state of the game
+ * @typeParam M - The object representing a move in the game
+ * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
 export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
     /**
@@ -15,6 +33,11 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
         super(root, opts);
     }
 
+    /**
+     *
+     * @param depth Overide the depth property in {@link Minimax.opts.depth}
+     * @returns The result of the search
+     */
     protected evalDepth(depth = this.opts.depth): MinimaxResult<M> {
         // reset stats
         this.outcomes = 0;
@@ -36,24 +59,20 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
     }
 
     /**
-     * Implements the negamax algorithm up to a given depth of search.
-     * Recursively calls itself until `depth` is `0` or {@link NodeType.LEAF} node is reached and evaluated.
-     * Node values are then passed back up the tree according to the {@link NodeAim} of the parent nodes.
+     * Implements the minimax algorithm up to a given depth of search.
+     * Recursively calls itself until `depth` is `0` or {@link NodeType.LEAF}
+     * node is reached and evaluated.
      *
-     * The `colour` arguments alternates between `1` and `-1`, as the node aim alternates between {@link NodeAim.MAX} and {@link NodeAim.MIN}.
-     * This changes the sign of the value applied to node depending on the aim of the parent.
-     * Selection of the best child can then be done based on the maximum node value.
+     * Node values and best child are chosen according to the
+     * {@link NodeAim} of the parent nodes.
      *
      * Returns early if timeout occurs
      *
      * @param node Node to evaluate or search children
      * @param depth Depth to search from this node
-     * @param colour `1` for {@link NodeAim.MAX}, `-1` for {@link NodeAim.MIN}
      * @param alpha minimum guaranteed score
-     * @param alpha_path Best guaranteed path
      * @param beta maximum guaranteed score from minimising player
-     * @param beta_path Best guaranteed path for minimising player
-     * @returns `false` if time expired during search, `true` if search should continue
+     * @returns Reason for returning.
      */
     protected minimax(node: Node<GS, M, D>, depth: number, alpha: number, beta: number): SearchExit {
         // Check if this node should be assigned a direct value
@@ -148,7 +167,14 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
         return { exit: exit, best: best };
     }
 
-    // Goes through to find best child using alpha beta pruning
+    /**
+     * Find the best child of a node using alpha beta pruning
+     * @param node Node to find best child of
+     * @param depth Depth to limit search to
+     * @param alpha Current alpha value
+     * @param beta current beta value
+     * @returns Reason for exit and opional best child
+     */
     protected alphaBetaBestChild(
         node: Node<GS, M, D>,
         depth: number,
@@ -197,7 +223,14 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
         }
         return { exit: exit, best: best };
     }
-    protected assignNodeValue(node: Node<GS, M, D>, leaf: boolean) {
+
+    /**
+     *
+     * @param node Node to assign value to
+     * @param leaf `true` if node is a leaf
+     * @returns reason for exit. Either {@link SearchExit.FULL_DEPTH} or {@link SearchExit.DEPTH}.
+     */
+    protected assignNodeValue(node: Node<GS, M, D>, leaf: boolean): SearchExit {
         // Assign value and depth
         node.inheritedValue = this.EvaluateNode(node);
         node.inheritedDepth = this.activeDepth;

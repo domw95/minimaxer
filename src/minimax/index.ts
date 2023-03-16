@@ -1,7 +1,10 @@
 import { SearchOpts, SearchResult } from "../tree/search.js";
 
-/** Options unique to minimax to change its behaviour */
+/** Change the behaviour of the minimax search */
 export class MinimaxOpts extends SearchOpts {}
 
-/** Object returned after searching the tree using negamax */
+/**
+ * Type of object returned after calling {@link Minimax.evaluate}
+ * on a {@link Minimax} tree.
+ */
 export class MinimaxResult<M> extends SearchResult<M> {}
