@@ -1,7 +1,5 @@
 {
-    "entryPoints": [
-        "src/index.ts"
-    ],
+    "entryPoints": ["src/index.ts"],
     "entryPointStrategy": "expand",
     "out": "docs",
     "includes": "docs-src",
@@ -9,9 +7,8 @@
     "readme": "docs-src/index.md",
     "gitRevision": "main",
     "searchInComments": true,
-    "sort": [
-        "enum-value-ascending"
-    ],
+    "categorizeByGroup": false,
+    "sort": ["enum-value-ascending"],
     "navigationLinks": {
         "GitHub": "https://github.com/domw95/minimaxer",
         "Blog": "https://domwil.co.uk/minimaxer/"
@@ -33,7 +30,7 @@
         "Accessor",
         "TypeAlias"
     ],
-    "theme": "default",
+    "theme": "default"
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],

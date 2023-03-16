@@ -3,7 +3,7 @@
 <div class="table-cell" id="tsd-search" data-base=".">
 <div class="field"><label for="tsd-search-field" class="tsd-widget tsd-toolbar-icon search no-caption"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M15.7824 13.833L12.6666 10.7177C12.5259 10.5771 12.3353 10.499 12.1353 10.499H11.6259C12.4884 9.39596 13.001 8.00859 13.001 6.49937C13.001 2.90909 10.0914 0 6.50048 0C2.90959 0 0 2.90909 0 6.49937C0 10.0896 2.90959 12.9987 6.50048 12.9987C8.00996 12.9987 9.39756 12.4863 10.5008 11.6239V12.1332C10.5008 12.3332 10.5789 12.5238 10.7195 12.6644L13.8354 15.7797C14.1292 16.0734 14.6042 16.0734 14.8948 15.7797L15.7793 14.8954C16.0731 14.6017 16.0731 14.1267 15.7824 13.833ZM6.50048 10.499C4.29094 10.499 2.50018 8.71165 2.50018 6.49937C2.50018 4.29021 4.28781 2.49976 6.50048 2.49976C8.71001 2.49976 10.5008 4.28708 10.5008 6.49937C10.5008 8.70852 8.71314 10.499 6.50048 10.499Z" fill="var(--color-text)"></path></svg></label><input type="text" id="tsd-search-field" aria-label="Search"/></div>
 <div class="field">
-<div id="tsd-toolbar-links"></div></div>
+<div id="tsd-toolbar-links"><a href="https://github.com/domw95/minimaxer">GitHub</a><a href="https://domwil.co.uk/minimaxer/">Blog</a></div></div>
 <ul class="results">
 <li class="state loading">Preparing search index...</li>
 <li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">minimaxer - v3.2.3</a></div>
@@ -13,16 +13,68 @@
 <div class="tsd-page-title">
 <h2>minimaxer - v3.2.3</h2></div>
 <div class="tsd-panel tsd-typography">
-<a href="#minimax-library-for-typescript-and-javascript" id="minimax-library-for-typescript-and-javascript" style="color: inherit; text-decoration: none;">
-  <h1>Minimax Library for Typescript and Javascript</h1>
+<a href="#overview" id="overview" style="color: inherit; text-decoration: none;">
+  <h2>Overview</h2>
 </a>
-<p>Implements the minimax (negamax) algorithm for 2 player turn based zero-sum games. Using it for a game requires implementing 3 functions:</p>
+<p>This is the API documentation for the minimaxer Typescript / Javscript library.</p>
+<p>The source code is available on <a href="https://github.com/domw95/minimaxer">Github</a> and I have a detailed write up of the inner-workings on <a href="https://domwil.co.uk/minimaxer/">my blog</a>.</p>
+<p>This library provides 3 different solutions for finding the best move in a turn based game:</p>
 <ul>
-<li>Return a list of moves from a particular game state.</li>
-<li>Transition from one game state to another by applying a move. Determine if the game state is terminal (end of the game).</li>
-<li>Return a number representing the value of a game state. One player desires a larger value, the other a smaller value.</li>
+<li><a href="classes/Negamax.html">Negamax</a><ul>
+<li>For 2 player games, alternating moves, no random components (deterministic).</li>
 </ul>
-<p>See the <a href="examples">examples</a> directory for more info.</p>
+</li>
+<li><a href="classes/Minimax.html">Minimax</a><ul>
+<li>Same as negamax but allows for a player having multiple turns and probability based selection (e.g dice) (<strong>coming soon</strong>).</li>
+</ul>
+</li>
+<li><a href="classes/Maxn.html">Maxn</a><ul>
+<li>Extends minimax to games with more that 2 players.</li>
+<li><strong>In active development.</strong></li>
+</ul>
+</li>
+</ul>
+
+<a href="#features" id="features" style="color: inherit; text-decoration: none;">
+  <h2>Features</h2>
+</a>
+<p>Each method varies in its capabilites, but some of the options available include:</p>
+<ul>
+<li><strong>Depth based searches</strong> | Search to a specified depth (number of moves ahead).</li>
+<li><strong>Iterative Deepening searches</strong> | Search 1 depth further each time until final depth reached.</li>
+<li><strong>Time based searches</strong> | Search deeper and deeper until time expires.</li>
+<li><strong>Alpha-beta pruning</strong> | Greatly reduces search space.</li>
+<li><strong>Presorting nodes</strong> | Combines with alpha-beta pruning for even better results.</li>
+<li><strong>Optimised sort</strong> | Makes presorting even faster.</li>
+<li><strong>Random selections</strong> | Select moves randomly (weighted or not) to appear less &#39;robotic&#39;.</li>
+</ul>
+<p>and many more!</p>
+
+<a href="#installation" id="installation" style="color: inherit; text-decoration: none;">
+  <h2>Installation</h2>
+</a>
+<pre><code class="language-bash"><span class="hl-0">npm </span><span class="hl-1">i</span><span class="hl-0"> </span><span class="hl-1">minimaxmer</span>
+</code></pre>
+
+<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+  <h2>Usage</h2>
+</a>
+<p>Each method requires specifying some callback functions for your game.
+These are used to build the game tree and evaluate the best series of moves by looking
+ahead at all the possible outcomes.</p>
+<p>Getting the best move from a particular game state requires:</p>
+<ul>
+<li>Creating a root node</li>
+<li>Creating a tree</li>
+<li>Attaching the callbacks</li>
+<li>Calling the evaluate function to find the best move (and corresponding value).</li>
+</ul>
+<p>Details about how to do this for each method can be found here:</p>
+<ul>
+<li><a href="classes/Negamax.html">Negamax</a></li>
+<li><a href="classes/Minimax.html">Minimax</a></li>
+<li><a href="classes/Maxn.html">Maxn</a></li>
+</ul>
 </div></div>
 <div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 <div class="tsd-navigation settings">
@@ -47,28 +99,28 @@
 <ul></ul></li></ul></div></details></nav>
 <nav class="tsd-navigation secondary menu-sticky">
 <ul>
+<li class="tsd-kind-class"><a href="classes/Node.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Node</a></li>
 <li class="tsd-kind-enum"><a href="enums/NodeAim.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-enum)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-8-path"></rect><path d="M9.45 16V7.24H14.49V8.224H10.518V10.936H14.07V11.908H10.518V15.016H14.49V16H9.45Z" fill="var(--color-text)" id="icon-8-text"></path></svg>Node<wbr/>Aim</a></li>
 <li class="tsd-kind-enum"><a href="enums/NodeType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Node<wbr/>Type</a></li>
-<li class="tsd-kind-enum"><a href="enums/PruningType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Pruning<wbr/>Type</a></li>
+<li class="tsd-kind-class"><a href="classes/Tree.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tree</a></li>
+<li class="tsd-kind-class"><a href="classes/SearchOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Search<wbr/>Opts</a></li>
 <li class="tsd-kind-enum"><a href="enums/SearchExit.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Search<wbr/>Exit</a></li>
+<li class="tsd-kind-enum"><a href="enums/PruningType.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Pruning<wbr/>Type</a></li>
 <li class="tsd-kind-enum"><a href="enums/SearchMethod.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Search<wbr/>Method</a></li>
+<li class="tsd-kind-class"><a href="classes/SearchResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Search<wbr/>Result</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/EvaluateNodeFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Evaluate<wbr/>Node<wbr/>Func</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/GetMovesFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Moves<wbr/>Func</a></li>
+<li class="tsd-kind-interface"><a href="interfaces/CreateChildNodeFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Create<wbr/>Child<wbr/>Node<wbr/>Func</a></li>
+<li class="tsd-kind-class"><a href="classes/Negamax.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax</a></li>
+<li class="tsd-kind-class"><a href="classes/NegamaxResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax<wbr/>Result</a></li>
+<li class="tsd-kind-class"><a href="classes/NegamaxOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax<wbr/>Opts</a></li>
 <li class="tsd-kind-enum"><a href="enums/SortMethod.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-8-path"></use><use href="#icon-8-text"></use></svg>Sort<wbr/>Method</a></li>
-<li class="tsd-kind-class"><a href="classes/Maxn.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-class)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-128-path"></rect><path d="M11.898 16.1201C11.098 16.1201 10.466 15.8961 10.002 15.4481C9.53803 15.0001 9.30603 14.3841 9.30603 13.6001V9.64012C9.30603 8.85612 9.53803 8.24012 10.002 7.79212C10.466 7.34412 11.098 7.12012 11.898 7.12012C12.682 7.12012 13.306 7.34812 13.77 7.80412C14.234 8.25212 14.466 8.86412 14.466 9.64012H13.386C13.386 9.14412 13.254 8.76412 12.99 8.50012C12.734 8.22812 12.37 8.09212 11.898 8.09212C11.426 8.09212 11.054 8.22412 10.782 8.48812C10.518 8.75212 10.386 9.13212 10.386 9.62812V13.6001C10.386 14.0961 10.518 14.4801 10.782 14.7521C11.054 15.0161 11.426 15.1481 11.898 15.1481C12.37 15.1481 12.734 15.0161 12.99 14.7521C13.254 14.4801 13.386 14.0961 13.386 13.6001H14.466C14.466 14.3761 14.234 14.9921 13.77 15.4481C13.306 15.8961 12.682 16.1201 11.898 16.1201Z" fill="var(--color-text)" id="icon-128-text"></path></svg>Maxn</a></li>
-<li class="tsd-kind-class"><a href="classes/MaxnOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Maxn<wbr/>Opts</a></li>
-<li class="tsd-kind-class"><a href="classes/MaxnResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Maxn<wbr/>Result</a></li>
 <li class="tsd-kind-class"><a href="classes/Minimax.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Minimax</a></li>
 <li class="tsd-kind-class"><a href="classes/MinimaxOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Minimax<wbr/>Opts</a></li>
 <li class="tsd-kind-class"><a href="classes/MinimaxResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Minimax<wbr/>Result</a></li>
-<li class="tsd-kind-class"><a href="classes/Negamax.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax</a></li>
-<li class="tsd-kind-class"><a href="classes/NegamaxOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax<wbr/>Opts</a></li>
-<li class="tsd-kind-class"><a href="classes/NegamaxResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Negamax<wbr/>Result</a></li>
-<li class="tsd-kind-class"><a href="classes/Node.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Node</a></li>
-<li class="tsd-kind-class"><a href="classes/SearchOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Search<wbr/>Opts</a></li>
-<li class="tsd-kind-class"><a href="classes/Tree.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Tree</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/CreateChildNodeFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><rect fill="var(--color-icon-background)" stroke="var(--color-ts-interface)" stroke-width="1.5" x="1" y="1" width="22" height="22" rx="6" id="icon-256-path"></rect><path d="M9.51 16V15.016H11.298V8.224H9.51V7.24H14.19V8.224H12.402V15.016H14.19V16H9.51Z" fill="var(--color-text)" id="icon-256-text"></path></svg>Create<wbr/>Child<wbr/>Node<wbr/>Func</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/EvaluateNodeFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Evaluate<wbr/>Node<wbr/>Func</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/GetMovesFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Moves<wbr/>Func</a></li>
-<li class="tsd-kind-interface"><a href="interfaces/GetScoresFunc.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-256-path"></use><use href="#icon-256-text"></use></svg>Get<wbr/>Scores<wbr/>Func</a></li></ul></nav></div></div>
+<li class="tsd-kind-class"><a href="classes/Maxn.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Maxn</a></li>
+<li class="tsd-kind-class"><a href="classes/MaxnOpts.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Maxn<wbr/>Opts</a></li>
+<li class="tsd-kind-class"><a href="classes/MaxnResult.html" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-128-path"></use><use href="#icon-128-text"></use></svg>Maxn<wbr/>Result</a></li></ul></nav></div></div>
 <div class="container tsd-generator">
 <p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div>
 <div class="overlay"></div><script src="assets/main.js"></script><script src="assets/custom.js"></script></body></html>
