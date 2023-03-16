@@ -7,18 +7,261 @@ import { bubbleSortEfficient } from "../tree/sorting.js";
 /**
  * For deterministic zero-sum 2 player games with alternating turns and full game knowledge.
  * Can be configured to do depth based, time based and deepening searches,
- * with or without alpha-beta pruning and other optimisations.
+ * with a number of tuning options.
+ *
+ * For an example implementation, see the
+ * [mancala game and required callback function](https://github.com/domw95/minimaxer/blob/main/examples/games/mancala.ts)
+ * and the
+ * [usage](https://github.com/domw95/minimaxer/blob/main/examples/minimax_mancala.ts).
+ *
+ * For configuring the search options, see the {@link NegamaxOpts} page.
+ * 
+ * ## Usage
+ * To search the game tree from a game state involves creating a root {@link Node}, creating
+ * the {@link Negamax} tree with the root, attaching callbacks and then evaluating.
+ * 
+ * ### Setting up
+ * ```ts
+ * import * as mx from minimaxer
+ * // Gamestate defined elsewhere
+ * const gamestate = new Gamestate():
+ * // root node and tree
+ * const root = new mx.Node(mx.NodeType.ROOT, gamestate.clone(), 0, 0, mx.NodeAim.MAX);
+ * const negamax = new mx.Negamax(root);
+ * // callbacks (defined elsewhere)
+ * negamax.CreateChildNode = createChildCallback;
+ * negamax.GetMoves = getMovesCallback;
+ * negamax.EvaluateNode = evaluateNodeCallback;
+ * ```
+ * 
+ * The 3rd argument `0` is the move used to get to this node but the value does not matter as it
+ * is the root node. The 4th is the data, not used here, so set to 0.
+ * 
+ * The 5th argument must be either {@link NodeAim.MAX} or {@link NodeAim.MIN}, depending on
+ * whether the player taking the next turn is trying to minimise or maximise the score.
+ * 
+ * ### Evaluating / searching
+ * Search options must be configured as required, then the {@link Negamax.evaluate} function can be called.
+ * See {@link NegamaxOpts} for details on the options.
+ * 
+ * ```ts
+ * // continuing from above ^^
+ * negamax.opts.method = mx.SearchMethod.TIME;
+ * negamax.opts.timeout = 100 //miliseconds
+ * negamax.opts.optimal = true
+ * const result = negamax.evaluate();
+ * ```
+ * The result is of type {@link SearchResult} and the best move and value can be acquired
+ * from it, as well as other information about the search process.
+ * 
+ * ## Implementing callbacks
+ * In the following implementations, the (made-up) concrete types of the 3 generic types are:
+ * - GS = `Gamestate`
+ * - M = `number`
+ * - D = `number` (always 0, unused)
+ *
+ * ### {@link Negamax.GetMoves}
+ * The GetMoves callback returns a reference to a list of moves.
+ * It may have to generate this list if not done during the {@link Negamax.CreateChildNode} callback.
+ *
+ * ```ts
+ * import * as mx from minimaxer
+ *
+ * const getMovesCallback: mx.GetMovesFunc<Gamestate, number[], number> = (node): Array<number[]> => {
+ *      node.gamestate.generate_moves();
+ *      return node.gamestate.moves;
+ * };
+ * ```
+ * The moves list and contained moves are never modified by the search,
+ * and must not be modified in any of the other callbacks.
+ * 
+ * ### {@link Negamax.CreateChildNode}
+ * The {@link Negamax.CreateChildNode} callback as a few impnodeortant responsibilites:
+ * - Clones the gamestate of the parent node (important so parent gamestate is not modified)
+ * - Applies the given move to the cloned gamestate to create the next gamestate
+ * - Checks for game end condition,
+ * - Returns a node with the correct {@link NodeType}.
+ * 
+ * **Passing a NodeAim argument to the child node constructor
+ * is not required and will be ignored by the negamax algorithm.
+ * The actual NodeAim is dervied internally from the root NodeAim**.
+ * 
+ * ```ts
+ * import * as mx from minimaxer
+ * 
+ * const createChildCallback: mx.CreateChildNodeFunc<Gamestate, Array<number>, number> = (node, move) => {
+    // First create a clone of the gamestate
+    const new_gamestate = node.gamestate.clone();
+    // Apply the move
+    new_gamestate.playMove(move);
+    // Return a new node with correct node type
+    if (new_gamestate.check_end()) {
+        return new mx.Node(mx.NodeType.LEAF, new_gamestate, move, 0);
+    } else {
+        return new mx.Node(mx.NodeType.INNER, new_gamestate, move, 0);
+    }
+};
+```
+ * The return type (Node<Gamestate, number, number>) is implied by the function type annotation.
+ *
+ * If using the {@link Node.data | Node.data} property, the {@link Negamax.CreateChildNode} callback is also responsible
+ * for passing that data to the child node, with whatever modification/copying of data is required.
+ * 
+ * ### {@link Negamax.EvaluateNode}
+ * 
+ * This callback receives a {@link Node} and evaluates its relative value based on the
+ * gamestate and any extra data included on the node.
+ * 
+ * This is highly game dependant, but may look something like this:
+ * ```ts
+ * import * as mx from minimaxer
+ * 
+ * const evaluateGamestateCallback: mx.EvaluateNodeFunc<Gamestate, number[], number> = (node): number => {
+    if (node.gamestate.end){
+        if (node.gamestate.winner == player0){
+            return Infinity;
+        } else {
+            return -Infinity;
+        }
+    } else {
+        return complex_evaluation_function(node.gamestate);
+    }
+};
+ * ```
+ * This function should not modify the node.
+ * 
+ * ### {@link Negamax.depthCallback}
+ * This callback is optional and a little different to the other 3. 
+ * It is called on every depth of search
+ * when using the {@link SearchMethod.DEEPENING} 
+ * or {@link SearchMethod.TIME} based {@link SearchMethod | search methods}.
+ * 
+ * It passes the full tree ({@link Negamax} class instance) and the {@link SearchResult}
+ * for that depth as arguments. It is most useful for printing out the current
+ * state of the search during the iterative deepening process
+ * 
+ * ```ts
+ * const negamax = new Negamax(*args*);
+ * 
+ * negamax.depthCallback = (tree, result) => {
+ *      console.log(result);
+ * }
+ * ```
+ *  Doing any long processes in this function will hold up the search, and it cannot
+ * update the DOM before the search has finished.
+ * 
+ * ## Advanced usage
+ * ### Removing the {@link Negamax.GetMoves} callback
+ * The {@link Negamax.GetMoves} callback can be omitted if the root node is initialised with an array of moves
+ * and if the {@link Negamax.CreateChildNode} callback assigns a list of moves to the created child.
+ * 
+ * The may be useful if the game state already has a list of moves in the process of creating the
+ * child node, either from playing the previous move or by checking for an end condition.
+ * 
+ * **Do not do this if extra computation is required to create a list of moves**.
+ * 
+ * ```ts
+ * const root = new mx.Node(mx.NodeType.ROOT, gamestate.clone(), 0, 0, mx.NodeAim.MAX, gamestate.moves);
+ * ```
+ * ```ts
+ * import * as mx from minimaxer
+ * 
+ * const createChildCallback: mx.CreateChildNodeFunc<Gamestate, Array<number>, number> = (node, move) => {
+ *     ...
+ *     if (new_gamestate.check_end()) {
+ *         return new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0, 0, new_gamestate.moves);
+ *     } else {
+ *         return new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0, 0, new_gamestate.moves);
+ *     }
+ * };
+ * ```
+ * 
+ * ### Removing the {@link Negamax.EvaluateNode} callback
+ * The {@link Negamax.EvaluateNode} callback can be removed if the node value is directly assigned during
+ * the {@link Negamax.CreateChildNode} callback. This requires first creating the node,
+ * then setting the {@link Node.value} property value.
+ * 
+ * **This should only be done if the evaluation is very quick e.g the difference
+ * between 2 scores on the gamestate**.
+ * 
+ * ### Using the {@link Node.data | Node.data} property
+ * The {@link Node.data} property is attached to the root {@link Node} and can then be
+ * passed through the tree via the {@link CreateChildNode} callback.
+ * 
+ * It is most useful for containing evaluation specific information that does not belong on
+ * the gamestate. An example is constant evaluation options that can be passed to the
+ * evaluation function. Otherwise these would have to be global variables.
+ * 
+ * It also does not have to be constant and could contain variables to help speed up
+ * the evaulation for complex games, by using information from previous turns.
+ * 
+ * 
+ * 
+ * The example below shows how a contant "options" object could be used:
+ * 
+ * ```ts
+ * // Class to change evaluation function
+ * class EvalOpts {
+ *      opt1 = false,
+ *      opt2 = 4
+ * }
+ * 
+ * // Modified evaluation function that uses node.data
+ * const evaluateGamestateCallback: mx.EvaluateNodeFunc<Gamestate, number[], EvalOpts> = (node): number => {
+    if (node.gamestate.end){
+        if (node.gamestate.winner == player0){
+            return Infinity;
+        } else {
+            return -Infinity;
+        }
+    } else {
+        if (node.data.opt1){
+            return complex_evaluation_function(node.gamestate);
+        } else {
+            return node.data.opt2 * simple_evaluation_function(node.gamestate);
+        }   
+    }
+};
+
+// Modifed create child function that passes data to child
+const createChildCallback: mx.CreateChildNodeFunc<Gamestate, Array<number>, number> = (node, move) => {
+    // First create a clone of the gamestate
+    const new_gamestate = node.gamestate.clone();
+    // Apply the move
+    new_gamestate.playMove(move);
+    // Return a new node with correct node type
+    if (new_gamestate.check_end()) {
+        return new mx.Node(mx.NodeType.LEAF, new_gamestate, move, node.gamestate.data);
+    } else {
+        return new mx.Node(mx.NodeType.INNER, new_gamestate, move, node.gamestate.data);
+    }
+};
+
+ * 
+ * const gamestate = new Gamestate():
+ * // root node and tree that ises EvalOpts as D type
+ * const root = new mx.Node(mx.NodeType.ROOT, gamestate.clone(), 0, new EvalOpts(), mx.NodeAim.MAX);
+ * const negamax = new mx.Negamax(root);
+ * // callbacks (defined elsewhere)
+ * negamax.CreateChildNode = createChildCallback;
+ * negamax.GetMoves = getMovesCallback;
+ * negamax.EvaluateNode = evaluateNodeCallback;
+ * 
+ * ```
+ *
+ * @typeParam GS - The object representing the state of the game
+ * @typeParam M - The object representing a move in the game
+ * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
+ * @category Negamax
  */
 export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
-    /** Search options.
-     * @see {@link Negamax.evalDepth}
-     * @see {@link Negamax.evalDeepening}
-     * @see {@link Negamax.evaluate}*/
+    /** Search options.*/
     opts: NegamaxOpts = new NegamaxOpts();
 
     /**
      * @param root Root to start the
      * @param opts Control the behaviour of the negamax search
+     *
      */
     constructor(root: Node<GS, M, D>, opts: NegamaxOpts = new NegamaxOpts()) {
         super(root, opts);
@@ -236,6 +479,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         }
     }
 
+    /** Wrapper around default children sort that specifices reverse=`false`*/
     protected sortChildren(node: Node<GS, M, D>): Node<GS, M, D> {
         return super.sortChildren(node, false);
     }
@@ -247,7 +491,6 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
      * Runs as:
      * - {@link NegamaxOpts.pruning} = {@link PruningType.ALPHA_BETA}
      * - {@link NegamaxOpts.presort} = `true`
-     * - {@link NegamaxOpts.postsort} = `false`
      * - {@link NegamaxOpts.genBased} = `true`
      * - {@link NegamaxOpts.pruneByPathLength} = `false`
      */

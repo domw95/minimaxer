@@ -1,7 +1,13 @@
 import { SearchOpts, SearchResult } from "../tree/search.js";
 
-/** Options unique to minimax to change its behaviour */
+/**
+ * Class to control the behaviour of maxn search.
+ * @category Maxn
+ */
 export class MaxnOpts extends SearchOpts {}
 
-/** Object returned after searching the tree using negamax */
+/**
+ * Object returned after searching the tree using maxn.
+ * @category Maxn
+ */
 export class MaxnResult<M> extends SearchResult<M> {}

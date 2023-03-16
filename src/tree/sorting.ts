@@ -8,7 +8,9 @@ export const enum SortMethod {
     DEFAULT,
     /** Bubble sort */
     BUBBLE,
-    /** Bubble that avoids nodes that havent been updated */
+    /** Bubble that avoids nodes that havent been updated
+     * @see [Better sorting in blog post](https://domwil.co.uk/minimaxer/part4/#child-sorting).
+     */
     BUBBLE_EFFICIENT,
 }
 

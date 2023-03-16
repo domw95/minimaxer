@@ -1,7 +1,36 @@
 {
     "entryPoints": ["src/index.ts"],
     "entryPointStrategy": "expand",
-    "out": "docs"
+    "out": "docs",
+    "includes": "docs-src",
+    "includeVersion": true,
+    "readme": "docs-src/index.md",
+    "gitRevision": "main",
+    "searchInComments": true,
+    "categorizeByGroup": false,
+    "sort": ["enum-value-ascending"],
+    "navigationLinks": {
+        "GitHub": "https://github.com/domw95/minimaxer",
+        "Blog": "https://domwil.co.uk/minimaxer/"
+    },
+    "validation": {
+        "invalidLink": true,
+        "notDocumented": true,
+        "notExported": true
+    },
+    "requiredToBeDocumented": [
+        "Enum",
+        "EnumMember",
+        "Variable",
+        "Function",
+        "Class",
+        "Interface",
+        "Property",
+        "Method",
+        "Accessor",
+        "TypeAlias"
+    ],
+    "theme": "default"
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],

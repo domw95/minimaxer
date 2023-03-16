@@ -15,7 +15,7 @@
         "cleanBuild": "rm -rf dist && tsc",
         "build:examples": "npm run build && npx tsc -p examples/",
         "build:benchmarks": "npm run build && npx tsc -p benchmarks/",
-        "build:docs": "npm run build && typedoc --includeVersion",
+        "build:docs": "npm run build && typedoc",
         "format": "prettier --write \"src/**/*.ts\"",
         "lint": "eslint .",
         "prepare": "npm run cleanBuild",

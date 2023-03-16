@@ -22,6 +22,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         super(root);
     }
 
+    /** Callback to evaluate the value of gamestate attached to node */
     EvaluateNode: EvaluateNodeFunc<GS, M, D> = (node: Node<GS, M, D>) => {
         if (!isNaN(node.value)) {
             return node.value;
@@ -31,6 +32,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /** The specific evaldepth function for a search mode. Must be implemented */
     protected evalDepth(depth = this.opts.depth): SearchResult<M> {
         throw Error("evalDepth not implemented");
     }
@@ -38,14 +40,13 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     /**
      * Searches the tree repeatedly, incrementing the depth each time.
      * Returns after reaching target depth, or early if tree is complete or time exceeded.
-     * ### Relevant {@link Negamax.opts | options}
-     * - {@link NegamaxOpts.depth} | Maximum depth to search for. 0 for unlimited
-     * - {@link NegamaxOpts.timeout} | Maximum time to search for. 0 for unlimited
-     * - {@link NegamaxOpts.pruning}
-     * - {@link NegamaxOpts.initialDepth}
-     * - {@link NegamaxOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
-     * - {@link NegamaxOpts.postsort}
-     * - {@link NegamaxOpts.presort}
+     * ### Relevant {@link SearchOpts | options}
+     * - {@link SearchOpts.depth} | Maximum depth to search for. 0 for unlimited
+     * - {@link SearchOpts.timeout} | Maximum time to search for. 0 for unlimited
+     * - {@link SearchOpts.pruning}
+     * - {@link SearchOpts.initialDepth}
+     * - {@link SearchOpts.genBased} (Only if {@link NegamaxOpts.pruning} is not {@link PruningType.NONE})
+     * - {@link SearchOpts.presort}
      *
      * @param depth Overide the depth parameter set in {@link Negamax.opts}
      * @returns The result of the search
@@ -74,16 +75,17 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         }
     }
     /**
-     * Search the tree according to the options specified by {@link Negamax.opts}
+     * Search the tree according to the options specified by the options (opts).
      * @returns Result from the tree search
      */
     evaluate(): SearchResult<M> {
         switch (this.opts.method) {
             case SearchMethod.DEPTH:
+                // Disable time related settings
                 this.expireTime = 0;
                 return this.evalDepth();
             case SearchMethod.DEEPENING:
-                // Don't use time related settings
+                // Disable time related settings
                 this.expireTime = 0;
                 return this.evalDeepening();
             case SearchMethod.TIME:
@@ -102,7 +104,8 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     }
 
     /**
-     *  Called during deepening search between each depth
+     * Called during deepening search between each depth.
+     * Does nothing until overidden
      */
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     depthCallback(tree: SearchTree<GS, M, D>, result: SearchResult<M>): void {
@@ -154,8 +157,13 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     }
 
     /**
-     * Sorts the child nodes of given node according to inherited value, descending.
-     * @param node Node of children to sort
+     * Sorts the child nodes of given parent {@link Node} according to inherited value.
+     * Sort is descending by default
+     *
+     * Sorts using the method specififed in
+     * {@link SearchOpts.method | opts.SearchOpts.SortMethod}.
+     * @param node parent {@link Node} of children to sort
+     * @param reverse Optionally sort ascending instead
      * @returns The child with the highest value
      */
     protected sortChildren(node: Node<GS, M, D>, reverse?: boolean): Node<GS, M, D> {
@@ -211,6 +219,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         return children.length ? children[Math.floor(children.length * Math.random())] : (node.child as Node<GS, M, D>);
     }
 
+    /** Selects best child from nodes children according to the weighting factor */
     protected randomWeightedChild(node: Node<GS, M, D>, weight: number): Node<GS, M, D> {
         // List of children and corresponding cumulative weights
         const children: { child: Node<GS, M, D>; weight: number; cumulative_weight: number }[] = [];
@@ -261,7 +270,13 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     }
 
     /**
-     * @returns A list of moves from the active root {@link Node} that represent the optimal sequence through the game.
+     * Function to return the list of moves starting from the root
+     * that are the 'optimal' path.
+     *
+     * Must be called after evaluating the tree.
+     *
+     * @returns A list of moves from the active root {@link Node}
+     * that represent the optimal sequence through the game.
      */
     getOptimalMoves(): M[] {
         return [...this.optimalMoveGen(this.activeRoot)];
