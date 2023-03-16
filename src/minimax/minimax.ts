@@ -37,7 +37,7 @@ export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
 
     /**
      *
-     * @param depth Overide the depth property in {@link Minimax.opts.depth}
+     * @param depth Overide the depth property in {@link MinimaxOpts.depth}
      * @returns The result of the search
      */
     protected evalDepth(depth = this.opts.depth): MinimaxResult<M> {

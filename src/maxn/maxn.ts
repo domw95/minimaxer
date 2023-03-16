@@ -34,7 +34,7 @@ export class Maxn<GS, M, D> extends SearchTree<GS, M, D> {
 
     /**
      *
-     * @param depth Overwrite the {@link Maxn.opt.depth} option.
+     * @param depth Overwrite the {@link MaxnOpts.depth} option.
      * @returns
      */
     protected evalDepth(depth = this.opts.depth): MaxnResult<M> {
