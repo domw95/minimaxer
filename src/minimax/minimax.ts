@@ -22,6 +22,8 @@ import { Node, NodeAim, NodeType, PruningType, SearchExit } from "../index.js";
  * @typeParam GS - The object representing the state of the game
  * @typeParam M - The object representing a move in the game
  * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
+ *
+ * @category Minimax
  */
 export class Minimax<GS, M, D> extends SearchTree<GS, M, D> {
     /**

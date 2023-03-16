@@ -40,6 +40,7 @@ import { SearchOpts, SearchResult } from "../tree/search.js";
  * The {@link NegamaxOpts.randomWeight} selects from all the children,
  * but is weighted towards the best valued. The weighting effect is outlined
  * in the property documentation.
+ * @category Negamax
  */
 export class NegamaxOpts extends SearchOpts {
     /**
@@ -57,5 +58,8 @@ export class NegamaxOpts extends SearchOpts {
     optimal = false;
 }
 
-/** Object returned after searching the tree using negamax */
+/**
+ * Object returned after searching the tree using negamax.
+ * @category Negamax
+ */
 export class NegamaxResult<M> extends SearchResult<M> {}

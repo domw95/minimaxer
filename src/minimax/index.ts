@@ -7,11 +7,13 @@ import { SearchOpts, SearchResult } from "../tree/search.js";
  * - {@link MinimaxOpts.pruneByPathLength}
  * - {@link MinimaxOpts.randomBest}
  * - {@link MinimaxOpts.randomWeight}
+ * @category Minimax
  */
 export class MinimaxOpts extends SearchOpts {}
 
 /**
  * Type of object returned after calling {@link Minimax.evaluate}
  * on a {@link Minimax} tree.
+ * @category Minimax
  */
 export class MinimaxResult<M> extends SearchResult<M> {}

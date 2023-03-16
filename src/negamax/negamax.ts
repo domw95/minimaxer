@@ -252,6 +252,7 @@ const createChildCallback: mx.CreateChildNodeFunc<Gamestate, Array<number>, numb
  * @typeParam GS - The object representing the state of the game
  * @typeParam M - The object representing a move in the game
  * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
+ * @category Negamax
  */
 export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
     /** Search options.*/
