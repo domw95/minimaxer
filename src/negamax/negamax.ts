@@ -178,7 +178,7 @@ import { bubbleSortEfficient } from "../tree/sorting.js";
  * 
  * ### Removing the {@link Negamax.EvaluateNode} callback
  * The {@link Negamax.EvaluateNode} callback can be removed if the node value is directly assigned during
- * the {@link Negamax.createChildNode} callback. This requires first creating the node,
+ * the {@link Negamax.CreateChildNode} callback. This requires first creating the node,
  * then setting the {@link Node.value} property value.
  * 
  * **This should only be done if the evaluation is very quick e.g the difference
@@ -254,10 +254,7 @@ const createChildCallback: mx.CreateChildNodeFunc<Gamestate, Array<number>, numb
  * @typeParam D - Extra data used in evaluation not suitable for storing in the gamestate
  */
 export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
-    /** Search options.
-     * @see {@link Negamax.evalDepth}
-     * @see {@link Negamax.evalDeepening}
-     * @see {@link Negamax.evaluate}*/
+    /** Search options.*/
     opts: NegamaxOpts = new NegamaxOpts();
 
     /**
@@ -493,7 +490,6 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
      * Runs as:
      * - {@link NegamaxOpts.pruning} = {@link PruningType.ALPHA_BETA}
      * - {@link NegamaxOpts.presort} = `true`
-     * - {@link NegamaxOpts.postsort} = `false`
      * - {@link NegamaxOpts.genBased} = `true`
      * - {@link NegamaxOpts.pruneByPathLength} = `false`
      */
