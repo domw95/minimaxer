@@ -9,9 +9,10 @@ This library provides 3 different solutions for finding the best move in a turn 
 -   {@link Negamax}
     -   For 2 player games, alternating moves, no random components (deterministic).
 -   {@link Minimax}
-    -   Same as negamax but allows for a player having multiple turns and probability based selection (e.g dice).
+    -   Same as negamax but allows for a player having multiple turns and probability based selection (e.g dice) (**coming soon**).
 -   {@link Maxn}
     -   Extends minimax to games with more that 2 players.
+    -   **In active development.**
 
 ## Features
 
