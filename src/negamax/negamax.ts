@@ -16,16 +16,98 @@ import { bubbleSortEfficient } from "../tree/sorting.js";
  *
  * For configuring the search options, see the {@link NegamaxOpts} page.
  *
- * ## Usage
- * ### Implementing callbacks
- * 4 callbacks: moves, child, eval, depth.
- * Show examples of each
- * Code examples
+ * ## Implementing callbacks
+ * In the following implementations, the (made-up) concrete types of the 3 generic types are:
+ * - GS = `gamestate`
+ * - M = `number`
+ * - D = `number` (always 0, unused)
+ *
+ * ### {@link Negamax.GetMoves}
+ * The GetMoves callback returns a reference to a list of moves.
+ * It may have to generate this list if not done during the CreateChildNode callback.
+ *
  * ```ts
- * function hello(){
+ * import * as mx from minimaxer
+ *
+ * const getMovesCallback: mx.GetMovesFunc<gamestate, number[], number> = (node): Array<number[]> => {
+ *      node.gamestate.generate_moves();
+ *      return node.gamestate.moves;
+ * };
+ * ```
+ * The moves list and contained moves are never modified by the search,
+ * and must not be modified in any of the other callbacks.
+ * 
+ * ### {@link Negamax.CreateChildNode}
+ * The createChildNode callback as a few important responsibilites:
+ * - Clones the gamestate of the parent node (important so parent gamestate is not modified)
+ * - Applies the given move to the cloned gamestate to create the next gamestate
+ * - Checks for game end condition,
+ * - Returns a node with the correct {@link NodeType}.
+ * 
+ * ```ts
+ * import * as mx from minimaxer
+ * 
+ * const createChildCallback: mx.CreateChildNodeFunc<gamestate, Array<number>, number> = (node, move) => {
+    // First create a clone of the gamestate
+    const new_gamestate = node.gamestate.clone();
+    // Apply the move
+    new_gamestate.playMove(move);
+    // Return a new node with correct node type
+    if (new_gamestate.check_end()) {
+        return new minimax.Node(minimax.NodeType.LEAF, new_gamestate, move, 0);
+    } else {
+        return new minimax.Node(minimax.NodeType.INNER, new_gamestate, move, 0);
+    }
+};
+```
+ * The return type (Node<gamestate, number, number>) is implied by the function type annotation.
+ *
+ * If using the {@link Node.data | Node.data} property, the createChildNode callback is also responsible
+ * for passing that data to the child node, with whatever modification/copying of data is required.
+ * 
+ * ### {@link Negamax.EvaluateNode}
+ * 
+ * This callback receives a {@link Node} and evaluates its relative value based on the
+ * gamestate and any extra data included on the node.
+ * 
+ * This is highly game dependant, but may look something like this:
+ * ```ts
+ * import * as mx from minimaxer
+ * 
+ * const evaluateGamestateCallback: mx.EvaluateNodeFunc<gamestate, number[], number> = (node): number => {
+    if (node.gamestate.end){
+        if (node.gamestate.winner == player0){
+            return Infinity;
+        } else {
+            return -Infinity;
+        }
+    } else {
+        return complex_evaluation_function(node.gamestate);
+    }
+};
+ * ```
+ * This function should not modify the node.
+ * 
+ * ### {@link Negamax.depthCallback}
+ * This callback is optional and a little different to the other 3. 
+ * It is called on every depth of search
+ * when using the {@link SearchMethod.DEEPENING} 
+ * or {@link SearchMethod.TIME} based {@link SearchMethod | search methods}.
+ * 
+ * It passes the full tree (Negamax class instance) and the {@link SearchResult}
+ * for that depth as arguments. It is most useful for printing out the current
+ * state of the search during the iterative deepening process
+ * 
+ * ```ts
+ * const negamax = new Negamax(*args*);
+ * 
+ * negamax.depthCallback = (tree, result) => {
+ *      console.log(result);
  * }
  * ```
- * Also need to check all the function comments
+ *  Doing any long processes in this function will hold up the search, and it cannot
+ * update the DOM before the search has finished.
+ * 
  *
  * @typeParam GS - The object representing the state of the game
  * @typeParam M - The object representing a move in the game
