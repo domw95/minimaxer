@@ -4,8 +4,9 @@
     ],
     "entryPointStrategy": "expand",
     "out": "docs",
+    "includes": "docs-src",
     "includeVersion": true,
-    "readme": "none",
+    "readme": "docs-src/index.md",
     "gitRevision": "main",
     "searchInComments": true,
     "sort": [
@@ -31,7 +32,8 @@
         "Method",
         "Accessor",
         "TypeAlias"
-    ]
+    ],
+    "theme": "default",
     //     "plugin": ["typedoc-theme-hierarchy"],
     //     "theme": "hierarchy"
     // "plugin": ["typedoc-neo-theme"],
