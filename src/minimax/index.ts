@@ -1,6 +1,13 @@
 import { SearchOpts, SearchResult } from "../tree/search.js";
 
-/** Change the behaviour of the minimax search */
+/**
+ * Change the behaviour of the minimax search.
+ *
+ * The following options are not yet supported:
+ * - {@link MinimaxOpts.pruneByPathLength}
+ * - {@link MinimaxOpts.randomBest}
+ * - {@link MinimaxOpts.randomWeight}
+ */
 export class MinimaxOpts extends SearchOpts {}
 
 /**
