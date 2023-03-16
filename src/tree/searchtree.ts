@@ -40,7 +40,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     /**
      * Searches the tree repeatedly, incrementing the depth each time.
      * Returns after reaching target depth, or early if tree is complete or time exceeded.
-     * ### Relevant {@link SearchOpts.opts | options}
+     * ### Relevant {@link SearchOpts | options}
      * - {@link SearchOpts.depth} | Maximum depth to search for. 0 for unlimited
      * - {@link SearchOpts.timeout} | Maximum time to search for. 0 for unlimited
      * - {@link SearchOpts.pruning}
@@ -159,9 +159,9 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     /**
      * Sorts the child nodes of given parent {@link Node} according to inherited value.
      * Sort is descending by default
-     * 
-     * Sorts using the method specififed in 
-     * {@link SearchOpts.SortMethod | opts.SearchOpts.SortMethod}.
+     *
+     * Sorts using the method specififed in
+     * {@link SearchOpts.method | opts.SearchOpts.SortMethod}.
      * @param node parent {@link Node} of children to sort
      * @param reverse Optionally sort ascending instead
      * @returns The child with the highest value
@@ -272,10 +272,10 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     /**
      * Function to return the list of moves starting from the root
      * that are the 'optimal' path.
-     * 
+     *
      * Must be called after evaluating the tree.
-     * 
-     * @returns A list of moves from the active root {@link Node} 
+     *
+     * @returns A list of moves from the active root {@link Node}
      * that represent the optimal sequence through the game.
      */
     getOptimalMoves(): M[] {
