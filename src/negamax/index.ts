@@ -30,27 +30,34 @@ import { SearchOpts, SearchResult } from "../tree/search.js";
  *
  * ## Random selections
  * These options can be useful for making the AI less 'robotic'. Neither of them
- * work with {@link NegamaxOpts.pruning} set to {@link PruningType.ALPHA_BETA} or
+ * work with {@link NegamaxOpts.pruneByPathLength} or
  * {@link NegamaxOpts.optimal} set to `true`.
- * They will run but just give garbage results.
+ * The {@link NegamaxOpts.randomWeight} option does not work with {@link NegamaxOpts.pruning}
+ * set to {@link PruningType.ALPHA_BETA}.
+ * They will run but likely give incorrect results.
  *
- * The {@link NegamaxOpts.randomBest} will randomly select from the child nodes
+ * The {@link NegamaxOpts.randomBest} option will randomly select from the child nodes
  * that all have the best value.
  *
- * The {@link NegamaxOpts.randomWeight} selects from all the children,
+ * The {@link NegamaxOpts.randomWeight} option selects from all the children,
  * but is weighted towards the best valued. The weighting effect is outlined
  * in the property documentation.
  * @category Negamax
  */
 export class NegamaxOpts extends SearchOpts {
     /**
-     * Set to `true` to override other options and run optimised negamax.
+     * Set to `true` to override other options and run an optimised negamax function.
      *
      * Overrides:
-     * - {@link NegamaxOpts.pruning}
-     * - {@link NegamaxOpts.genBased}
-     * - {@link NegamaxOpts.presort}
-     * - {@link NegamaxOpts.sortMethod}
+     * - {@link NegamaxOpts.pruning} = {@link PruningType.ALPHA_BETA}
+     * - {@link NegamaxOpts.genBased} = `true`
+     * - {@link NegamaxOpts.presort} = `true`
+     * - {@link NegamaxOpts.sortMethod} = {@link SortMethod.BUBBLE_EFFICIENT}
+     * - {@link NegamaxOpts.pruneByPathLength} = false
+     *
+     * Invalidates:
+     * - {@link NegamaxOpts.randomBest}
+     * - {@link NegamaxOpts.randomWeight}
      *
      * @see [Optimal function in blog post](https://domwil.co.uk/minimaxer/part4/#optimal-function).
      *

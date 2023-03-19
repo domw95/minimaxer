@@ -47,7 +47,7 @@ export const enum PruningType {
 export class SearchOpts {
     /** Method used to search for best move. See {@link SearchMethod} for details*/
     method = SearchMethod.DEPTH;
-    /** Timeout used for **all** searches. Timeout disabled when set to 0.*/
+    /** Timeout used when method is {@link SearchMethod.TIME}. Timeout disabled when set to 0.*/
     timeout = 0;
     /** Default search depth for depth and deepening searches.*/
     depth = 0;
@@ -74,13 +74,19 @@ export class SearchOpts {
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
-     *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}
+     *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}.
+     * Is disabled for {@link Negamax} when {@link NegamaxOpts.optimal} is `true`.
+     *
+     * Check {@link Negamax}, {@link Minimax} or {@link Maxn} (and corresponing Opts) for
+     * specific support.
      */
     pruneByPathLength = false;
     /**
      * @experimental
-     * Select random best child (same value)
-     * Does not choose from pruned branches
+     * Select randomly from all of the children with the best value.
+     *
+     * Check {@link Negamax}, {@link Minimax} or {@link Maxn} (and corresponing Opts) for
+     * specific support.
      */
     randomBest = false;
     /**
@@ -90,6 +96,9 @@ export class SearchOpts {
      * - randomWeight = 0, disabled
      * - randomWeight = 1, equal probabilty
      * - randomWeight = 5, 5 times more likely for every +1 valuation
+     *
+     * Check {@link Negamax}, {@link Minimax} or {@link Maxn} (and corresponing Opts) for
+     * specific support.
      */
     randomWeight = 0;
 }

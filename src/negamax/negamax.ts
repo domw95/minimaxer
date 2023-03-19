@@ -423,8 +423,10 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                             break;
                         } else if (alpha == beta) {
                             if (!this.opts.pruneByPathLength) {
-                                node.pruned = true;
-                                break;
+                                if (!this.opts.randomBest) {
+                                    node.pruned = true;
+                                    break;
+                                }
                             }
                             // Need to check path length
                             // If alpha is positive, minimiser wont select if path is short

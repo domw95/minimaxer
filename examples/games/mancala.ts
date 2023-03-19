@@ -1,5 +1,9 @@
 import * as minimax from "../../dist/index.js";
 
+// Class that implements the game mancala
+// 6 pits of 4 tokens for each player
+// Landing in empty opposite pit wins tiles
+// Optional double move for landing in end
 export class mancala {
     pits: Array<Array<number>> = [];
     ends: Array<number> = [];
@@ -107,16 +111,22 @@ export class mancala {
     }
 }
 
+// This is the only callback required as it assigns both the value and the moves to the child node
+// This works well as the value is very easy to calculate, and the moves are generated as part of playMove function
 export const createChildCallback: minimax.CreateChildNodeFunc<mancala, number, number> = (parent, move) => {
     // First create a clone of the gamestate
     const new_gamestate = parent.gamestate.clone();
     // Apply the move
     new_gamestate.playMove(move);
-    // Return a new node with correct node type
-    const score = new_gamestate.ends[0] - new_gamestate.ends[1];
+    // Get the score as the difference between tile counts in end pits
+    const value = new_gamestate.ends[0] - new_gamestate.ends[1];
+    // Assign as Leaf if game has finished, otherwise Inner
     const type = new_gamestate.end ? minimax.NodeType.LEAF : minimax.NodeType.INNER;
+    // Only have to assign aim for Minimax/Maxn, Negamax will ignore this
     const aim = new_gamestate.activePlayer == 0 ? minimax.NodeAim.MAX : minimax.NodeAim.MIN;
+    // Create the child node to return
     const node = new minimax.Node(type, new_gamestate, move, 0, aim, new_gamestate.moves);
-    node.value = score;
+    // Assign the value and return
+    node.value = value;
     return node;
 };
