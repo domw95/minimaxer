@@ -47,7 +47,7 @@ export const enum PruningType {
 export class SearchOpts {
     /** Method used to search for best move. See {@link SearchMethod} for details*/
     method = SearchMethod.DEPTH;
-    /** Timeout used for **all** searches. Timeout disabled when set to 0.*/
+    /** Timeout used when method is {@link SearchMethod.TIME}. Timeout disabled when set to 0.*/
     timeout = 0;
     /** Default search depth for depth and deepening searches.*/
     depth = 0;
