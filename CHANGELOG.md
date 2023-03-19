@@ -11,20 +11,29 @@ Security
 
 # Changelog
 
-## [3.3.0] -
+## [3.3.0] - 2023-03-19
 
-## [3.2.4] - 2023-03-19
+### Added
+
+-   Support for `randomBest` with alpha-beta pruning using `Negamax`
+-   More mancala examples for `Negamax` usage.
+
+### Changed
+
+-   Improved documentation for search options.
+
+## [3.2.4] - 2023-03-16
 
 ### Added
 
 -   Updated the [docs](https://domw95.github.io/minimaxer/index.html) to match the most recent changes.
--   Instructions for how to use the library in the documentation
+-   Instructions for how to use the library in the documentation.
 
 ## [3.2.3] - 2023-02-10
 
 ### Fixed
 
--   Track the depth child is evaluated to avoid selecting wrong child
+-   Track the depth child is evaluated to avoid selecting wrong child.
 
 ## [3.2.2] - 2023-02-04
 
@@ -36,13 +45,13 @@ Security
 
 ### Changed
 
--   Docs updated for 3.2.0
+-   Docs updated for 3.2.0.
 
 ## [3.2.0] - 2023-02-04
 
 ### Added
 
--   Premliminary `Maxn` feature
+-   Premliminary `Maxn` feature.
 
 ### Changed
 
