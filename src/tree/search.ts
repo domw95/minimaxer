@@ -75,7 +75,7 @@ export class SearchOpts {
     sortMethod = SortMethod.DEFAULT;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
      *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}.
-     * Is disabled for {@link Negamax} when {@link Negamax.optimal} is `true`.
+     * Is disabled for {@link Negamax} when {@link NegamaxOpts.optimal} is `true`.
      *
      * Check {@link Negamax}, {@link Minimax} or {@link Maxn} (and corresponing Opts) for
      * specific support.
