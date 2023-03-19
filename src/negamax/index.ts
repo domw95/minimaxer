@@ -46,13 +46,18 @@ import { SearchOpts, SearchResult } from "../tree/search.js";
  */
 export class NegamaxOpts extends SearchOpts {
     /**
-     * Set to `true` to override other options and run optimised negamax.
+     * Set to `true` to override other options and run an optimised negamax function.
      *
      * Overrides:
-     * - {@link NegamaxOpts.pruning}
-     * - {@link NegamaxOpts.genBased}
-     * - {@link NegamaxOpts.presort}
-     * - {@link NegamaxOpts.sortMethod}
+     * - {@link NegamaxOpts.pruning} = {@link PruningType.ALPHA_BETA}
+     * - {@link NegamaxOpts.genBased} = `true`
+     * - {@link NegamaxOpts.presort} = `true`
+     * - {@link NegamaxOpts.sortMethod} = {@link SortMethod.BUBBLE_EFFICIENT}
+     * - {@link NegamaxOpts.pruneByPathLength} = false
+     *
+     * Invalidates:
+     * - {@link NegamaxOpts.randomBest}
+     * - {@link NegamaxOpts.randomWeight}
      *
      * @see [Optimal function in blog post](https://domwil.co.uk/minimaxer/part4/#optimal-function).
      *
