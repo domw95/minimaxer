@@ -79,8 +79,10 @@ export class SearchOpts {
     pruneByPathLength = false;
     /**
      * @experimental
-     * Select random best child (same value)
-     * Does not choose from pruned branches
+     * Select randomly from all of the children with the best value.
+     *
+     * Check {@link Negamax}, {@link Minimax} or {@link Maxn} for
+     * specific support.
      */
     randomBest = false;
     /**
@@ -90,6 +92,9 @@ export class SearchOpts {
      * - randomWeight = 0, disabled
      * - randomWeight = 1, equal probabilty
      * - randomWeight = 5, 5 times more likely for every +1 valuation
+     *
+     * Check {@link Negamax}, {@link Minimax} or {@link Maxn} for
+     * specific support.
      */
     randomWeight = 0;
 }
