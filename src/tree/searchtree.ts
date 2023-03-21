@@ -18,6 +18,8 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
     protected presortEnable = false;
     /** Number of leaf or depth = 0 reached during current call */
     protected outcomes = 0;
+    /** Flag set if node limit has been reached */
+    protected nodeLimitExceeded = false;
     constructor(root: Node<GS, M, D>, public opts: SearchOpts = new SearchOpts()) {
         super(root);
     }
@@ -122,6 +124,22 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
                 return true;
             } else if (Date.now() > this.expireTime) {
                 this.expired = true;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Checks if node limit is enabled and returns `true` if it has been exceeded,
+     * otherwise returns `false`.
+     */
+    protected checkNodeLimit(): boolean {
+        if (this.opts.nodeLimit) {
+            if (this.nodeLimitExceeded) {
+                return true;
+            } else if (this.nodeCount >= this.opts.nodeLimit) {
+                this.nodeLimitExceeded = true;
                 return true;
             }
         }
