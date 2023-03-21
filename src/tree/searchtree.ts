@@ -65,7 +65,7 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
             this.depthCallback(this, result);
             if (result.exit == SearchExit.FULL_DEPTH || activeDepth == max_depth) {
                 return result;
-            } else if (result.exit == SearchExit.TIME) {
+            } else if (result.exit == SearchExit.TIME || result.exit == SearchExit.NODE_LIMIT) {
                 if (prevResult != undefined) {
                     result.move = prevResult.move;
                     result.value = prevResult.value;

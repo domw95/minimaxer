@@ -74,10 +74,13 @@ export class SearchOpts {
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
     /**
+     * @alpha
      * Maximum number of nodes allowed in the tree. Search will finish if exceeded,
      * returning {@link SearchExit.NODE_LIMIT}.
      *
      * Disabled by setting to 0
+     *
+     * Only works with Negamax (optimal = false)
      */
     nodeLimit = 0;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
