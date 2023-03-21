@@ -73,6 +73,19 @@ export class SearchOpts {
     presort = false;
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
+    /**
+     * @alpha
+     * Maximum number of nodes allowed in the tree. Search will finish if exceeded,
+     * returning {@link SearchExit.NODE_LIMIT}.
+     *
+     * Actual nodes in tree will be between nodeLimit and nodeLimit + x where x,
+     * is the number of moves/children being checked when the nodeLimit is exceeded.
+     *
+     * Disabled by setting to 0
+     *
+     * Only works with Negamax (optimal = false)
+     */
+    nodeLimit = 0;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
      *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}.
      * Is disabled for {@link Negamax} when {@link NegamaxOpts.optimal} is `true`.
@@ -120,6 +133,10 @@ export const enum SearchExit {
      * {@link SearchOpts.timeout | SearchOpts.timeout}.
      */
     TIME,
+    /**
+     * Search concluded as the node limit was reached
+     */
+    NODE_LIMIT,
 }
 
 /** Object that is returned after a search has been completed */
