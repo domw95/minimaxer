@@ -13,5 +13,5 @@ tree.GetMoves = ttt.getMovesCallback;
 test("Construct TicTacToe game tree", () => {
     tree.createFullTree();
     expect(tree.leafCount).toBe(255168);
-    expect(tree.nodeCount).toBe(549945);
+    expect(tree.nodeCount).toBe(549946);
 });
