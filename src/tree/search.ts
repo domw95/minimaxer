@@ -78,6 +78,9 @@ export class SearchOpts {
      * Maximum number of nodes allowed in the tree. Search will finish if exceeded,
      * returning {@link SearchExit.NODE_LIMIT}.
      *
+     * Actual nodes in tree will be between nodeLimit and nodeLimit + x where x,
+     * is the number of moves/children being checked when the nodeLimit is exceeded.
+     *
      * Disabled by setting to 0
      *
      * Only works with Negamax (optimal = false)
