@@ -126,25 +126,28 @@ export class Tree<GS, M, D> {
     }
 
     removeNodes(): void {
-        this.removeNonBestNodes(this.activeRoot, 0);
+        this.removeNonBestNodes(this.activeRoot, 0, true);
     }
 
     /**
      * Recursively go through node and its children removing all
      * nodes that are not best
      */
-    protected removeNonBestNodes(node: Node<GS, M, D>, depth: number) {
+    protected removeNonBestNodes(node: Node<GS, M, D>, depth: number, keep: boolean) {
         // Check if node has 0 children
         if (node.children.length == 0) {
             return;
         }
         // Iterate through children
-        for (const child of node.children) {
-            this.removeNonBestNodes(child, depth + 1);
+        for (let i = 0; i < node.children.length; i++) {
+            const child = node.children[i];
+            this.removeNonBestNodes(child, depth + 1, keep && i == 0);
         }
 
         // remove non best children of this node
-        if (depth > 0) {
+        if (!keep) {
+            // Replace moves with sorted versions
+
             this.nodeCount -= node.children.length - 1;
             node.children = [node.child as Node<GS, M, D>];
         }
