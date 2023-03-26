@@ -132,7 +132,7 @@ export class SearchOpts {
     randomWeight = 0;
     /**
      * For removing nodes in between iterative searches.
-     * Allows for deeper searches that were previously memory limited.
+     * Allows for deeper searches that would otherwise be memory limited.
      *
      * Good for reduced memory usage but takes extra time.
      */
