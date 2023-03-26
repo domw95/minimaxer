@@ -311,10 +311,10 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         return [...this.optimalMoveGen(this.activeRoot)];
     }
 
-    removeNodes(): void {
+    removeNodes(): number {
         const removedCount = this.removeNonBestNodes(this.activeRoot, 0, true);
-        console.log("Removed", removedCount);
         this.nodeCount -= removedCount;
+        return removedCount;
     }
 
     /**
