@@ -49,9 +49,9 @@ export const enum RemovalMethod {
     NONE,
     /** Run node removal at the end of each depth search */
     ALWAYS,
-    /** Run node removal above a certain depth ({@link SearchOpts.removalValue}) */
+    /** Run node removal above a certain depth ({@link SearchOpts.removalDepth}) */
     DEPTH,
-    /** Run node removal when the node count exceeds a certain value ({@link SearchOpts.removalValue}) */
+    /** Run node removal when the node count exceeds a certain value ({@link SearchOpts.removalCount}) */
     COUNT,
 }
 
@@ -139,9 +139,12 @@ export class SearchOpts {
     removalMethod = RemovalMethod.NONE;
     /**
      * Controls the way removal behaves for {@link RemovalMethod.DEPTH}
-     * and {@link RemovalMethod.COUNT}.
      */
-    removalValue = 0;
+    removalDepth = 0;
+    /**
+     * Controls the way removal behaves for {@link RemovalMethod.COUNT}
+     */
+    removalCount = 0;
 }
 
 /**

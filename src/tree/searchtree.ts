@@ -77,8 +77,8 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
                 if (this.opts.removalMethod != RemovalMethod.NONE) {
                     if (
                         this.opts.removalMethod == RemovalMethod.ALWAYS ||
-                        (this.opts.removalMethod == RemovalMethod.DEPTH && activeDepth >= this.opts.removalValue) ||
-                        (this.opts.removalMethod == RemovalMethod.COUNT && this.nodeCount >= this.opts.removalValue)
+                        (this.opts.removalMethod == RemovalMethod.DEPTH && activeDepth >= this.opts.removalDepth) ||
+                        (this.opts.removalMethod == RemovalMethod.COUNT && this.nodeCount >= this.opts.removalCount)
                     ) {
                         // Remove nodes to minimum required for next search depth
                         this.removeNodes();
