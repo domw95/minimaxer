@@ -67,6 +67,8 @@ export class Node<GS, M, D> {
     child: Node<GS, M, D> | undefined;
     /**`true` if any children of node have been pruned, `false` if full search */
     pruned = false;
+    /** Count of decendant nodes */
+    descendantCount = 0;
 
     /**
      * @param type Defines location within tree. See {@link NodeType}.
