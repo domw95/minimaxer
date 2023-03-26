@@ -1,7 +1,7 @@
 import { Tree } from "./tree.js";
 import { Node, NodeAim } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
-import { SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
+import { RemovalMethod, SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
 import { bubbleSort, bubbleSortEfficient, defaultSort, SortMethod } from "./sorting.js";
 
 /**
@@ -73,6 +73,17 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
                 return result;
             } else {
                 prevResult = result;
+                // Check if node removal is enabled
+                if (this.opts.removalMethod != RemovalMethod.NONE) {
+                    if (
+                        this.opts.removalMethod == RemovalMethod.ALWAYS ||
+                        (this.opts.removalMethod == RemovalMethod.DEPTH && activeDepth >= this.opts.removalDepth) ||
+                        (this.opts.removalMethod == RemovalMethod.COUNT && this.nodeCount >= this.opts.removalCount)
+                    ) {
+                        // Remove nodes to minimum required for next search depth
+                        this.removeNodes();
+                    }
+                }
             }
         }
     }
@@ -298,5 +309,54 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
      */
     getOptimalMoves(): M[] {
         return [...this.optimalMoveGen(this.activeRoot)];
+    }
+
+    removeNodes(): number {
+        const removedCount = this.removeNonBestNodes(this.activeRoot, 0, true);
+        this.nodeCount -= removedCount;
+        return removedCount;
+    }
+
+    /**
+     * Recursively go through node and its children removing all
+     * nodes that are not best
+     */
+    protected removeNonBestNodes(node: Node<GS, M, D>, depth: number, keep: boolean): number {
+        // Check if node has 0 children
+        if (node.children.length == 0) {
+            return 0;
+        } else if (keep) {
+            // keep all children, remove grand-children etc
+            let removedCount = 0;
+            // Iterate through children
+            for (let i = 0; i < node.children.length; i++) {
+                const child = node.children[i];
+                removedCount += this.removeNonBestNodes(child, depth + 1, keep && i == 0);
+            }
+            node.descendantCount -= removedCount;
+            return removedCount;
+        } else {
+            // Only keep the best child
+            // Sort current children
+            bubbleSort(node.children, false, false);
+            // Check that best child is correct
+            if (node.children[0] != node.child) {
+                throw new Error("Node best child mismatch");
+            }
+            // Update moves and get number of nodes removed
+            let removedCount = -node.children[0].descendantCount - 1;
+            for (let i = 0; i < node.children.length; i++) {
+                node.moves[i] = node.children[i].move;
+                removedCount += node.children[i].descendantCount + 1;
+            }
+            // Remove the nodes
+            node.children = [node.children[0]];
+            // Recusrive call on remaining child
+            removedCount += this.removeNonBestNodes(node.children[0], depth + 1, false);
+            // Update counts and index of next move to generate from
+            node.descendantCount -= removedCount;
+            node.moveInd = 1;
+            return removedCount;
+        }
     }
 }
