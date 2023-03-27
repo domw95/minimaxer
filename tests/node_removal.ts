@@ -15,7 +15,7 @@ test("Remove every depth", () => {
         tree.opts.method = mx.SearchMethod.DEEPENING;
         tree.opts.depth = depth;
 
-        let result = tree.evaluate();
+        const result = tree.evaluate();
         validateDescendants(tree.root);
         expect(tree.nodeCount).toBe(tree.root.descendantCount + 1);
 
@@ -28,7 +28,7 @@ test("Remove every depth", () => {
         tree.opts.depth = depth;
         tree.opts.removalMethod = mx.RemovalMethod.ALWAYS;
 
-        let result2 = tree.evaluate();
+        const result2 = tree.evaluate();
 
         expect(result2.move).toBe(result.move);
         expect(result2.value).toBe(result.value);

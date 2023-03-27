@@ -100,6 +100,7 @@ export function bubbleSort(list: Node<unknown, unknown, unknown>[], reverse = fa
 export function bubbleSortEfficient(
     list: Node<unknown, unknown, unknown>[],
     reverse = false,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     pruneByPathLength = false,
 ) {
     for (;;) {

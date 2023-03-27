@@ -22,9 +22,9 @@ test("Standard negamax evaluation", () => {
     tree.opts.pruneByPathLength = true;
     tree.opts.method = SearchMethod.TIME;
 
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evaluate();
-    const elapsed = (Date.now() - now) / 1000;
+    // const elapsed = (Date.now() - now) / 1000;
     console.log(result);
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
@@ -68,9 +68,9 @@ test("Alphabeta pruning, genbased and presort", () => {
     tree.EvaluateNode = ttt.evaluateGamestateCallback;
     tree.GetMoves = ttt.getMovesCallback;
 
-    const now = Date.now();
+    // const now = Date.now();
     const result = tree.evaluate();
-    const elapsed = (Date.now() - now) / 1000;
+    // const elapsed = (Date.now() - now) / 1000;
     expect(result.value).toBe(1);
     expect(result.depth).toBe(8);
     // expect(elapsed).toBeLessThan(0.2);

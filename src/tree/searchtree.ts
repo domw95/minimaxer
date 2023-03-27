@@ -33,8 +33,8 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         }
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     /** The specific evaldepth function for a search mode. Must be implemented */
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     protected evalDepth(depth = this.opts.depth): SearchResult<M> {
         throw Error("evalDepth not implemented");
     }

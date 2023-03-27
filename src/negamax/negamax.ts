@@ -367,7 +367,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                 return SearchExit.NODE_LIMIT;
             }
             // Check node count before searching deeper
-            let nodeCount = this.nodeCount;
+            const nodeCount = this.nodeCount;
 
             let exit = SearchExit.FULL_DEPTH;
             let best: Node<GS, M, D> | undefined;
@@ -527,7 +527,7 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
 
             let exit = SearchExit.FULL_DEPTH;
             // Check node count before searching deeper
-            let nodeCount = this.nodeCount;
+            const nodeCount = this.nodeCount;
 
             // Get moves if not already on node
             if (!node.moves.length) {
