@@ -286,8 +286,9 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         // reset stats
         this.outcomes = 0;
         this.activeDepth = depth;
-        // reset fullDepth flag
+        // reset flags
         this.fullDepth = true;
+        this.nodeLimitExceeded = false;
         // Call negamax to depth
         let exit: SearchExit;
         if (this.opts.optimal == false) {
@@ -300,12 +301,14 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
         let best = this.activeRoot.child as Node<GS, M, D>;
 
         // Select random best if enabled
-        if (this.opts.randomBest && exit != SearchExit.TIME) {
-            // Get randomly selected best move
-            best = this.randomBestChild(this.activeRoot);
-        } else if (this.opts.randomWeight && exit != SearchExit.TIME) {
-            // Get weighted random best move
-            best = this.randomWeightedChild(this.activeRoot, this.opts.randomWeight);
+        if (exit != SearchExit.TIME && exit != SearchExit.NODE_LIMIT) {
+            if (this.opts.randomBest) {
+                // Get randomly selected best move
+                best = this.randomBestChild(this.activeRoot);
+            } else if (this.opts.randomWeight) {
+                // Get weighted random best move
+                best = this.randomWeightedChild(this.activeRoot, this.opts.randomWeight);
+            }
         }
 
         // return result
@@ -360,7 +363,11 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             // Check expiry
             if (this.checkExpiry()) {
                 return SearchExit.TIME;
+            } else if (this.checkNodeLimit()) {
+                return SearchExit.NODE_LIMIT;
             }
+            // Check node count before searching deeper
+            const nodeCount = this.nodeCount;
 
             let exit = SearchExit.FULL_DEPTH;
             let best: Node<GS, M, D> | undefined;
@@ -371,8 +378,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
-                        if (exit == SearchExit.TIME) {
-                            return SearchExit.TIME;
+                        if (exit == SearchExit.TIME || exit == SearchExit.NODE_LIMIT) {
+                            return exit;
                         }
                         if (best == undefined || child.inheritedValue > best.inheritedValue) {
                             best = child;
@@ -385,8 +392,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     for (const child of this.getChildren(node)) {
                         // score is assigned directly to child, exit if timeout
                         exit = this.negamax(child, depth - 1, -colour, -beta, beta_path, -alpha, alpha_path);
-                        if (exit == SearchExit.TIME) {
-                            return SearchExit.TIME;
+                        if (exit == SearchExit.TIME || exit == SearchExit.NODE_LIMIT) {
+                            return exit;
                         }
                         // get best value with pathlength
                         node.pruned ||= child.pruned;
@@ -442,6 +449,9 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     }
                     break;
             }
+
+            // update descendants
+            node.descendantCount += this.nodeCount - nodeCount;
 
             // Assign the best child to parent
             if (best !== undefined) {
@@ -516,7 +526,8 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
             }
 
             let exit = SearchExit.FULL_DEPTH;
-            // node.aim = NodeAim.MAX;
+            // Check node count before searching deeper
+            const nodeCount = this.nodeCount;
 
             // Get moves if not already on node
             if (!node.moves.length) {
@@ -549,6 +560,9 @@ export class Negamax<GS, M, D> extends SearchTree<GS, M, D> {
                     }
                 }
             }
+            // update descendants
+            node.descendantCount += this.nodeCount - nodeCount;
+
             if (best !== undefined) {
                 node.child = best;
                 node.inheritedValue = -node.child.inheritedValue;

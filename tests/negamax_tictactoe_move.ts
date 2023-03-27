@@ -24,7 +24,7 @@ test("Standard negamax evaluation", () => {
     expect(result.value).toBe(0);
     expect(result.depth).toBe(9);
     expect(result.outcomes).toBe(255168);
-    expect(result.nodes).toBe(549945);
+    expect(result.nodes).toBe(549946);
 });
 
 test("Alphabeta pruning", () => {

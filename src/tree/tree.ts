@@ -41,6 +41,7 @@ export class Tree<GS, M, D> {
     constructor(root: Node<GS, M, D>) {
         this.root = root;
         this.activeRoot = this.root;
+        this.nodeCount = 1;
     }
 
     /**

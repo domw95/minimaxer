@@ -1,4 +1,4 @@
-import { MinimaxResult, Node, NodeType, SearchExit } from "../index.js";
+import { Node, NodeType, SearchExit } from "../index.js";
 import { GetScoresFunc } from "../tree/interfaces.js";
 import { SearchTree } from "../tree/searchtree.js";
 import { MaxnOpts, MaxnResult } from "./index.js";

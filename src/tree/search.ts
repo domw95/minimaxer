@@ -40,6 +40,22 @@ export const enum PruningType {
 }
 
 /**
+ * Control the removal of nodes in between iterative searches when using
+ * {@link SearchMethod.DEEPENING} or {@link SearchMethod.TIME}.
+ *
+ */
+export const enum RemovalMethod {
+    /** Disable node removal */
+    NONE,
+    /** Run node removal at the end of each depth search */
+    ALWAYS,
+    /** Run node removal above a certain depth ({@link SearchOpts.removalDepth}) */
+    DEPTH,
+    /** Run node removal when the node count exceeds a certain value ({@link SearchOpts.removalCount}) */
+    COUNT,
+}
+
+/**
  * Class representing common options for searching a {@link Tree}.
  *
  * Derived classes are used and attached to their corresponding tree.
@@ -73,6 +89,19 @@ export class SearchOpts {
     presort = false;
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
+    /**
+     * @alpha
+     * Maximum number of nodes allowed in the tree. Search will finish if exceeded,
+     * returning {@link SearchExit.NODE_LIMIT}.
+     *
+     * Actual nodes in tree will be between nodeLimit and nodeLimit + x where x,
+     * is the number of moves/children being checked when the nodeLimit is exceeded.
+     *
+     * Disabled by setting to 0
+     *
+     * Only works with Negamax (optimal = false)
+     */
+    nodeLimit = 0;
     /** Set to `true` to shorten winning paths and lengthen losing paths.
      *  Only works when combined with {@link PruningType.ALPHA_BETA | PruningType.ALPHA_BETA}.
      * Is disabled for {@link Negamax} when {@link NegamaxOpts.optimal} is `true`.
@@ -101,6 +130,21 @@ export class SearchOpts {
      * specific support.
      */
     randomWeight = 0;
+    /**
+     * For removing nodes in between iterative searches.
+     * Allows for deeper searches that would otherwise be memory limited.
+     *
+     * Good for reduced memory usage but takes extra time.
+     */
+    removalMethod = RemovalMethod.NONE;
+    /**
+     * Controls the way removal behaves for {@link RemovalMethod.DEPTH}
+     */
+    removalDepth = 0;
+    /**
+     * Controls the way removal behaves for {@link RemovalMethod.COUNT}
+     */
+    removalCount = 0;
 }
 
 /**
@@ -120,6 +164,10 @@ export const enum SearchExit {
      * {@link SearchOpts.timeout | SearchOpts.timeout}.
      */
     TIME,
+    /**
+     * Search concluded as the node limit was reached
+     */
+    NODE_LIMIT,
 }
 
 /** Object that is returned after a search has been completed */
