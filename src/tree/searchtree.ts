@@ -2,7 +2,7 @@ import { Tree } from "./tree.js";
 import { Node, NodeAim } from "./node.js";
 import { EvaluateNodeFunc } from "./interfaces.js";
 import { RemovalMethod, SearchExit, SearchMethod, SearchOpts, SearchResult } from "./search.js";
-import { bubbleSort, bubbleSortEfficient, defaultSort, SortMethod } from "./sorting.js";
+import { bubbleSort, bubbleSortEfficient, defaultSort, staticSort, SortMethod } from "./sorting.js";
 
 /**
  * Extends the tree class with function specifically for minimax searches
@@ -175,13 +175,41 @@ export class SearchTree<GS, M, D> extends Tree<GS, M, D> {
         } else {
             // Create children if required
             // sort enabled and children already present
-            if (!this.createChildren(node)) {
+            if (this.createChildren(node)) {
+                // Children were just created, so have no inherited value to sort on.
+                // Sort by the value they were given instead, so the search sees the
+                // promising ones first
+                if (this.opts.sortOnCreate) {
+                    this.sortNewChildren(node);
+                }
+            } else {
                 // Children already created, sort by inherited value
                 if (this.presortEnable) {
                     this.sortChildren(node);
                 }
             }
             return node.children;
+        }
+    }
+
+    /**
+     * Sorts the child nodes of given parent {@link Node} by the value assigned to them
+     * when they were created, before any of them have been searched.
+     *
+     * Does nothing if the node has no aim, or if the children were not given a value.
+     * @param node parent {@link Node} of children to sort
+     */
+    protected sortNewChildren(node: Node<GS, M, D>): void {
+        if (!node.children.length || isNaN(node.children[0].value)) {
+            return;
+        }
+        switch (node.aim) {
+            case NodeAim.MAX:
+                staticSort(node.children, false);
+                break;
+            case NodeAim.MIN:
+                staticSort(node.children, true);
+                break;
         }
     }
 
