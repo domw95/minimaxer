@@ -63,6 +63,15 @@ function getSortFunc(reverse: boolean, prune: boolean) {
     }
 }
 
+// Sort by the value given to a node when it was created, before it has been searched
+export function staticSort(list: Node<unknown, unknown, unknown>[], reverse = false) {
+    if (reverse) {
+        list.sort((a, b) => a.value - b.value);
+    } else {
+        list.sort((a, b) => b.value - a.value);
+    }
+}
+
 // Sort using in build sort function
 export function defaultSort(list: Node<unknown, unknown, unknown>[], reverse = false, pruneByPathLength = false) {
     const sortFunc = getSortFunc(reverse, pruneByPathLength);

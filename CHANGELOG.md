@@ -11,6 +11,12 @@ Security
 
 # Changelog
 
+## [Unreleased]
+
+### Added
+
+- `sortOnCreate` option to sort a node's children by their own value as soon as they are created, before any of them have been searched. `presort` can only order children that an earlier iteration has given an inherited value to, so the first visit to a node searches its children in the order the moves arrived in, which is what decides how much of the tree alpha-beta can skip. Requires children to exist, so it has no effect with `genBased` set, and relies on the node aim, so it applies to `Minimax` rather than `Negamax`.
+
 ## [3.4.0] - 2023-03-27
 
 ### Added

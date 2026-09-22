@@ -90,6 +90,20 @@ export class SearchOpts {
     /** Method used to sort nodes if {@link SearchOpts.presort} is enabled */
     sortMethod = SortMethod.DEFAULT;
     /**
+     * Sort the children of a node by their own value as soon as they are created, before
+     * any of them have been searched.
+     *
+     * {@link SearchOpts.presort} can only order children that a previous iteration has
+     * already given an inherited value to, so the first visit to a node searches its
+     * children in the order the moves arrived in. Alpha-beta only cuts off once a good
+     * move has been found, so that first ordering decides how much of the tree is skipped.
+     *
+     * Requires children to exist, so has no effect when {@link SearchOpts.genBased} is
+     * set, and relies on the node aim, so applies to {@link Minimax} and not
+     * {@link Negamax}, which tracks the aim by colour instead.
+     */
+    sortOnCreate = false;
+    /**
      * @alpha
      * Maximum number of nodes allowed in the tree. Search will finish if exceeded,
      * returning {@link SearchExit.NODE_LIMIT}.
